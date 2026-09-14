@@ -1,0 +1,33 @@
+{
+  "exampleOrigin": "fixture",
+  "description": "Invalid replacements/deletions against named design fixture records; no real decisions or provider evidence.",
+  "cases": [
+    { "name": "unknown-rpo-cannot-confirm-requirements", "base": "requirements-unknown-rpo", "path": ["status"], "value": "confirmed" },
+    { "name": "unanswered-rpo-cannot-have-value", "base": "requirements-unknown-rpo", "path": ["rpoQuestion", "valueMinutes"], "value": 15 },
+    { "name": "answer-needs-explicit-confirmation", "base": "requirements-confirmed-rpo", "path": ["rpoQuestion", "confirmation"], "value": null },
+    { "name": "agent-cannot-confirm-rpo", "base": "requirements-confirmed-rpo", "path": ["rpoQuestion", "confirmation", "actor", "kind"], "value": "agent" },
+    { "name": "proposal-cannot-approve", "base": "architecture-proposal", "path": ["approvalStatus"], "value": "approved" },
+    { "name": "agent-proposal-not-human", "base": "architecture-proposal", "path": ["producer", "kind"], "value": "human" },
+    { "name": "proposal-cannot-claim-eligibility", "base": "architecture-proposal", "path": ["options", 0, "eligibility"], "value": "eligible" },
+    { "name": "a-cannot-invent-reviewed-profile", "base": "architecture-proposal", "path": ["options", 0, "catalogFacts", "regionalRecoveryProfile"], "value": "PROFILE-ACTIVE-PASSIVE-V2" },
+    { "name": "b-cannot-rewrite-catalog-cost", "base": "architecture-proposal", "path": ["options", 1, "catalogFacts", "monthlyEstimateUsd"], "value": 9000 },
+    { "name": "agent-finding-not-human", "base": "design-review", "path": ["review", "findings", 1, "actor", "kind"], "value": "human" },
+    { "name": "eligibility-producer-not-agent", "base": "design-review", "path": ["review", "optionAssessments", 0, "producer", "kind"], "value": "agent" },
+    { "name": "blocked-check-cannot-be-weakened", "base": "blocked-checks-approved-snapshot", "path": ["gate", "effectiveStatus"], "value": "pass" },
+    { "name": "unknown-gate", "base": "design-review", "path": ["gate", "gateId"], "value": "budget-ready" },
+    { "name": "empty-gate-input-hashes", "base": "design-review", "path": ["gate", "boundChecksums"], "value": {} },
+    { "name": "selection-needs-human", "base": "adr-recorded", "path": ["decisionReceipt", "actor", "kind"], "value": "agent" },
+    { "name": "empty-decision-input-hashes", "base": "adr-recorded", "path": ["decisionReceipt", "boundChecksums"], "value": {} },
+    { "name": "pending-is-not-a-human-decision", "base": "approval-pending", "path": ["actor"], "value": { "kind": "human", "actorId": "demo-human", "identityAssurance": "local-demo" } },
+    { "name": "agent-cannot-approve", "base": "approval-approved", "path": ["actor", "kind"], "value": "agent" },
+    { "name": "no-other-human-approver", "base": "approval-approved", "path": ["actor", "actorId"], "value": "another-human" },
+    { "name": "approval-expiry-required", "base": "approval-approved", "path": ["expiresAt"], "delete": true },
+    { "name": "approval-needs-human-event", "base": "approval-approved", "path": ["attentionEvent"], "value": null },
+    { "name": "empty-approval-binding-hashes", "base": "approval-approved", "path": ["binding", "boundChecksums"], "value": {} },
+    { "name": "uppercase-action-id-rejected", "base": "approval-approved", "path": ["binding", "actionId"], "value": "ACTION-APPROVE" },
+    { "name": "ready-plan-needs-approval-reference", "base": "generation-ready", "path": ["approval"], "value": null },
+    { "name": "plan-cannot-include-shell", "base": "generation-ready", "path": ["command"], "value": "run arbitrary shell" },
+    { "name": "plan-cannot-escape-root", "base": "generation-ready", "path": ["outputs", 0, "relativePath"], "value": "../main.bicep" },
+    { "name": "missing-inherited-run-id", "base": "architecture-model", "path": ["runId"], "delete": true }
+  ]
+}

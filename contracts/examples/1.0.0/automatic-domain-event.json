@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "domain-event",
+  "artifactId": "ART-AUTOMATIC-EVENT-EXAMPLE",
+  "runId": "RUN-CONTRACT-EXAMPLE",
+  "caseId": "CASE-CONTRACT-EXAMPLE",
+  "scope": {
+    "scopeId": "SCOPE-EXAMPLE",
+    "subscriptionId": null,
+    "resourceGroup": null,
+    "resourceIds": []
+  },
+  "caseRevisionAtWrite": 0,
+  "createdAt": "2026-09-12T17:00:00Z",
+  "updatedAt": "2026-09-12T17:00:00Z",
+  "stateChecksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "derivedFrom": {},
+  "eventId": "EVENT-AUTOMATIC-EXAMPLE",
+  "sequence": 1,
+  "eventType": "automatic-observation-recorded",
+  "correlationId": "CORRELATION-AUTOMATIC-EXAMPLE",
+  "workId": "WORK-EXAMPLE",
+  "actor": { "kind": "system", "actorId": "SYSTEM-OBSERVER" },
+  "payloadRefs": []
+}

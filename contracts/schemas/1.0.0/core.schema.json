@@ -1,0 +1,524 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:intent-to-impact:contracts:core:1.0.0",
+  "title": "CoreContract",
+  "description": "FND-01-01 base envelopes only. Runtime JSON Schema validation is authoritative; generated types are structural views.",
+  "oneOf": [
+    { "$ref": "#/definitions/CaseState" },
+    { "$ref": "#/definitions/LocalRunManifest" },
+    { "$ref": "#/definitions/EvidenceReference" },
+    { "$ref": "#/definitions/CommandExecutionReceipt" },
+    { "$ref": "#/definitions/WorkEnvelope" },
+    { "$ref": "#/definitions/DomainEvent" },
+    { "$ref": "#/definitions/ErrorEnvelope" },
+    { "$ref": "#/definitions/AuthorizationContext" }
+  ],
+  "definitions": {
+    "Identifier": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[A-Z][A-Z0-9]*(?:-[A-Za-z0-9]+)+$"
+    },
+    "RunId": {
+      "type": "string",
+      "maxLength": 128,
+      "pattern": "^RUN-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$"
+    },
+    "CaseId": {
+      "type": "string",
+      "maxLength": 128,
+      "pattern": "^CASE-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$"
+    },
+    "WorkId": {
+      "type": "string",
+      "maxLength": 128,
+      "pattern": "^WORK-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$"
+    },
+    "Checksum": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "Timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "RFC 3339 time with explicit offset. Fixture example times are not observations."
+    },
+    "Version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "ActionId": {
+      "type": "string",
+      "maxLength": 128,
+      "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"
+    },
+    "RunMode": {
+      "type": "string",
+      "enum": ["live", "fixture", "replay"]
+    },
+    "RunPurpose": {
+      "type": "string",
+      "enum": ["magic-moment-proof", "hero", "ux-mock", "test", "rehearsal"]
+    },
+    "EvidenceOrigin": {
+      "type": "string",
+      "enum": ["live-external", "live-local", "fixture", "replayed", "ux-mock"]
+    },
+    "EvidenceState": {
+      "type": "string",
+      "enum": ["fresh", "stale", "missing", "partial", "failed"]
+    },
+    "DemoIdentity": {
+      "type": "object",
+      "description": "The only local human identity. Not independent identity assurance, an executor classification, or an approval.",
+      "properties": {
+        "actorId": { "type": "string", "const": "demo-human" },
+        "identityAssurance": { "type": "string", "const": "local-demo" }
+      },
+      "required": ["actorId", "identityAssurance"],
+      "additionalProperties": false
+    },
+    "HumanExecutionActor": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "const": "human" },
+        "actorId": { "$ref": "#/definitions/DemoIdentity/properties/actorId" },
+        "identityAssurance": { "$ref": "#/definitions/DemoIdentity/properties/identityAssurance" }
+      },
+      "required": ["kind", "actorId", "identityAssurance"],
+      "additionalProperties": false
+    },
+    "AgentExecutionActor": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "const": "agent" },
+        "actorId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^AGENT-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$"
+        }
+      },
+      "required": ["kind", "actorId"],
+      "additionalProperties": false
+    },
+    "SystemExecutionActor": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "const": "system" },
+        "actorId": {
+          "type": "string",
+          "maxLength": 128,
+          "pattern": "^SYSTEM-[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$"
+        }
+      },
+      "required": ["kind", "actorId"],
+      "additionalProperties": false
+    },
+    "ExecutionActor": {
+      "description": "Actual executor, assigned by the trusted producer. A human initiator does not turn automatic execution into human approval.",
+      "oneOf": [
+        { "$ref": "#/definitions/HumanExecutionActor" },
+        { "$ref": "#/definitions/AgentExecutionActor" },
+        { "$ref": "#/definitions/SystemExecutionActor" }
+      ]
+    },
+    "HumanCaller": {
+      "type": "object",
+      "properties": {
+        "callerClass": { "type": "string", "const": "human" },
+        "channel": { "type": "string", "enum": ["browser", "cli", "harness"] },
+        "actor": { "$ref": "#/definitions/HumanExecutionActor" }
+      },
+      "required": ["callerClass", "channel", "actor"],
+      "additionalProperties": false
+    },
+    "AgentCaller": {
+      "type": "object",
+      "properties": {
+        "callerClass": { "type": "string", "const": "agent" },
+        "channel": { "type": "string", "const": "model" },
+        "actor": { "$ref": "#/definitions/AgentExecutionActor" }
+      },
+      "required": ["callerClass", "channel", "actor"],
+      "additionalProperties": false
+    },
+    "SystemCaller": {
+      "type": "object",
+      "properties": {
+        "callerClass": { "type": "string", "const": "system" },
+        "channel": { "type": "string", "enum": ["worker", "harness"] },
+        "actor": { "$ref": "#/definitions/SystemExecutionActor" }
+      },
+      "required": ["callerClass", "channel", "actor"],
+      "additionalProperties": false
+    },
+    "TrustedCaller": {
+      "description": "Server-created caller attribution from the actual entry channel, never authority established by model-supplied data. Schema validity does not grant a capability.",
+      "oneOf": [
+        { "$ref": "#/definitions/HumanCaller" },
+        { "$ref": "#/definitions/AgentCaller" },
+        { "$ref": "#/definitions/SystemCaller" }
+      ]
+    },
+    "Scope": {
+      "type": "object",
+      "description": "Configured scope metadata, not proof of authorization or Azure resource existence.",
+      "properties": {
+        "scopeId": { "$ref": "#/definitions/Identifier" },
+        "subscriptionId": { "type": ["string", "null"], "format": "uuid" },
+        "resourceGroup": { "type": ["string", "null"], "minLength": 1 },
+        "resourceIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      },
+      "required": ["scopeId", "subscriptionId", "resourceGroup", "resourceIds"],
+      "additionalProperties": false
+    },
+    "ChecksumMap": {
+      "type": "object",
+      "propertyNames": { "type": "string", "minLength": 1 },
+      "additionalProperties": { "$ref": "#/definitions/Checksum" }
+    },
+    "ArtifactReference": {
+      "type": "object",
+      "properties": {
+        "artifactId": { "$ref": "#/definitions/Identifier" },
+        "checksum": { "$ref": "#/definitions/Checksum" }
+      },
+      "required": ["artifactId", "checksum"],
+      "additionalProperties": false
+    },
+    "CommonEnvelope": {
+      "type": "object",
+      "description": "Common persisted metadata. stateChecksum excludes itself; derivedFrom contains input checksums. This extensible fragment is not a standalone contract.",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0.0" },
+        "artifactId": { "$ref": "#/definitions/Identifier" },
+        "runId": { "$ref": "#/definitions/RunId", "x-immutable": true },
+        "caseId": { "$ref": "#/definitions/CaseId", "x-immutable": true },
+        "scope": { "$ref": "#/definitions/Scope", "x-immutable": true },
+        "caseRevisionAtWrite": { "type": "integer", "minimum": 0 },
+        "createdAt": { "$ref": "#/definitions/Timestamp" },
+        "updatedAt": { "$ref": "#/definitions/Timestamp" },
+        "stateChecksum": { "$ref": "#/definitions/Checksum" },
+        "derivedFrom": { "$ref": "#/definitions/ChecksumMap" }
+      },
+      "required": [
+        "schemaVersion", "artifactId", "runId", "caseId", "scope",
+        "caseRevisionAtWrite", "createdAt", "updatedAt", "stateChecksum", "derivedFrom"
+      ]
+    },
+    "CaseState": {
+      "title": "CaseState",
+      "x-contract-id": "D01",
+      "type": "object",
+      "allOf": [{ "$ref": "#/definitions/CommonEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "case-state" },
+        "logicalRevision": { "type": "integer", "minimum": 0 },
+        "lifecycleState": {
+          "type": "string",
+          "enum": [
+            "Draft", "Discovering", "RequirementsReady", "Designing", "DesignReview",
+            "AwaitingApproval", "Approved", "Generating", "DeliveryReview",
+            "LocalChangePrepared", "LocalChangeApproved", "ApplyingLocally", "LocalApplied",
+            "Observing", "DriftDetected", "RemediationReview", "CorrectiveChangePrepared",
+            "CorrectiveChangeApproved", "CorrectionAppliedLocally", "VerificationPending",
+            "VerifiedRestoration"
+          ]
+        },
+        "sections": {
+          "type": "object",
+          "description": "Opaque canonical section references; later tasks own domain content.",
+          "propertyNames": { "$ref": "#/definitions/ActionId" },
+          "additionalProperties": { "$ref": "#/definitions/ArtifactReference" }
+        },
+        "work": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": { "$ref": "#/definitions/WorkEnvelope" }
+        },
+        "events": {
+          "type": "array",
+          "maxItems": 10000,
+          "items": { "$ref": "#/definitions/DomainEvent" }
+        },
+        "idempotencyRecords": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": { "$ref": "#/definitions/IdempotencyRecord" }
+        }
+      },
+      "required": [
+        "artifactType", "logicalRevision", "lifecycleState", "sections", "work",
+        "events", "idempotencyRecords"
+      ],
+      "unevaluatedProperties": false
+    },
+    "IdempotencyRecord": {
+      "type": "object",
+      "properties": {
+        "idempotencyKey": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "commandId": { "$ref": "#/definitions/ActionId" },
+        "inputChecksum": { "$ref": "#/definitions/Checksum" },
+        "result": { "$ref": "#/definitions/ArtifactReference" }
+      },
+      "required": ["idempotencyKey", "commandId", "inputChecksum", "result"],
+      "additionalProperties": false
+    },
+    "LocalRunManifest": {
+      "title": "LocalRunManifest",
+      "x-contract-id": "D22",
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/definitions/CommonEnvelope" },
+        {
+          "if": { "properties": { "purpose": { "const": "ux-mock" } }, "required": ["purpose"] },
+          "then": { "properties": { "runMode": { "const": "fixture" } } }
+        }
+      ],
+      "properties": {
+        "artifactType": { "type": "string", "const": "local-run-manifest" },
+        "runMode": { "$ref": "#/definitions/RunMode", "x-immutable": true },
+        "purpose": { "$ref": "#/definitions/RunPurpose", "x-immutable": true },
+        "scenarioId": { "$ref": "#/definitions/Identifier", "x-immutable": true },
+        "scenarioVersion": { "$ref": "#/definitions/Version", "x-immutable": true },
+        "scenarioHash": { "$ref": "#/definitions/Checksum", "x-immutable": true },
+        "rootId": {
+          "$ref": "#/definitions/Identifier",
+          "description": "Opaque server-configured run-root reference; never a client-selected path.",
+          "x-immutable": true
+        },
+        "configId": { "$ref": "#/definitions/Identifier", "x-immutable": true },
+        "sourceRunId": {
+          "$ref": "#/definitions/RunId",
+          "description": "Required for replay; source references/times must be retained by the replay owner.",
+          "x-immutable": true
+        }
+      },
+      "required": [
+        "artifactType", "runMode", "purpose", "scenarioId", "scenarioVersion",
+        "scenarioHash", "rootId", "configId"
+      ],
+      "if": { "properties": { "runMode": { "const": "replay" } }, "required": ["runMode"] },
+      "then": { "required": ["sourceRunId"] },
+      "else": { "not": { "required": ["sourceRunId"] } },
+      "unevaluatedProperties": false
+    },
+    "EvidenceReference": {
+      "title": "EvidenceReference",
+      "x-contract-id": "E01",
+      "type": "object",
+      "allOf": [{ "$ref": "#/definitions/CommonEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "evidence-reference" },
+        "origin": { "$ref": "#/definitions/EvidenceOrigin" },
+        "evidenceState": { "$ref": "#/definitions/EvidenceState" },
+        "collector": {
+          "type": "object",
+          "properties": {
+            "collectorId": { "$ref": "#/definitions/Identifier" },
+            "version": { "$ref": "#/definitions/Version" }
+          },
+          "required": ["collectorId", "version"],
+          "additionalProperties": false
+        },
+        "observedAt": { "$ref": "#/definitions/Timestamp" },
+        "retrievedAt": { "$ref": "#/definitions/Timestamp" },
+        "validUntil": {
+          "anyOf": [{ "$ref": "#/definitions/Timestamp" }, { "type": "null" }]
+        },
+        "eligibility": { "type": "string", "enum": ["eligible", "ineligible", "unknown"] },
+        "sourceChecksum": { "$ref": "#/definitions/Checksum" },
+        "completeness": { "type": "string", "enum": ["complete", "partial", "missing"] },
+        "supportedAssertionIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/definitions/Identifier" }
+        }
+      },
+      "required": [
+        "artifactType", "origin", "evidenceState", "collector", "observedAt",
+        "retrievedAt", "validUntil", "eligibility", "sourceChecksum",
+        "completeness", "supportedAssertionIds"
+      ],
+      "unevaluatedProperties": false
+    },
+    "CommandExecutionReceipt": {
+      "title": "CommandExecutionReceipt",
+      "x-contract-id": "E02",
+      "type": "object",
+      "allOf": [{ "$ref": "#/definitions/CommonEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "command-execution-receipt" },
+        "origin": { "$ref": "#/definitions/EvidenceOrigin" },
+        "argvAllowlistId": { "$ref": "#/definitions/Identifier" },
+        "workingRootId": { "$ref": "#/definitions/Identifier" },
+        "argv": {
+          "type": "array",
+          "description": "Redacted argument vector, never an executable command supplied by a model.",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+        "exitCode": { "type": "integer" },
+        "startedAt": { "$ref": "#/definitions/Timestamp" },
+        "completedAt": { "$ref": "#/definitions/Timestamp" },
+        "stdoutChecksum": { "$ref": "#/definitions/Checksum" },
+        "stderrChecksum": { "$ref": "#/definitions/Checksum" },
+        "correlationId": { "$ref": "#/definitions/Identifier" },
+        "actor": { "$ref": "#/definitions/ExecutionActor" },
+        "humanInitiator": { "$ref": "#/definitions/DemoIdentity" }
+      },
+      "required": [
+        "artifactType", "origin", "argvAllowlistId", "workingRootId", "argv",
+        "exitCode", "startedAt", "completedAt", "stdoutChecksum", "stderrChecksum",
+        "correlationId", "actor"
+      ],
+      "unevaluatedProperties": false
+    },
+    "WorkCheckpoint": {
+      "type": "object",
+      "properties": {
+        "checkpointId": { "$ref": "#/definitions/Identifier" },
+        "createdAt": { "$ref": "#/definitions/Timestamp" },
+        "artifacts": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ArtifactReference" }
+        }
+      },
+      "required": ["checkpointId", "createdAt", "artifacts"],
+      "additionalProperties": false
+    },
+    "WorkEnvelope": {
+      "title": "WorkEnvelope",
+      "x-contract-id": "E03",
+      "type": "object",
+      "allOf": [{ "$ref": "#/definitions/CommonEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "work-envelope" },
+        "workId": { "$ref": "#/definitions/WorkId" },
+        "attempt": { "type": "integer", "minimum": 1 },
+        "commandId": { "$ref": "#/definitions/ActionId" },
+        "expectedRevision": { "type": "integer", "minimum": 0 },
+        "status": {
+          "type": "string",
+          "enum": [
+            "queued", "running", "succeeded", "failed", "stale", "blocked",
+            "recovery-required", "awaiting-human", "cancelled"
+          ]
+        },
+        "checkpoints": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/WorkCheckpoint" }
+        },
+        "correlationId": { "$ref": "#/definitions/Identifier" }
+      },
+      "required": [
+        "artifactType", "workId", "attempt", "commandId", "expectedRevision",
+        "status", "checkpoints", "correlationId"
+      ],
+      "unevaluatedProperties": false
+    },
+    "DomainEvent": {
+      "title": "DomainEvent",
+      "x-contract-id": "E04",
+      "type": "object",
+      "allOf": [{ "$ref": "#/definitions/CommonEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "domain-event" },
+        "eventId": { "$ref": "#/definitions/Identifier" },
+        "sequence": { "type": "integer", "minimum": 1 },
+        "eventType": { "$ref": "#/definitions/ActionId" },
+        "correlationId": { "$ref": "#/definitions/Identifier" },
+        "workId": { "anyOf": [{ "$ref": "#/definitions/WorkId" }, { "type": "null" }] },
+        "actor": { "$ref": "#/definitions/ExecutionActor" },
+        "humanInitiator": { "$ref": "#/definitions/DemoIdentity" },
+        "payloadRefs": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ArtifactReference" }
+        }
+      },
+      "required": [
+        "artifactType", "eventId", "sequence", "eventType", "correlationId",
+        "workId", "actor", "payloadRefs"
+      ],
+      "unevaluatedProperties": false
+    },
+    "ErrorEnvelope": {
+      "title": "ErrorEnvelope",
+      "x-contract-id": "E07",
+      "type": "object",
+      "description": "Bounded error response, not a canonical persisted root. Unknown canonical context is omitted or null; never invent IDs or state hashes. diagnosticId identifies this diagnostic even when no persisted reference exists.",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0.0" },
+        "artifactType": { "type": "string", "const": "error-envelope" },
+        "createdAt": { "$ref": "#/definitions/Timestamp" },
+        "artifactId": {
+          "anyOf": [{ "$ref": "#/definitions/Identifier" }, { "type": "null" }]
+        },
+        "runId": { "anyOf": [{ "$ref": "#/definitions/RunId" }, { "type": "null" }] },
+        "caseId": { "anyOf": [{ "$ref": "#/definitions/CaseId" }, { "type": "null" }] },
+        "scope": { "anyOf": [{ "$ref": "#/definitions/Scope" }, { "type": "null" }] },
+        "caseRevisionAtWrite": { "type": ["integer", "null"], "minimum": 0 },
+        "updatedAt": { "anyOf": [{ "$ref": "#/definitions/Timestamp" }, { "type": "null" }] },
+        "stateChecksum": {
+          "anyOf": [{ "$ref": "#/definitions/Checksum" }, { "type": "null" }]
+        },
+        "derivedFrom": {
+          "anyOf": [{ "$ref": "#/definitions/ChecksumMap" }, { "type": "null" }]
+        },
+        "code": {
+          "type": "string",
+          "enum": [
+            "stale-revision", "stale-input", "idempotency-conflict", "approval-required",
+            "not-authorized", "workspace-conflict", "invalid-artifact", "command-failed",
+            "binding-missing", "evidence-incomplete", "provider-unavailable",
+            "recovery-required", "fixture-contract-mismatch"
+          ]
+        },
+        "message": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "workId": { "anyOf": [{ "$ref": "#/definitions/WorkId" }, { "type": "null" }] },
+        "correlationId": { "$ref": "#/definitions/Identifier" },
+        "diagnosticId": { "$ref": "#/definitions/Identifier" },
+        "expectedRevision": { "type": ["integer", "null"], "minimum": 0 },
+        "actualRevision": { "type": ["integer", "null"], "minimum": 0 },
+        "retryable": { "type": "boolean" },
+        "allowedRecoveryActions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/definitions/ActionId" }
+        },
+        "diagnosticReference": {
+          "anyOf": [{ "$ref": "#/definitions/ArtifactReference" }, { "type": "null" }]
+        }
+      },
+      "required": [
+        "schemaVersion", "artifactType", "createdAt", "code", "message",
+        "correlationId", "diagnosticId", "retryable", "allowedRecoveryActions"
+      ],
+      "additionalProperties": false
+    },
+    "AuthorizationContext": {
+      "title": "AuthorizationContext",
+      "x-contract-id": "E08",
+      "type": "object",
+      "allOf": [{ "$ref": "#/definitions/CommonEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "authorization-context" },
+        "caller": { "$ref": "#/definitions/TrustedCaller" },
+        "humanInitiator": { "$ref": "#/definitions/DemoIdentity" },
+        "permittedCapabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/definitions/ActionId" }
+        },
+        "correlationId": { "$ref": "#/definitions/Identifier" }
+      },
+      "required": ["artifactType", "caller", "permittedCapabilities", "correlationId"],
+      "unevaluatedProperties": false
+    }
+  }
+}

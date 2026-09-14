@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "authorization-context",
+  "artifactId": "AUTH-AGENT-EXAMPLE",
+  "runId": "RUN-CONTRACT-EXAMPLE",
+  "caseId": "CASE-CONTRACT-EXAMPLE",
+  "scope": {
+    "scopeId": "SCOPE-EXAMPLE",
+    "subscriptionId": null,
+    "resourceGroup": null,
+    "resourceIds": []
+  },
+  "caseRevisionAtWrite": 0,
+  "createdAt": "2026-09-12T17:00:00Z",
+  "updatedAt": "2026-09-12T17:00:00Z",
+  "stateChecksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "derivedFrom": {},
+  "caller": {
+    "callerClass": "agent",
+    "channel": "model",
+    "actor": { "kind": "agent", "actorId": "AGENT-EXAMPLE" }
+  },
+  "humanInitiator": { "actorId": "demo-human", "identityAssurance": "local-demo" },
+  "permittedCapabilities": [],
+  "correlationId": "CORRELATION-AGENT-EXAMPLE"
+}

@@ -1,0 +1,246 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "SPK-03-01-prerequisite-proposal-only",
+  "taskId": "SPK-03-01",
+  "parentPlanId": "SPK-03",
+  "scenarioId": "DEMO-CASE-CLAIMS-V1",
+  "componentId": "CMP-CLAIMS-STORE",
+  "status": "superseded",
+  "supersededBy": "proposed-sandbox.json",
+  "supersededReason": "User directed public endpoint only: use public IP where needed, no private needed. This private architecture and its VM/quota/cost prerequisites are historical, not required components.",
+  "canonicalProductState": false,
+  "runtimeProof": "blocked",
+  "runtimePromiseStatus": "unknown",
+  "deploymentId": null,
+  "azureMutationsPerformed": [],
+  "evidenceOrigins": {
+    "publicDocumentationAndPrices": "live-external",
+    "proposalValidation": "live-local",
+    "designChoices": "proposal-not-proof",
+    "fixtureUsedAsProof": false
+  },
+  "target": {
+    "subscriptionId": "463a82d4-1896-4332-aeeb-618ee5a5aa93",
+    "resourceGroupName": "rg-intent-to-impact-demo",
+    "resourceGroupId": null,
+    "resourceGroupExists": false,
+    "existenceEvidence": {
+      "origin": "live-external",
+      "provenance": "reported-by-orchestrator",
+      "result": "ResourceGroupNotFound",
+      "independentlyRequeriedInThisProposal": false,
+      "observationTimestamp": null,
+      "limitation": "Task input reports the real az group show result; recheck exact target before any separately approved creation."
+    },
+    "region": "eastus2",
+    "regionStatus": "proposed-not-confirmed",
+    "regionRationale": "Same region as the existing project per task context; no unrelated resources were inventoried.",
+    "allResourceNamesExceptTargetGroupAndServiceDnsZone": "unassigned; operator-approved names and actual IDs must be captured after a real deployment"
+  },
+  "design": {
+    "strategy": "private-vm-cloud-init-serial-evidence",
+    "rationale": "A single low-cost Linux VM can use native Azure DNS, IMDS managed identity and Blob Private Link without public IP, NAT, VPN, SSH or guest internet. Reviewed cloud-init starts a bounded verifier; managed boot diagnostics carries nonsecret serial evidence to the operator.",
+    "publicVerifierIp": false,
+    "publicIpResources": 0,
+    "defaultOutboundAccess": false,
+    "guestInternetAccess": false,
+    "localLaptopVnetConnectivityAssumed": false,
+    "natGateway": false,
+    "bastion": false,
+    "runCommand": false,
+    "runCommandExclusion": "Microsoft documents outbound 443 to Azure public IPs for Run Command results; it is not assumed to work in this no-egress design.",
+    "subnetDelegation": null,
+    "proposedVnetCidr": "10.244.80.0/27",
+    "proposedSubnets": {
+      "verifier": "10.244.80.0/28",
+      "private-endpoint": "10.244.80.16/28"
+    },
+    "cidrStatus": "proposed; isolated VNet with no peering, VPN or reused DNS links",
+    "allowedGuestPaths": [
+      "TCP 443 only to the actually assigned blob Private Endpoint address, discovered from the deployed NIC and verified against DNS.",
+      "Azure-provided DNS at 168.63.129.16, UDP/TCP 53.",
+      "Azure platform WireServer 168.63.129.16 TCP 80/32526 for provisioning/agent readiness; not an allocated customer public IP or general internet route.",
+      "IMDS 169.254.169.254 TCP 80 for VM identity/metadata and the storage-audience token; never log tokens."
+    ],
+    "inbound": "Deny all customer inbound, including SSH/RDP; no public IP, load balancer or exposed listener.",
+    "outbound": "Private subnet plus explicit NSG denies for other traffic; preserve required Azure platform traffic. No package downloads, extensions, apt update or remote script URLs."
+  },
+  "resources": [
+    {"proposedRef": "sandbox-rg", "armType": "Microsoft.Resources/resourceGroups", "quantity": 1, "resourceId": null, "reason": "New, dedicated, empty, disposable scope; not created."},
+    {"proposedRef": "claims-store", "armType": "Microsoft.Storage/storageAccounts", "quantity": 1, "resourceId": null, "sku": "Standard_LRS", "kind": "StorageV2", "reason": "Empty hot, non-HNS blob account; LRS is cheapest sufficient synthetic verifier storage, not a recovery design."},
+    {"proposedRef": "empty-container", "armType": "Microsoft.Storage/storageAccounts/blobServices/containers", "quantity": 1, "resourceId": null, "parentRef": "claims-store", "reason": "Created empty by approved management-plane deployment, with publicAccess None; allows meaningful authenticated empty List Blobs, no sample blob writes."},
+    {"proposedRef": "verifier-vnet", "armType": "Microsoft.Network/virtualNetworks", "quantity": 1, "resourceId": null, "reason": "One isolated regional VNet with the two private subnets described above."},
+    {"proposedRef": "verifier-nsg", "armType": "Microsoft.Network/networkSecurityGroups", "quantity": 1, "resourceId": null, "reason": "Attach to the verifier NIC; deny inbound and constrain outbound. PE subnet has no delegated service and privateEndpointNetworkPolicies Disabled for this simple pairing."},
+    {"proposedRef": "blob-pe", "armType": "Microsoft.Network/privateEndpoints", "quantity": 1, "resourceId": null, "groupIds": ["blob"], "targetRef": "claims-store", "reason": "PE in the private-endpoint subnet, same proposed region/VNet; includes its platform-created NIC. Approved binding must be observed, not inferred."},
+    {"proposedRef": "blob-dns", "armType": "Microsoft.Network/privateDnsZones", "quantity": 1, "resourceId": null, "proposedName": "privatelink.blob.core.windows.net", "reason": "Dedicated zone with VNet link, registration disabled, and PE privateDnsZoneGroup/A-record association. No shared DNS zone changes."},
+    {"proposedRef": "blob-dns-link", "armType": "Microsoft.Network/privateDnsZones/virtualNetworkLinks", "quantity": 1, "resourceId": null, "parentRef": "blob-dns", "targetRef": "verifier-vnet", "reason": "Resolve the normal storage hostname privately inside this VNet."},
+    {"proposedRef": "blob-dns-zone-group", "armType": "Microsoft.Network/privateEndpoints/privateDnsZoneGroups", "quantity": 1, "resourceId": null, "parentRef": "blob-pe", "targetRef": "blob-dns", "reason": "Manage the PE's blob A record automatically; observe actual record and private address after creation."},
+    {"proposedRef": "verifier-nic", "armType": "Microsoft.Network/networkInterfaces", "quantity": 1, "resourceId": null, "reason": "Private address in verifier subnet, no publicIpAddress association; accelerated networking not required."},
+    {"proposedRef": "verifier-vm", "armType": "Microsoft.Compute/virtualMachines", "quantity": 1, "resourceId": null, "sku": "Standard_B2ts_v2", "reason": "Smallest practical current-generation Bsv2 x64 option: 2 burstable vCPUs, 1 GiB RAM; fixed stdlib-only probe, no server or agent install. SKU/quota/capacity remain unconfirmed."},
+    {"proposedRef": "verifier-os-disk", "armType": "Microsoft.Compute/disks", "quantity": 1, "resourceId": null, "sku": "StandardSSD_LRS", "proposedSizeGiB": 32, "priceTier": "E4 LRS", "reason": "Single nonshared managed OS disk; confirm image minimum size before finalizing. No data disk."},
+    {"proposedRef": "verifier-reader-role", "armType": "Microsoft.Authorization/roleAssignments", "quantity": 1, "resourceId": null, "roleName": "Storage Blob Data Reader", "scopeRef": "empty-container", "principalRef": "verifier-vm-system-assigned-identity", "reason": "Read-only data-plane access to this one empty container; principal/assignment IDs are unknown until real creation."}
+  ],
+  "storageControls": {
+    "publicNetworkAccess": "Disabled",
+    "allowBlobPublicAccess": false,
+    "allowSharedKeyAccess": false,
+    "supportsHttpsTrafficOnly": true,
+    "minimumTlsVersion": "TLS1_2",
+    "networkAcls": {"defaultAction": "Deny", "bypass": "None", "ipRules": [], "virtualNetworkRules": []},
+    "containerPublicAccess": "None",
+    "isHnsEnabled": false,
+    "realDataAllowed": false,
+    "blobWritesAllowed": false
+  },
+  "verifier": {
+    "image": "Proposed standard Canonical Ubuntu 24.04 LTS Gen2 x64, cloud-init ready; not Ubuntu Pro",
+    "imageUrn": null,
+    "imageVersion": null,
+    "adminUsername": null,
+    "sshPublicKey": null,
+    "passwordAuthentication": false,
+    "identity": "SystemAssigned",
+    "bootDiagnostics": "Managed; no customer diagnostics storage account, no claims data in serial logs",
+    "scriptStatus": "not-generated-not-approved-not-run",
+    "execution": "Only separately reviewed fixed cloud-init custom data: write a stdlib Python verifier and bounded systemd timer. Package update/upgrade/install disabled; image must contain Python3, CA trust and cloud-init.",
+    "cadenceSeconds": 30,
+    "maximumLifetimeSeconds": 7200,
+    "maximumRequestTimeoutSeconds": 10,
+    "initialIdentityPropagationAllowanceMinutes": 30,
+    "output": "Small nonsecret JSON records to /dev/ttyS0 and local guest log; no token, SAS, key, full HTTP headers or real data.",
+    "retrieval": "Separately authorized operator uses az vm boot-diagnostics get-boot-log with explicit subscription/group/actual VM name. Internally minted diagnostic SAS must not be logged; no get-boot-log-uris export.",
+    "freshnessRule": "Match actual VM IMDS identity, approved script hash, execution nonce and observation timestamp. Poll serial snapshots; stale/missing/truncated records or script errors mean unknown, never verified.",
+    "billingWarning": "The timer stops probes, not Azure billing. Explicit operator deallocation and deletion are still required."
+  },
+  "requiredProofAfterApproval": [
+    {"check": "deployment-baseline", "requiredEvidence": "Successful real deployment/operation IDs, actual scoped resource IDs, creation times, deployed template/script hashes, and no pre-existing or unowned resources."},
+    {"check": "storage-properties", "requiredEvidence": "Fresh ARM observation of all storageControls, with timestamp, resource ID and ETag where available."},
+    {"check": "private-endpoint-binding", "requiredEvidence": "PE provisioning Succeeded, connection Approved, exact new storage resource ID, blob group ID, VNet/subnet ID and PE NIC private IP."},
+    {"check": "private-dns", "requiredEvidence": "Linked dedicated private DNS zone and A record; the guest resolves the normal <actual-account>.blob.core.windows.net hostname to the actual PE NIC private IP. No hosts-file override."},
+    {"check": "private-network-path", "requiredEvidence": "Guest TCP/TLS connection to port 443, peer socket address matching that PE private IP, validated certificate/hostname and TLS version; guest source VM/NIC identity and time."},
+    {"check": "authenticated-data-plane", "requiredEvidence": "IMDS token for https://storage.azure.com/ kept in memory; HTTPS List Blobs on the exact empty container returns HTTP 200 and an empty enumeration. Record x-ms-request-id, client request ID, time, method, target, body hash and empty count, but no credentials."},
+    {"check": "fresh-post-rollback", "requiredEvidence": "New property/binding/DNS/socket/data-plane observations after rollback timestamp; do not reuse the pre-seed proof."}
+  ],
+  "permissions": {
+    "status": "not-verified-not-granted",
+    "operatorOnlyMutations": true,
+    "requiredOperatorPermissions": [
+      "Create the single named RG in the selected subscription, or have its authorized owner create it; no blanket Owner assignment is requested.",
+      "Read/write/delete only the listed Network, Compute, Storage and deployment resources in this dedicated RG; approve only this account's blob private endpoint connection.",
+      "An authorized RBAC administrator must assign/read/delete Storage Blob Data Reader for the newly created VM principal at the exact container scope. Resource Contributor alone cannot assign this role.",
+      "Read scoped deployment operations and runtime metadata; Microsoft.Compute/virtualMachines/retrieveBootDiagnosticsData/action on the verifier VM to retrieve managed serial diagnostics.",
+      "Separately approved seed/rollback requires storage account write on the exact new account; never listKeys, assign broad data roles, register providers or modify another resource group.",
+      "Manifest-scoped cleanup requires delete on these owned resources and removal of only the exact role assignment created for this test."
+    ],
+    "verifierPermissions": ["Storage Blob Data Reader at the single empty container; no ARM write, no blob write/delete, no subscription roles"],
+    "providerRegistration": "Microsoft.Resources, Microsoft.Compute, Microsoft.Network and Microsoft.Storage state must be checked before deployment; any registration requires separate explicit permission."
+  },
+  "seedAndRollback": {
+    "approvalRequired": true,
+    "approved": false,
+    "operatorOnly": true,
+    "scopeRef": "claims-store",
+    "rollbackProperty": "publicNetworkAccess",
+    "rollbackValue": "Disabled",
+    "scope": "Only the actual claims-store resource deployed by this approved sandbox run; resource ID not yet assigned.",
+    "preconditions": [
+      "Independent explicit post-baseline seed consent; named operator present with a ready rollback path.",
+      "Complete fresh baseline proof above, authenticated empty listing, no real data, no IP/VNet allow rules, anonymous/shared-key access disabled.",
+      "Save exact resource ID, baseline protected fields/ETag, desired-state hash, ownership manifest and timestamps; re-read before each write and stop on unrelated changes."
+    ],
+    "change": {"property": "publicNetworkAccess", "from": "Disabled", "to": "Enabled"},
+    "unchangedGuards": ["allowBlobPublicAccess=false", "allowSharedKeyAccess=false", "networkAcls.defaultAction=Deny", "networkAcls.bypass=None", "empty ipRules and virtualNetworkRules", "TLS/HTTPS controls", "existing approved private endpoint", "empty container"],
+    "meaning": "Intentional configuration mismatch for CP-01. Deny-all network ACLs remain: this is not evidence that anonymous or internet data access succeeded.",
+    "maximumRequestedDurationSeconds": 120,
+    "observation": "Immediately perform scoped ARM polling; record actual mismatch and measured detection latency. No artificial passing/failing fixture.",
+    "rollback": "In a guarded operator finally path, restore only publicNetworkAccess=Disabled on that same actual account, leaving every other field intact. Re-read protected fields first; if a concurrent edit makes scope/state ambiguous, stop and escalate to the named operator rather than overwrite it.",
+    "rollbackOnFailure": "Named operator restores immediately on timeout, failed observation or lost automation. The 120-second target is not an unattended rollback guarantee. No seed if this fallback is unavailable.",
+    "postRollback": "Repeat all fresh storage/binding/DNS/private-socket/authenticated empty-list checks; unknown if any proof is missing."
+  },
+  "cleanup": {
+    "approvalRequired": true,
+    "approved": false,
+    "operatorOnly": true,
+    "scopeRule": "actual-owned-manifest-only",
+    "maximumRequestedLifetimeHours": 2,
+    "plan": [
+      "Before deletion, restore the desired property, export nonsecret proof/hash receipts, and stop the guest timer; deallocate the VM promptly if cleanup is delayed.",
+      "Remove only the recorded container-scoped role assignment, then VM and its OS disk/NIC, PE and managed NIC/zone group, dedicated DNS link/zone, empty container/account, NSG and VNet.",
+      "Delete the named RG only if a fresh inventory equals the run's actual ownership manifest, including platform-created children, and no unowned resource is present; otherwise delete only confirmed owned items and escalate.",
+      "Confirm deletion of all manifest IDs and absence of orphan disks, NICs, PE, DNS zone and role assignment. Verify residual billing later; deallocation alone leaves disk/PE/DNS charges."
+    ],
+    "unrelatedResourceDeletionAllowed": false,
+    "automaticCleanupClaimed": false
+  },
+  "pricing": {
+    "status": "current-public-retail-estimate-with-exclusions",
+    "currency": "USD",
+    "region": "eastus2",
+    "apiVersion": "2023-01-01-preview",
+    "retrievedWindowUtc": ["2026-09-12T22:33:20Z", "2026-09-12T22:35:05Z"],
+    "selectedMeters": [
+      {"item": "verifier compute", "meterId": "29c748c5-6b09-54c0-96fb-6804a247619e", "meterName": "B2ts v2", "productName": "Virtual Machines Bsv2 Series", "armRegionName": "eastus2", "unitPrice": 0.0104, "unit": "1 Hour", "evidenceFile": "public-20260912T223320163939Z\\prices-vm.json"},
+      {"item": "one E4 LRS OS disk", "meterId": "8c48b19a-c815-401e-b675-a94b6053b296", "meterName": "E4 LRS Disk", "productName": "Standard SSD Managed Disks", "armRegionName": "eastus2", "unitPrice": 2.4, "unit": "1/Month", "evidenceFile": "public-20260912T223320163939Z\\prices-disk.json"},
+      {"item": "one blob private endpoint", "meterId": "e6ab7238-e433-4fe0-a2b2-2b2564df2cdb", "meterName": "Standard Private Endpoint", "productName": "Virtual Network Private Link", "armRegionName": "Global", "unitPrice": 0.01, "unit": "1 Hour", "evidenceFile": "public-20260912T223503816628Z\\prices-private-endpoint-global.json"},
+      {"item": "one private DNS zone", "meterId": "0b608a26-f611-4232-8192-ce81b6b57194", "meterName": "Private Zone", "productName": "Azure DNS", "armRegionName": "", "unitPrice": 0.5, "unit": "1", "billingInterpretation": "One zone/month, first 25 hosted zones; confirmed by Microsoft DNS pricing page.", "evidenceFile": "public-20260912T223320163939Z\\prices-dns.json"},
+      {"item": "private DNS queries", "meterId": "46cff9cb-4b15-4af0-bf41-25143827fef8", "meterName": "Private Queries", "productName": "Azure DNS", "armRegionName": "", "unitPrice": 0.4, "unit": "1M", "evidenceFile": "public-20260912T223320163939Z\\prices-dns.json"},
+      {"item": "empty hot LRS blob capacity", "meterId": "10b97fb2-5db4-4ad2-a4e0-69b858d6b52d", "meterName": "Hot LRS Data Stored", "productName": "Blob Storage", "armRegionName": "eastus2", "unitPrice": 0.0184, "unit": "1 GB/Month", "evidenceFile": "public-20260912T223320163939Z\\prices-blob.json"},
+      {"item": "empty list operations", "meterId": "d2e20d26-9b33-4492-aefb-c810e51d48a7", "meterName": "LRS List and Create Container Operations", "productName": "Blob Storage", "armRegionName": "eastus2", "unitPrice": 0.05, "unit": "10K", "evidenceFile": "public-20260912T223320163939Z\\prices-blob.json"}
+    ],
+    "twoHourComputeAndEndpointSubtotalUsd": 0.0408,
+    "conservativeFixedAllowanceUsd": 2.9408,
+    "conservativeFormula": "2 * (0.0104 + 0.01) + 2.40 + 0.50; reserves full monthly disk and zone amounts instead of assuming short-run proration. Not the predicted invoice.",
+    "example480ListsUsd": 0.0024,
+    "example480DnsQueriesUsd": 0.000192,
+    "leftRunning730HourFixedSubtotalUsd": 17.792,
+    "operatorMonitoringThresholdUsd": 5,
+    "budgetApproved": false,
+    "exclusions": [
+      "Tax, currency conversion, negotiated subscription discounts, free allowances, support and any mandated paid security/monitoring policy.",
+      "Standard SSD disk transaction charges and Private Link data-processing charges are not priced here; total invoice is not guaranteed.",
+      "Actual DNS query count, retry count, storage operations and cleanup delays; the example 480 probes is not a usage measurement.",
+      "PE partial hours are billed as full hours; allow an extra hour if creation/deletion crosses the requested window.",
+      "No NAT gateway, public IP, Bastion, VPN, private resolver, paid OS license or Log Analytics workspace is proposed.",
+      "The USD 5 monitoring threshold is a proposed operator stop/escalation threshold, not an enforced Azure budget cap."
+    ],
+    "provenanceNotes": [
+      "Only Consumption, primary-region meter entries were selected; no Windows, Cloud Services, Spot or Low Priority VM meters.",
+      "Regional Azure Private Link searches returned zero entries, not zero cost. The actual hourly meter was found under Virtual Network Private Link, Global.",
+      "Retail availability is not subscription SKU eligibility, quota, capacity or authorization.",
+      "Managed boot diagnostic blobs are documented as currently not billed; do not store secrets or customer data in them."
+    ]
+  },
+  "evidence": {
+    "root": ".intent-to-impact\\spikes\\SPK-03-01",
+    "publicManifests": [
+      "public-20260912T223320163939Z\\public-evidence.json",
+      "public-20260912T223418389076Z\\public-evidence.json",
+      "public-20260912T223503816628Z\\public-evidence.json"
+    ],
+    "metadataGapReceipt": "metadata-gaps.json",
+    "requiredDocumentIds": ["storage-private-endpoints", "private-endpoint-dns", "cloud-init", "boot-diagnostics", "boot-log-cli", "platform-address", "managed-identity-token", "list-blobs", "blob-data-reader", "bsv2-sizes", "default-outbound", "run-command-restrictions", "private-link-pricing", "dns-pricing", "disk-pricing"],
+    "referenceLimits": "Public docs support the individual resource pairing and mechanisms, not this unexecuted end-to-end custom verifier. Each manifest includes actual URL, retrieval time, status and raw-body hash."
+  },
+  "unknownsAndBlockers": [
+    "No deployment/role assignment/guest execution/cleanup or seed approval; target RG does not exist according to supplied live result.",
+    "East US 2 is proposed, not confirmed by the user. Final resource names, CIDRs, administrator public key and ownership tags require approval.",
+    "Selected-subscription B2ts_v2 restrictions, two-vCPU regional/family quota, provider registration and policy were not successfully retrieved: Compute MCP returned command discovery instead of metadata.",
+    "Exact supported Ubuntu image URN/version, Gen2/security pairing, Python/CA packages and 32-GiB disk fit require read-only resolution before IaC approval; do not assume a latest image has been pinned.",
+    "Managed identity role propagation, private DNS binding and actual storage authorization can only be established after separately approved creation.",
+    "No-egress cloud-init execution and serial-log freshness/visibility remain untested end-to-end. Missing logs must block proof, not justify silent public egress or SSH.",
+    "No existing VPN, laptop VNet access, passing CP-01 status or full architecture compliance is assumed.",
+    "Current billing quantities and subscription discounts are unknown; private-link traffic and disk transactions are excluded."
+  ],
+  "alternatives": [
+    {"option": "Standard_B2ls_v2 VM", "tradeoff": "4 GiB RAM versus 1 GiB if image/probe cannot operate reliably on B2ts_v2; current Linux retail USD 0.0416/hour, same public price snapshot. Requires new size/budget/quota approval; no automatic upgrade."},
+    {"option": "No-public-VM-IP with NAT and Run Command", "tradeoff": "Supported Run Command result path needs explicit outbound Azure HTTPS. A NAT gateway plus public egress IP adds resources/cost and changes this zero-public-IP proposal; separate explicit approval required, not the default."},
+    {"option": "Existing operator-authorized private runner or VPN", "tradeoff": "Avoids a disposable VM but no such connectivity or authorization is known; remain blocked until supplied."}
+  ],
+  "approval": {
+    "approved": false,
+    "requestedNow": "Approve this proposed East US 2 design for preparing and reviewing exact IaC and the fixed verifier only. Do not deploy yet.",
+    "beforeProvisioning": "Require explicit operator approval of final names/CIDRs/image/script hashes, the listed create/RBAC/guest-execution operations in the selected subscription/new RG, the USD 5 monitored threshold, two-hour lifetime and manifest-scoped cleanup. Resolve quota/provider/policy and image gaps first.",
+    "beforeSeed": "Obtain separate explicit post-baseline consent for publicNetworkAccess Disabled -> Enabled -> Disabled on the one actual empty account, retaining all deny/anonymous/shared-key guards, for at most the requested 120 seconds.",
+    "safeNextAction": "Present approval-request.md and these blockers; stop before generating deployment IaC, provisioning, granting roles or seeding."
+  }
+}

@@ -1,0 +1,306 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://intent-to-impact.invalid/contracts/1.0.0/risk.schema.json",
+  "title": "RiskContract",
+  "oneOf": [
+    { "$ref": "#/definitions/CustomerPromiseContract" },
+    { "$ref": "#/definitions/SandboxOperationReceipt" },
+    { "$ref": "#/definitions/RuntimeBinding" },
+    { "$ref": "#/definitions/RuntimeSnapshot" },
+    { "$ref": "#/definitions/DriftFinding" },
+    { "$ref": "#/definitions/PromiseEvaluation" },
+    { "$ref": "#/definitions/HumanAttentionEvent" }
+  ],
+  "definitions": {
+    "RiskEnvelope": {
+      "type": "object",
+      "allOf": [{ "$ref": "core.schema.json#/definitions/CommonEnvelope" }],
+      "properties": {
+        "scenario": { "$ref": "scenario.schema.json#/definitions/ScenarioIdentity" },
+        "runMode": { "$ref": "core.schema.json#/definitions/RunMode" },
+        "purpose": { "$ref": "core.schema.json#/definitions/RunPurpose" }
+      },
+      "required": ["scenario", "runMode", "purpose"]
+    },
+    "LinkedContractId": {
+      "type": "string",
+      "enum": ["D03", "D10", "D11", "D12", "D13", "D14", "D15", "D16", "D17", "E01", "E02", "E04", "E05", "P01", "P05", "P06"]
+    },
+    "ArtifactLink": {
+      "type": "object",
+      "description": "Typed, checksum-bound, scenario-bound reference. Resolve against trusted artifacts; an ID/string alone never creates a supported graph link.",
+      "properties": {
+        "contractId": { "$ref": "#/definitions/LinkedContractId" },
+        "artifact": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "scenario": { "$ref": "scenario.schema.json#/definitions/ScenarioIdentity" }
+      },
+      "required": ["contractId", "artifact", "scenario"],
+      "additionalProperties": false
+    },
+    "PromiseContractReference": { "allOf": [{ "$ref": "#/definitions/ArtifactLink" }], "properties": { "contractId": { "const": "D03", "type": "string" } } },
+    "GenerationManifestReference": { "allOf": [{ "$ref": "#/definitions/ArtifactLink" }], "properties": { "contractId": { "const": "D10", "type": "string" } } },
+    "ChangeSetReference": { "allOf": [{ "$ref": "#/definitions/ArtifactLink" }], "properties": { "contractId": { "const": "D11", "type": "string" } } },
+    "ApplicationReference": { "allOf": [{ "$ref": "#/definitions/ArtifactLink" }], "properties": { "contractId": { "const": "D12", "type": "string" } } },
+    "OperationReference": { "allOf": [{ "$ref": "#/definitions/ArtifactLink" }], "properties": { "contractId": { "const": "D13", "type": "string" } } },
+    "BindingReference": { "allOf": [{ "$ref": "#/definitions/ArtifactLink" }], "properties": { "contractId": { "const": "D14", "type": "string" } } },
+    "SnapshotReference": { "allOf": [{ "$ref": "#/definitions/ArtifactLink" }], "properties": { "contractId": { "const": "D15", "type": "string" } } },
+    "FindingReference": { "allOf": [{ "$ref": "#/definitions/ArtifactLink" }], "properties": { "contractId": { "const": "D16", "type": "string" } } },
+    "EvaluationReference": { "allOf": [{ "$ref": "#/definitions/ArtifactLink" }], "properties": { "contractId": { "const": "D17", "type": "string" } } },
+    "EvidenceReferenceLink": { "allOf": [{ "$ref": "#/definitions/ArtifactLink" }], "properties": { "contractId": { "const": "E01", "type": "string" } } },
+    "EventReference": { "allOf": [{ "$ref": "#/definitions/ArtifactLink" }], "properties": { "contractId": { "const": "E04", "type": "string" } } },
+    "EvidenceLink": {
+      "type": "object",
+      "properties": {
+        "reference": { "$ref": "#/definitions/EvidenceReferenceLink" },
+        "origin": { "$ref": "core.schema.json#/definitions/EvidenceOrigin" }
+      },
+      "required": ["reference", "origin"],
+      "additionalProperties": false
+    },
+    "EvidenceLinks": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/definitions/EvidenceLink" } },
+    "EvidenceWindow": {
+      "type": "object",
+      "properties": {
+        "from": { "$ref": "core.schema.json#/definitions/Timestamp" },
+        "to": { "$ref": "core.schema.json#/definitions/Timestamp" }
+      },
+      "required": ["from", "to"],
+      "additionalProperties": false
+    },
+    "StorageResourceId": {
+      "type": "string",
+      "description": "Storage ARM ID shape only; not proof the resource exists or is authorized.",
+      "pattern": "^/subscriptions/[0-9a-fA-F-]{36}/resourceGroups/[^/]+/providers/Microsoft\\.Storage/storageAccounts/[a-z0-9]{3,24}$"
+    },
+    "NullableOperationReference": { "anyOf": [{ "$ref": "#/definitions/OperationReference" }, { "type": "null" }] },
+    "NullableBindingReference": { "anyOf": [{ "$ref": "#/definitions/BindingReference" }, { "type": "null" }] },
+    "NullableSnapshotReference": { "anyOf": [{ "$ref": "#/definitions/SnapshotReference" }, { "type": "null" }] },
+    "NullableEvaluationReference": { "anyOf": [{ "$ref": "#/definitions/EvaluationReference" }, { "type": "null" }] },
+    "RuntimeStatus": { "type": "string", "enum": ["verified", "breached", "unknown", "stale", "not-applicable"] },
+    "EvaluationStatus": { "type": "string", "enum": ["design-supported", "implementation-validated", "verified", "contradicted", "breached", "unknown", "stale", "not-applicable"] },
+    "CustomerPromiseContract": {
+      "title": "CustomerPromiseContract",
+      "x-contract-id": "D03",
+      "type": "object",
+      "allOf": [{ "$ref": "#/definitions/RiskEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "customer-promise-contract" },
+        "contractId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "status": { "type": "string", "enum": ["draft", "partially-confirmed", "confirmed"] },
+        "requirementChecksum": { "$ref": "core.schema.json#/definitions/Checksum" },
+        "confirmationDecisionId": { "anyOf": [{ "$ref": "core.schema.json#/definitions/Identifier" }, { "type": "null" }] },
+        "confirmedPromiseIds": { "type": "array", "uniqueItems": true, "items": { "$ref": "scenario.schema.json#/definitions/PromiseId" } },
+        "promises": { "$ref": "scenario.schema.json#/definitions/EightPromises" }
+      },
+      "required": ["artifactType", "contractId", "status", "requirementChecksum", "confirmationDecisionId", "confirmedPromiseIds", "promises"],
+      "unevaluatedProperties": false
+    },
+    "SandboxOperationReceipt": {
+      "title": "SandboxOperationReceipt",
+      "x-contract-id": "D13",
+      "type": "object",
+      "allOf": [{ "$ref": "#/definitions/RiskEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "sandbox-operation-receipt" },
+        "operationId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "operation": { "type": "string", "enum": ["deploy-baseline", "seed", "restore"] },
+        "result": { "type": "string", "enum": ["acknowledged", "failed", "blocked", "unknown"] },
+        "generationManifest": { "$ref": "#/definitions/GenerationManifestReference" },
+        "applicationReceipt": { "$ref": "#/definitions/ApplicationReference" },
+        "desiredStateChecksum": { "$ref": "core.schema.json#/definitions/Checksum" },
+        "resourceIds": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/definitions/StorageResourceId" } },
+        "providerOperationId": { "type": ["string", "null"], "minLength": 1 },
+        "operatorConsentId": { "anyOf": [{ "$ref": "core.schema.json#/definitions/Identifier" }, { "type": "null" }] },
+        "actor": { "$ref": "core.schema.json#/definitions/ExecutionActor" },
+        "humanInitiator": { "$ref": "core.schema.json#/definitions/DemoIdentity" },
+        "startedAt": { "$ref": "core.schema.json#/definitions/Timestamp" },
+        "completedAt": { "anyOf": [{ "$ref": "core.schema.json#/definitions/Timestamp" }, { "type": "null" }] },
+        "evidence": { "$ref": "#/definitions/EvidenceLinks" },
+        "correlationId": { "$ref": "core.schema.json#/definitions/Identifier" }
+      },
+      "required": ["artifactType", "operationId", "operation", "result", "generationManifest", "applicationReceipt", "desiredStateChecksum", "resourceIds", "providerOperationId", "operatorConsentId", "actor", "startedAt", "completedAt", "evidence", "correlationId"],
+      "unevaluatedProperties": false
+    },
+    "RuntimeBinding": {
+      "title": "RuntimeBinding",
+      "x-contract-id": "D14",
+      "type": "object",
+      "allOf": [{ "$ref": "#/definitions/RiskEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "runtime-binding" },
+        "bindingId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "componentId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "resourceId": { "$ref": "#/definitions/StorageResourceId" },
+        "bindingState": { "type": "string", "enum": ["bound", "missing", "stale", "unknown"] },
+        "operationReceipt": { "$ref": "#/definitions/NullableOperationReference" },
+        "generationManifest": { "anyOf": [{ "$ref": "#/definitions/GenerationManifestReference" }, { "type": "null" }] },
+        "applicationReceipt": { "anyOf": [{ "$ref": "#/definitions/ApplicationReference" }, { "type": "null" }] },
+        "desiredStateChecksum": { "anyOf": [{ "$ref": "core.schema.json#/definitions/Checksum" }, { "type": "null" }] },
+        "boundAt": { "anyOf": [{ "$ref": "core.schema.json#/definitions/Timestamp" }, { "type": "null" }] },
+        "gaps": { "type": "array", "items": { "$ref": "core.schema.json#/definitions/ActionId" } }
+      },
+      "required": ["artifactType", "bindingId", "componentId", "resourceId", "bindingState", "operationReceipt", "generationManifest", "applicationReceipt", "desiredStateChecksum", "boundAt", "gaps"],
+      "if": { "properties": { "bindingState": { "const": "bound" } } },
+      "then": {
+        "properties": {
+          "operationReceipt": { "$ref": "#/definitions/OperationReference" },
+          "generationManifest": { "$ref": "#/definitions/GenerationManifestReference" },
+          "applicationReceipt": { "$ref": "#/definitions/ApplicationReference" },
+          "desiredStateChecksum": { "$ref": "core.schema.json#/definitions/Checksum" },
+          "boundAt": { "$ref": "core.schema.json#/definitions/Timestamp" }
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "ObservedStorageProperties": {
+      "type": "object",
+      "description": "Missing/null properties remain missing data. This schema never derives a passing predicate.",
+      "properties": {
+        "publicNetworkAccess": { "type": ["string", "null"], "enum": ["Enabled", "Disabled", null] },
+        "supportsHttpsTrafficOnly": { "type": ["boolean", "null"] },
+        "allowBlobPublicAccess": { "type": ["boolean", "null"] },
+        "minimumTlsVersion": { "type": ["string", "null"], "enum": ["TLS1_0", "TLS1_1", "TLS1_2", null] }
+      },
+      "additionalProperties": false
+    },
+    "StorageObservation": {
+      "type": "object",
+      "properties": {
+        "resourceId": { "$ref": "#/definitions/StorageResourceId" },
+        "componentId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "resourceType": { "type": "string", "const": "Microsoft.Storage/storageAccounts" },
+        "properties": { "$ref": "#/definitions/ObservedStorageProperties" },
+        "evidence": { "$ref": "#/definitions/EvidenceLinks", "minItems": 1 }
+      },
+      "required": ["resourceId", "componentId", "resourceType", "properties", "evidence"],
+      "additionalProperties": false
+    },
+    "RuntimeSnapshot": {
+      "title": "RuntimeSnapshot",
+      "x-contract-id": "D15",
+      "type": "object",
+      "allOf": [{ "$ref": "#/definitions/RiskEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "runtime-snapshot" },
+        "snapshotId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "binding": { "$ref": "#/definitions/NullableBindingReference" },
+        "collectedAt": { "$ref": "core.schema.json#/definitions/Timestamp" },
+        "evidenceWindow": { "$ref": "#/definitions/EvidenceWindow" },
+        "completeness": { "type": "string", "enum": ["complete", "partial", "missing", "failed"] },
+        "observations": { "type": "array", "items": { "$ref": "#/definitions/StorageObservation" } },
+        "evidence": { "$ref": "#/definitions/EvidenceLinks" },
+        "missingEvidenceKinds": { "type": "array", "uniqueItems": true, "items": { "$ref": "scenario.schema.json#/definitions/EvidenceKind" } },
+        "collectionErrors": { "type": "array", "items": { "$ref": "core.schema.json#/definitions/ActionId" } }
+      },
+      "required": ["artifactType", "snapshotId", "binding", "collectedAt", "evidenceWindow", "completeness", "observations", "evidence", "missingEvidenceKinds", "collectionErrors"],
+      "unevaluatedProperties": false
+    },
+    "DriftFinding": {
+      "title": "DriftFinding",
+      "x-contract-id": "D16",
+      "type": "object",
+      "allOf": [{ "$ref": "#/definitions/RiskEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "drift-finding" },
+        "findingId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "promiseId": { "$ref": "scenario.schema.json#/definitions/PromiseId" },
+        "ruleId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "componentId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "resourceId": { "$ref": "#/definitions/StorageResourceId" },
+        "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+        "status": { "type": "string", "enum": ["open", "correction-prepared", "restoration-pending", "resolved", "stale"] },
+        "reasonCode": { "$ref": "core.schema.json#/definitions/ActionId" },
+        "customerImpact": { "type": "string", "minLength": 1, "maxLength": 1200 },
+        "baseline": { "$ref": "#/definitions/NullableBindingReference" },
+        "runtimeSnapshot": { "$ref": "#/definitions/NullableSnapshotReference" },
+        "evaluation": { "$ref": "#/definitions/NullableEvaluationReference" },
+        "proposedCorrection": { "anyOf": [{ "$ref": "#/definitions/ChangeSetReference" }, { "type": "null" }] },
+        "restorationOperation": { "$ref": "#/definitions/NullableOperationReference" },
+        "firstObservedAt": { "$ref": "core.schema.json#/definitions/Timestamp" },
+        "lastObservedAt": { "$ref": "core.schema.json#/definitions/Timestamp" },
+        "evidence": { "$ref": "#/definitions/EvidenceLinks" },
+        "correlationId": { "$ref": "core.schema.json#/definitions/Identifier" }
+      },
+      "required": ["artifactType", "findingId", "promiseId", "ruleId", "componentId", "resourceId", "severity", "status", "reasonCode", "customerImpact", "baseline", "runtimeSnapshot", "evaluation", "proposedCorrection", "restorationOperation", "firstObservedAt", "lastObservedAt", "evidence", "correlationId"],
+      "unevaluatedProperties": false
+    },
+    "PredicateResult": {
+      "type": "object",
+      "properties": {
+        "predicateId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "result": { "type": "string", "enum": ["pass", "fail", "unknown"] },
+        "reasonCode": { "$ref": "core.schema.json#/definitions/ActionId" },
+        "evidence": { "$ref": "#/definitions/EvidenceLinks" }
+      },
+      "required": ["predicateId", "result", "reasonCode", "evidence"],
+      "additionalProperties": false
+    },
+    "PromiseEvaluation": {
+      "title": "PromiseEvaluation",
+      "x-contract-id": "D17",
+      "type": "object",
+      "allOf": [
+        { "$ref": "#/definitions/RiskEnvelope" },
+        { "if": { "properties": { "phase": { "const": "runtime" } } }, "then": { "properties": { "status": { "$ref": "#/definitions/RuntimeStatus" } } } },
+        { "if": { "properties": { "phase": { "const": "design" } } }, "then": { "properties": { "status": { "enum": ["design-supported", "contradicted", "unknown", "stale", "not-applicable"] } } } },
+        { "if": { "properties": { "phase": { "const": "delivery" } } }, "then": { "properties": { "status": { "enum": ["implementation-validated", "contradicted", "unknown", "stale", "not-applicable"] } } } }
+      ],
+      "properties": {
+        "artifactType": { "type": "string", "const": "promise-evaluation" },
+        "evaluationId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "promiseId": { "$ref": "scenario.schema.json#/definitions/PromiseId" },
+        "phase": { "type": "string", "enum": ["design", "delivery", "runtime"] },
+        "status": { "$ref": "#/definitions/EvaluationStatus" },
+        "reasonCode": { "$ref": "core.schema.json#/definitions/ActionId" },
+        "evaluatedAt": { "$ref": "core.schema.json#/definitions/Timestamp" },
+        "evidenceWindow": { "$ref": "#/definitions/EvidenceWindow" },
+        "promiseContract": { "$ref": "#/definitions/PromiseContractReference" },
+        "binding": { "$ref": "#/definitions/NullableBindingReference" },
+        "runtimeSnapshot": { "$ref": "#/definitions/NullableSnapshotReference" },
+        "verifier": {
+          "type": "object",
+          "properties": {
+            "verifierId": { "$ref": "core.schema.json#/definitions/Identifier" },
+            "version": { "$ref": "core.schema.json#/definitions/Version" },
+            "checksum": { "$ref": "core.schema.json#/definitions/Checksum" }
+          },
+          "required": ["verifierId", "version", "checksum"],
+          "additionalProperties": false
+        },
+        "predicateResults": { "type": "array", "items": { "$ref": "#/definitions/PredicateResult" } },
+        "evidence": { "$ref": "#/definitions/EvidenceLinks" },
+        "findingId": { "anyOf": [{ "$ref": "core.schema.json#/definitions/Identifier" }, { "type": "null" }] },
+        "notApplicableDecision": { "anyOf": [{ "$ref": "core.schema.json#/definitions/ArtifactReference" }, { "type": "null" }] }
+      },
+      "required": ["artifactType", "evaluationId", "promiseId", "phase", "status", "reasonCode", "evaluatedAt", "evidenceWindow", "promiseContract", "binding", "runtimeSnapshot", "verifier", "predicateResults", "evidence", "findingId", "notApplicableDecision"],
+      "if": { "properties": { "status": { "const": "not-applicable" } } },
+      "then": { "properties": { "notApplicableDecision": { "$ref": "core.schema.json#/definitions/ArtifactReference" } } },
+      "unevaluatedProperties": false
+    },
+    "HumanAttentionEvent": {
+      "title": "HumanAttentionEvent",
+      "x-contract-id": "E05",
+      "type": "object",
+      "description": "Actual human attention only. Server capability classification distinguishes product workflow from operator effort; automated execution belongs to E04, not an invented human approval.",
+      "allOf": [{ "$ref": "#/definitions/RiskEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "human-attention-event" },
+        "eventId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "attentionId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "stepId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "questionId": { "anyOf": [{ "$ref": "core.schema.json#/definitions/Identifier" }, { "type": "null" }] },
+        "decisionId": { "anyOf": [{ "$ref": "core.schema.json#/definitions/Identifier" }, { "type": "null" }] },
+        "activityClass": { "type": "string", "enum": ["product-workflow", "demo-operator"] },
+        "actionId": { "$ref": "core.schema.json#/definitions/ActionId" },
+        "attentionKind": { "type": "string", "enum": ["presented", "answered", "confirmed", "approved", "rejected", "acknowledged", "operator-action"] },
+        "actor": { "$ref": "core.schema.json#/definitions/HumanExecutionActor" },
+        "occurredAt": { "$ref": "core.schema.json#/definitions/Timestamp" },
+        "durationSeconds": { "type": ["number", "null"], "minimum": 0 },
+        "sourceEvent": { "$ref": "#/definitions/EventReference" },
+        "correlationId": { "$ref": "core.schema.json#/definitions/Identifier" }
+      },
+      "required": ["artifactType", "eventId", "attentionId", "stepId", "questionId", "decisionId", "activityClass", "actionId", "attentionKind", "actor", "occurredAt", "durationSeconds", "sourceEvent", "correlationId"],
+      "unevaluatedProperties": false
+    }
+  }
+}

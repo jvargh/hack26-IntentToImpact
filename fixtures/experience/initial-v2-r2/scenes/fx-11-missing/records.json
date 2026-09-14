@@ -1,0 +1,638 @@
+{
+  "records": [
+    {
+      "schemaVersion": "1.0.0",
+      "artifactType": "promise-evaluation",
+      "artifactId": "ART-EVALUATION-UNKNOWN-V2-MOCK-R2-FX-11-MISSING",
+      "runId": "RUN-UX-MOCK-CLAIMS-V2-R2",
+      "caseId": "CASE-UX-MOCK-CLAIMS-V2-R2",
+      "scope": {
+        "scopeId": "SCOPE-CONTRACT-V2",
+        "subscriptionId": "00000000-0000-0000-0000-000000000000",
+        "resourceGroup": "rg-contract-fixture",
+        "resourceIds": [
+          "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+        ]
+      },
+      "caseRevisionAtWrite": 5,
+      "createdAt": "2026-09-12T17:05:00Z",
+      "updatedAt": "2026-09-12T17:05:00Z",
+      "stateChecksum": "sha256:4fedd6f8a9c608b004c547761db44086ea778c24e5eb9580cc20b448b58ddd3a",
+      "derivedFrom": {},
+      "scenario": {
+        "scenarioId": "DEMO-CASE-CLAIMS-V2",
+        "scenarioVersion": "2.0.0",
+        "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+      },
+      "runMode": "fixture",
+      "purpose": "ux-mock",
+      "evaluationId": "EVALUATION-UNKNOWN-V2",
+      "promiseId": "CP-01",
+      "phase": "runtime",
+      "status": "unknown",
+      "reasonCode": "binding-missing",
+      "evaluatedAt": "2026-09-12T17:05:00Z",
+      "evidenceWindow": {
+        "from": "2026-09-12T17:05:00Z",
+        "to": "2026-09-12T17:05:00Z"
+      },
+      "promiseContract": {
+        "contractId": "D03",
+        "artifact": {
+          "artifactId": "ART-PROMISES-V2-MOCK-R2-FX-11-MISSING",
+          "checksum": "sha256:3cf5ac59e3b65e036095c34704a35303f2499d2316b7b870c142a4756c9f6ba7"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        }
+      },
+      "binding": null,
+      "runtimeSnapshot": {
+        "contractId": "D15",
+        "artifact": {
+          "artifactId": "ART-SNAPSHOT-UNKNOWN-V2-MOCK-R2-FX-11-MISSING",
+          "checksum": "sha256:07860b527da97f93510a8db8a824ab5b01d04e533fe7fbd58fd90074ef43e643"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        }
+      },
+      "verifier": {
+        "verifierId": "VERIFY-CP01-PUBLIC-STORAGE-V2",
+        "version": "2.0.0",
+        "checksum": "sha256:f77d69d18f2e3788f5d22207cef5eb6cb23ea7f88386a44fed3ffa2ec1d082e0"
+      },
+      "predicateResults": [
+        {
+          "predicateId": "PRED-PUBLIC-NETWORK-ENABLED",
+          "result": "unknown",
+          "reasonCode": "evidence-missing",
+          "evidence": []
+        },
+        {
+          "predicateId": "PRED-HTTPS-REQUIRED",
+          "result": "unknown",
+          "reasonCode": "evidence-missing",
+          "evidence": []
+        },
+        {
+          "predicateId": "PRED-ANONYMOUS-BLOB-DISABLED",
+          "result": "unknown",
+          "reasonCode": "evidence-missing",
+          "evidence": []
+        },
+        {
+          "predicateId": "PRED-TLS12-MINIMUM",
+          "result": "unknown",
+          "reasonCode": "evidence-missing",
+          "evidence": []
+        }
+      ],
+      "evidence": [],
+      "findingId": null,
+      "notApplicableDecision": null
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "artifactType": "intent-continuity-graph",
+      "artifactId": "ART-GRAPH-UNKNOWN-V2-MOCK-R2-FX-11-MISSING",
+      "runId": "RUN-UX-MOCK-CLAIMS-V2-R2",
+      "caseId": "CASE-UX-MOCK-CLAIMS-V2-R2",
+      "scope": {
+        "scopeId": "SCOPE-CONTRACT-V2",
+        "subscriptionId": "00000000-0000-0000-0000-000000000000",
+        "resourceGroup": "rg-contract-fixture",
+        "resourceIds": [
+          "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+        ]
+      },
+      "caseRevisionAtWrite": 5,
+      "createdAt": "2026-09-12T17:05:00Z",
+      "updatedAt": "2026-09-12T17:05:00Z",
+      "stateChecksum": "sha256:96b880f48861270f131cb9ea0e756445469e706b71904b4330b4722e3797c570",
+      "derivedFrom": {},
+      "scenario": {
+        "scenarioId": "DEMO-CASE-CLAIMS-V2",
+        "scenarioVersion": "2.0.0",
+        "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+      },
+      "runMode": "fixture",
+      "purpose": "ux-mock",
+      "logicalRevision": 5,
+      "asOf": "2026-09-12T17:05:00Z",
+      "scenarioOrigin": "fixture",
+      "evidence": [],
+      "currentWork": [],
+      "allowedActions": [],
+      "blockers": [],
+      "artifactRefs": [],
+      "nodes": [
+        {
+          "nodeId": "NODE-INTENT",
+          "nodeType": "intent",
+          "label": "Contoso claims intent",
+          "source": {
+            "kind": "scenario",
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            },
+            "entityId": "INTENT-CLAIMS"
+          }
+        },
+        {
+          "nodeId": "NODE-CP01",
+          "nodeType": "promise",
+          "label": "Protected Claims: public endpoint / HTTPS / anonymous access disabled / TLS1.2",
+          "source": {
+            "kind": "scenario",
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            },
+            "entityId": "CP-01"
+          }
+        },
+        {
+          "nodeId": "NODE-STORE",
+          "nodeType": "component",
+          "label": "Claims storage",
+          "source": {
+            "kind": "scenario",
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            },
+            "entityId": "CMP-CLAIMS-STORE"
+          }
+        },
+        {
+          "nodeId": "NODE-EVALUATION",
+          "nodeType": "evaluation",
+          "label": "Fixture CP-01 evaluation: unknown — binding-missing",
+          "source": {
+            "kind": "artifact",
+            "reference": {
+              "contractId": "D17",
+              "artifact": {
+                "artifactId": "ART-EVALUATION-UNKNOWN-V2-MOCK-R2-FX-11-MISSING",
+                "checksum": "sha256:4fedd6f8a9c608b004c547761db44086ea778c24e5eb9580cc20b448b58ddd3a"
+              },
+              "scenario": {
+                "scenarioId": "DEMO-CASE-CLAIMS-V2",
+                "scenarioVersion": "2.0.0",
+                "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+              }
+            }
+          }
+        },
+        {
+          "nodeId": "NODE-BASELINE-GAP",
+          "nodeType": "baseline",
+          "label": "Deployment binding unavailable",
+          "source": {
+            "kind": "gap",
+            "expectedContractId": "D14",
+            "reasonCode": "binding-missing"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "edgeId": "EDGE-INTENT-PROMISE",
+          "fromNodeId": "NODE-INTENT",
+          "toNodeId": "NODE-CP01",
+          "relation": "defines",
+          "status": "supported",
+          "support": {
+            "kind": "scenario-link",
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            },
+            "fromEntityId": "INTENT-CLAIMS",
+            "toEntityId": "CP-01"
+          }
+        },
+        {
+          "edgeId": "EDGE-PROMISE-STORE",
+          "fromNodeId": "NODE-CP01",
+          "toNodeId": "NODE-STORE",
+          "relation": "implemented-by",
+          "status": "supported",
+          "support": {
+            "kind": "scenario-link",
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            },
+            "fromEntityId": "CP-01",
+            "toEntityId": "CMP-CLAIMS-STORE"
+          }
+        },
+        {
+          "edgeId": "EDGE-EVALUATION-PROMISE",
+          "fromNodeId": "NODE-EVALUATION",
+          "toNodeId": "NODE-CP01",
+          "relation": "evaluates",
+          "status": "gap",
+          "support": {
+            "kind": "evaluation",
+            "reference": {
+              "contractId": "D17",
+              "artifact": {
+                "artifactId": "ART-EVALUATION-UNKNOWN-V2-MOCK-R2-FX-11-MISSING",
+                "checksum": "sha256:4fedd6f8a9c608b004c547761db44086ea778c24e5eb9580cc20b448b58ddd3a"
+              },
+              "scenario": {
+                "scenarioId": "DEMO-CASE-CLAIMS-V2",
+                "scenarioVersion": "2.0.0",
+                "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+              }
+            },
+            "promiseId": "CP-01"
+          }
+        },
+        {
+          "edgeId": "EDGE-BASELINE-GAP",
+          "fromNodeId": "NODE-EVALUATION",
+          "toNodeId": "NODE-BASELINE-GAP",
+          "relation": "references",
+          "status": "gap",
+          "support": {
+            "kind": "gap",
+            "reasonCode": "binding-missing"
+          }
+        }
+      ],
+      "listEntries": [
+        {
+          "nodeId": "NODE-INTENT",
+          "relatedEdgeIds": [
+            "EDGE-INTENT-PROMISE"
+          ]
+        },
+        {
+          "nodeId": "NODE-CP01",
+          "relatedEdgeIds": [
+            "EDGE-INTENT-PROMISE",
+            "EDGE-PROMISE-STORE",
+            "EDGE-EVALUATION-PROMISE"
+          ]
+        },
+        {
+          "nodeId": "NODE-STORE",
+          "relatedEdgeIds": [
+            "EDGE-PROMISE-STORE"
+          ]
+        },
+        {
+          "nodeId": "NODE-EVALUATION",
+          "relatedEdgeIds": [
+            "EDGE-EVALUATION-PROMISE",
+            "EDGE-BASELINE-GAP"
+          ]
+        },
+        {
+          "nodeId": "NODE-BASELINE-GAP",
+          "relatedEdgeIds": [
+            "EDGE-BASELINE-GAP"
+          ]
+        }
+      ]
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "artifactType": "operations-risk",
+      "artifactId": "ART-OPERATIONS-UNKNOWN-V2-MOCK-R2-FX-11-MISSING",
+      "runId": "RUN-UX-MOCK-CLAIMS-V2-R2",
+      "caseId": "CASE-UX-MOCK-CLAIMS-V2-R2",
+      "scope": {
+        "scopeId": "SCOPE-CONTRACT-V2",
+        "subscriptionId": "00000000-0000-0000-0000-000000000000",
+        "resourceGroup": "rg-contract-fixture",
+        "resourceIds": [
+          "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+        ]
+      },
+      "caseRevisionAtWrite": 5,
+      "createdAt": "2026-09-12T17:05:00Z",
+      "updatedAt": "2026-09-12T17:05:00Z",
+      "stateChecksum": "sha256:307856f38d77ec3a05508c18d6c5f4c58595578ff945270c8de84284cc5a2027",
+      "derivedFrom": {},
+      "scenario": {
+        "scenarioId": "DEMO-CASE-CLAIMS-V2",
+        "scenarioVersion": "2.0.0",
+        "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+      },
+      "runMode": "fixture",
+      "purpose": "ux-mock",
+      "logicalRevision": 5,
+      "asOf": "2026-09-12T17:05:00Z",
+      "scenarioOrigin": "fixture",
+      "evidence": [],
+      "currentWork": [],
+      "allowedActions": [
+        {
+          "actionId": "view-verification-pending",
+          "capability": "read-case",
+          "label": "Return to pending example"
+        }
+      ],
+      "blockers": [
+        {
+          "code": "fixture-only-no-operation-authority",
+          "message": "Authored fixture only: no deployment, seed, restoration, approval or live proof is performed."
+        },
+        {
+          "code": "restoration-evidence-missing",
+          "message": "No fresh scoped restoration proof is available; do not display verified."
+        }
+      ],
+      "artifactRefs": [],
+      "riskState": "unknown",
+      "headline": "Restoration remains unknown: fresh configuration evidence and binding are missing",
+      "customerImpact": "Sensitive claims documents must not be exposed through anonymous blob access or transferred without the required HTTPS configuration.",
+      "binding": null,
+      "snapshot": {
+        "contractId": "D15",
+        "artifact": {
+          "artifactId": "ART-SNAPSHOT-UNKNOWN-V2-MOCK-R2-FX-11-MISSING",
+          "checksum": "sha256:07860b527da97f93510a8db8a824ab5b01d04e533fe7fbd58fd90074ef43e643"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        }
+      },
+      "findingRefs": [],
+      "evaluationRefs": [
+        {
+          "contractId": "D17",
+          "artifact": {
+            "artifactId": "ART-EVALUATION-UNKNOWN-V2-MOCK-R2-FX-11-MISSING",
+            "checksum": "sha256:4fedd6f8a9c608b004c547761db44086ea778c24e5eb9580cc20b448b58ddd3a"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        }
+      ],
+      "restoration": {
+        "status": "verification-pending",
+        "operationReceipt": null,
+        "verificationEvaluation": null
+      }
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "artifactType": "customer-promise-contract",
+      "artifactId": "ART-PROMISES-V2-MOCK-R2-FX-11-MISSING",
+      "runId": "RUN-UX-MOCK-CLAIMS-V2-R2",
+      "caseId": "CASE-UX-MOCK-CLAIMS-V2-R2",
+      "scope": {
+        "scopeId": "SCOPE-CONTRACT-V2",
+        "subscriptionId": "00000000-0000-0000-0000-000000000000",
+        "resourceGroup": "rg-contract-fixture",
+        "resourceIds": [
+          "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+        ]
+      },
+      "caseRevisionAtWrite": 5,
+      "createdAt": "2026-09-12T17:05:00Z",
+      "updatedAt": "2026-09-12T17:05:00Z",
+      "stateChecksum": "sha256:3cf5ac59e3b65e036095c34704a35303f2499d2316b7b870c142a4756c9f6ba7",
+      "derivedFrom": {},
+      "scenario": {
+        "scenarioId": "DEMO-CASE-CLAIMS-V2",
+        "scenarioVersion": "2.0.0",
+        "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+      },
+      "runMode": "fixture",
+      "purpose": "ux-mock",
+      "contractId": "PROMISES-CONTRACT-V2",
+      "status": "partially-confirmed",
+      "requirementChecksum": "sha256:e7c508e9372b898b546159fad41169d6f81fa2af65e02d1bbcdaa470fdb20c43",
+      "confirmationDecisionId": "DECISION-FIXTURE-NOT-LIVE",
+      "confirmedPromiseIds": [
+        "CP-01",
+        "CP-02",
+        "CP-03",
+        "CP-04",
+        "CP-06",
+        "CP-07",
+        "CP-08"
+      ],
+      "promises": [
+        {
+          "promiseId": "CP-01",
+          "statement": "Claims storage uses its approved public endpoint with HTTPS required, anonymous blob access disabled, and minimum TLS 1.2. Verification is scoped configuration assurance, not complete access-control proof.",
+          "customerImpact": "Sensitive claims documents must not be exposed through anonymous blob access or transferred without the required HTTPS configuration.",
+          "category": "security",
+          "criticality": "blocking",
+          "requirementIds": [
+            "REQ-CLAIMS-ACCESS"
+          ],
+          "componentIds": [
+            "CMP-CLAIMS-STORE"
+          ],
+          "verifierIds": [
+            "VERIFY-CP01-PUBLIC-STORAGE-V2"
+          ],
+          "requiredEvidenceKinds": [
+            "resource-configuration"
+          ]
+        },
+        {
+          "promiseId": "CP-02",
+          "statement": "Approved managed identities and scoped roles are used for declared data operations; configuration evidence must cover those operations.",
+          "customerImpact": "Only the intended workload identities should perform the declared claims data operations.",
+          "category": "security",
+          "criticality": "blocking",
+          "requirementIds": [
+            "REQ-CLAIMS-IDENTITY"
+          ],
+          "componentIds": [
+            "CMP-CLAIMS-STORE"
+          ],
+          "verifierIds": [
+            "VERIFY-CP02-IDENTITY-V2"
+          ],
+          "requiredEvidenceKinds": [
+            "identity-role-configuration"
+          ]
+        },
+        {
+          "promiseId": "CP-03",
+          "statement": "Approved storage encryption and secure-transfer controls are configured; this does not establish every data-protection property.",
+          "customerImpact": "Claims documents need the approved protection at rest and in transit.",
+          "category": "security",
+          "criticality": "blocking",
+          "requirementIds": [
+            "REQ-CLAIMS-ENCRYPTION"
+          ],
+          "componentIds": [
+            "CMP-CLAIMS-STORE"
+          ],
+          "verifierIds": [
+            "VERIFY-CP03-ENCRYPTION-V2"
+          ],
+          "requiredEvidenceKinds": [
+            "encryption-configuration"
+          ]
+        },
+        {
+          "promiseId": "CP-04",
+          "statement": "Recover within 60 minutes for the specified regional-loss scenario. Runtime verification requires a matching recovery test, not a design estimate.",
+          "customerImpact": "Claims processing needs a bounded interruption during the declared regional-loss event.",
+          "category": "resilience",
+          "criticality": "blocking",
+          "requirementIds": [
+            "REQ-CLAIMS-RTO"
+          ],
+          "componentIds": [
+            "CMP-CLAIMS-STORE"
+          ],
+          "verifierIds": [
+            "VERIFY-CP04-REGIONAL-RTO-V2"
+          ],
+          "requiredEvidenceKinds": [
+            "regional-recovery-test"
+          ]
+        },
+        {
+          "promiseId": "CP-05",
+          "statement": "RPO remains unconfirmed until the customer explicitly answers the consequential question. The scripted acceptance answer is 15 minutes for the same regional-loss scenario; runtime verification requires matching test evidence.",
+          "customerImpact": "The customer must choose the acceptable claims-data loss window rather than have it assumed by an agent.",
+          "category": "resilience",
+          "criticality": "blocking",
+          "requirementIds": [
+            "REQ-CLAIMS-RPO"
+          ],
+          "componentIds": [
+            "CMP-CLAIMS-STORE"
+          ],
+          "verifierIds": [
+            "VERIFY-CP05-REGIONAL-RPO-V2"
+          ],
+          "requiredEvidenceKinds": [
+            "regional-recovery-test"
+          ]
+        },
+        {
+          "promiseId": "CP-06",
+          "statement": "Declared processing, storage, and dependencies remain in approved US geography, with evidence adequate for the declared scope.",
+          "customerImpact": "Claims data must remain within the customer's approved geographic boundary.",
+          "category": "residency",
+          "criticality": "blocking",
+          "requirementIds": [
+            "REQ-CLAIMS-US-GEOGRAPHY"
+          ],
+          "componentIds": [
+            "CMP-CLAIMS-STORE"
+          ],
+          "verifierIds": [
+            "VERIFY-CP06-US-GEOGRAPHY-V2"
+          ],
+          "requiredEvidenceKinds": [
+            "residency-inventory"
+          ]
+        },
+        {
+          "promiseId": "CP-07",
+          "statement": "The defined monthly workload cost basis is at most USD 8,000. Runtime verification requires a complete billed period; synthetic estimates are not actual billing or realized savings.",
+          "customerImpact": "The workload must fit the defined operating budget on a comparable cost basis.",
+          "category": "cost",
+          "criticality": "blocking",
+          "requirementIds": [
+            "REQ-CLAIMS-BUDGET"
+          ],
+          "componentIds": [
+            "CMP-CLAIMS-STORE"
+          ],
+          "verifierIds": [
+            "VERIFY-CP07-COST-BASIS-V2"
+          ],
+          "requiredEvidenceKinds": [
+            "complete-billing-period"
+          ]
+        },
+        {
+          "promiseId": "CP-08",
+          "statement": "Required diagnostics are enabled with configured retention of at least 90 days. Settings alone do not prove that 90 days of logs already exist.",
+          "customerImpact": "Operators need the declared diagnostics and retention configuration to investigate claims-service issues.",
+          "category": "observability",
+          "criticality": "blocking",
+          "requirementIds": [
+            "REQ-CLAIMS-DIAGNOSTICS"
+          ],
+          "componentIds": [
+            "CMP-CLAIMS-STORE"
+          ],
+          "verifierIds": [
+            "VERIFY-CP08-DIAGNOSTICS-V2"
+          ],
+          "requiredEvidenceKinds": [
+            "diagnostic-configuration"
+          ]
+        }
+      ]
+    },
+    {
+      "schemaVersion": "1.0.0",
+      "artifactType": "runtime-snapshot",
+      "artifactId": "ART-SNAPSHOT-UNKNOWN-V2-MOCK-R2-FX-11-MISSING",
+      "runId": "RUN-UX-MOCK-CLAIMS-V2-R2",
+      "caseId": "CASE-UX-MOCK-CLAIMS-V2-R2",
+      "scope": {
+        "scopeId": "SCOPE-CONTRACT-V2",
+        "subscriptionId": "00000000-0000-0000-0000-000000000000",
+        "resourceGroup": "rg-contract-fixture",
+        "resourceIds": [
+          "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+        ]
+      },
+      "caseRevisionAtWrite": 5,
+      "createdAt": "2026-09-12T17:05:00Z",
+      "updatedAt": "2026-09-12T17:05:00Z",
+      "stateChecksum": "sha256:07860b527da97f93510a8db8a824ab5b01d04e533fe7fbd58fd90074ef43e643",
+      "derivedFrom": {},
+      "scenario": {
+        "scenarioId": "DEMO-CASE-CLAIMS-V2",
+        "scenarioVersion": "2.0.0",
+        "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+      },
+      "runMode": "fixture",
+      "purpose": "ux-mock",
+      "snapshotId": "SNAPSHOT-UNKNOWN-V2",
+      "binding": null,
+      "collectedAt": "2026-09-12T17:05:00Z",
+      "evidenceWindow": {
+        "from": "2026-09-12T17:05:00Z",
+        "to": "2026-09-12T17:05:00Z"
+      },
+      "completeness": "missing",
+      "observations": [],
+      "evidence": [],
+      "missingEvidenceKinds": [
+        "resource-configuration"
+      ],
+      "collectionErrors": [
+        "binding-missing"
+      ]
+    }
+  ],
+  "externalReferences": []
+}

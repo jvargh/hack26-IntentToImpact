@@ -1,0 +1,184 @@
+{
+  "schemaVersion": "2.0.0",
+  "artifactType": "claims-scenario",
+  "scenarioId": "DEMO-CASE-CLAIMS-V3",
+  "scenarioVersion": "3.0.0",
+  "scenarioOrigin": "fixture",
+  "stateChecksum": "sha256:363494e94d3d436fa76a574c0eb91824be1a74f0b52c6928a452c744cee6be29",
+  "networkDecisionId": "LOCAL-09",
+  "intentId": "INTENT-CLAIMS",
+  "businessIntent": "Fictional Contoso Insurance must prepare digital claims for its customer-confirmed seasonal deadline, protect sensitive claims documents, keep approved US data geography, recover within 60 minutes, and keep the defined estimated workload cost within USD 8,000 per month. The empty demo storage uses the selected Enforced NSP boundary with no external access rules.",
+  "catalog": {
+    "catalogId": "CATALOG-CLAIMS-V3",
+    "catalogVersion": "3.0.0",
+    "rulePackId": "RULES-CLAIMS-V3",
+    "rulePackVersion": "3.0.0"
+  },
+  "rtoMinutes": 60,
+  "rpoMinutes": null,
+  "rpoConfirmation": "unconfirmed",
+  "rpoQuestionId": "QUESTION-RPO",
+  "scriptedRpoAnswerMinutes": 15,
+  "monthlyBudgetUsd": 8000,
+  "estimateBasis": "synthetic-comparable-monthly-workload",
+  "promises": [
+    {
+      "promiseId": "CP-01",
+      "statement": "Claims storage is SecuredByPerimeter with a correctly linked Enforced NSP/profile/resource association and matching effective storage configuration. Complete profile and effective-rule observations contain no external inbound or outbound rules; HTTPS is required, anonymous blob and shared-key access are disabled, and minimum TLS is 1.2.",
+      "customerImpact": "Sensitive claims documents need the selected explicit NSP configuration boundary. Management-plane configuration evidence does not prove data-plane reachability, complete authorization, or regional recovery.",
+      "category": "security",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-ACCESS"],
+      "componentIds": ["CMP-CLAIMS-STORE", "CMP-CLAIMS-NSP", "CMP-CLAIMS-NSP-PROFILE", "CMP-CLAIMS-NSP-ASSOCIATION"],
+      "verifierIds": ["VERIFY-CP01-NSP-STORAGE-V3"],
+      "requiredEvidenceKinds": ["resource-configuration", "nsp-perimeter", "nsp-profile", "nsp-association", "nsp-effective-configuration", "nsp-profile-access-rules", "nsp-effective-access-rules"]
+    },
+    {
+      "promiseId": "CP-02",
+      "statement": "Approved existing managed identities and scoped roles are used for declared data operations; configuration evidence must cover those operations. No identity or role assignment is created by this scenario.",
+      "customerImpact": "Only the intended workload identities should perform the declared claims data operations.",
+      "category": "security",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-IDENTITY"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP02-IDENTITY-V3"],
+      "requiredEvidenceKinds": ["identity-role-configuration"]
+    },
+    {
+      "promiseId": "CP-03",
+      "statement": "Approved storage encryption and secure-transfer controls are configured; this does not establish every data-protection property.",
+      "customerImpact": "Claims documents need the approved protection at rest and in transit.",
+      "category": "security",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-ENCRYPTION"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP03-ENCRYPTION-V3"],
+      "requiredEvidenceKinds": ["encryption-configuration"]
+    },
+    {
+      "promiseId": "CP-04",
+      "statement": "Recover within 60 minutes for the specified regional-loss scenario. Runtime verification requires a matching recovery test; the empty LRS demo account is not such a test.",
+      "customerImpact": "Claims processing needs a bounded interruption during the declared regional-loss event.",
+      "category": "resilience",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-RTO"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP04-REGIONAL-RTO-V3"],
+      "requiredEvidenceKinds": ["regional-recovery-test"]
+    },
+    {
+      "promiseId": "CP-05",
+      "statement": "RPO remains unconfirmed until the customer explicitly answers the consequential question. The scripted answer is 15 minutes for the same regional-loss scenario; runtime verification requires matching test evidence.",
+      "customerImpact": "The customer must choose the acceptable claims-data loss window rather than have it assumed by an agent.",
+      "category": "resilience",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-RPO"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP05-REGIONAL-RPO-V3"],
+      "requiredEvidenceKinds": ["regional-recovery-test"]
+    },
+    {
+      "promiseId": "CP-06",
+      "statement": "Declared processing, storage, and dependencies remain in approved US geography, with evidence adequate for the declared scope.",
+      "customerImpact": "Claims data must remain within the customer's approved geographic boundary.",
+      "category": "residency",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-US-GEOGRAPHY"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP06-US-GEOGRAPHY-V3"],
+      "requiredEvidenceKinds": ["residency-inventory"]
+    },
+    {
+      "promiseId": "CP-07",
+      "statement": "The defined monthly workload cost basis is at most USD 8,000. Runtime verification requires a complete billed period; synthetic catalog estimates are not actual billing or savings.",
+      "customerImpact": "The workload must fit the defined operating budget on a comparable cost basis.",
+      "category": "cost",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-BUDGET"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP07-COST-BASIS-V3"],
+      "requiredEvidenceKinds": ["complete-billing-period"]
+    },
+    {
+      "promiseId": "CP-08",
+      "statement": "Required diagnostics are enabled with configured retention of at least 90 days. Settings alone do not prove that 90 days of logs already exist.",
+      "customerImpact": "Operators need the declared diagnostics and retention configuration to investigate claims-service issues.",
+      "category": "observability",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-DIAGNOSTICS"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP08-DIAGNOSTICS-V3"],
+      "requiredEvidenceKinds": ["diagnostic-configuration"]
+    }
+  ],
+  "candidates": [
+    {
+      "candidateId": "A",
+      "monthlyEstimateUsd": 6000,
+      "regionalRecoveryProfile": null,
+      "declaredStorageControls": {
+        "publicNetworkAccess": "SecuredByPerimeter", "supportsHttpsTrafficOnly": true,
+        "allowBlobPublicAccess": false, "allowSharedKeyAccess": false, "minimumTlsVersion": "TLS1_2",
+        "kind": "StorageV2", "skuName": "Standard_LRS", "accessTier": "Hot", "isHnsEnabled": false,
+        "networkDefaultAction": "Deny", "networkBypass": "None"
+      },
+      "declaredNspControls": {
+        "accessMode": "Enforced", "inboundAccessRules": [], "outboundAccessRules": [],
+        "requiresLinkedAssociation": true, "requiresEffectiveConfiguration": true, "requiresCompleteRuleCollections": true
+      }
+    },
+    {
+      "candidateId": "B",
+      "monthlyEstimateUsd": 7200,
+      "regionalRecoveryProfile": "PROFILE-ACTIVE-PASSIVE-V3",
+      "declaredStorageControls": {
+        "publicNetworkAccess": "SecuredByPerimeter", "supportsHttpsTrafficOnly": true,
+        "allowBlobPublicAccess": false, "allowSharedKeyAccess": false, "minimumTlsVersion": "TLS1_2",
+        "kind": "StorageV2", "skuName": "Standard_LRS", "accessTier": "Hot", "isHnsEnabled": false,
+        "networkDefaultAction": "Deny", "networkBypass": "None"
+      },
+      "declaredNspControls": {
+        "accessMode": "Enforced", "inboundAccessRules": [], "outboundAccessRules": [],
+        "requiresLinkedAssociation": true, "requiresEffectiveConfiguration": true, "requiresCompleteRuleCollections": true
+      }
+    }
+  ],
+  "componentId": "CMP-CLAIMS-STORE",
+  "boundaryComponentIds": {
+    "storage": "CMP-CLAIMS-STORE", "perimeter": "CMP-CLAIMS-NSP",
+    "profile": "CMP-CLAIMS-NSP-PROFILE", "association": "CMP-CLAIMS-NSP-ASSOCIATION"
+  },
+  "desiredStorageConfiguration": {
+    "publicNetworkAccess": "SecuredByPerimeter", "supportsHttpsTrafficOnly": true,
+    "allowBlobPublicAccess": false, "allowSharedKeyAccess": false, "minimumTlsVersion": "TLS1_2",
+    "kind": "StorageV2", "skuName": "Standard_LRS", "accessTier": "Hot", "isHnsEnabled": false,
+    "networkDefaultAction": "Deny", "networkBypass": "None"
+  },
+  "desiredNspConfiguration": {
+    "accessMode": "Enforced", "inboundAccessRules": [], "outboundAccessRules": [],
+    "requiresLinkedAssociation": true, "requiresEffectiveConfiguration": true, "requiresCompleteRuleCollections": true
+  },
+  "desiredStateChecksum": "sha256:18dd87871a551c33e760c0c580aa1c6d9338d2c90520cf2433854dc7aab5ebf5",
+  "verifierChecksum": "sha256:72dd72c225d462afe5dae16829b0b8d98b603afdc153b54d8ccffa22239f4e99",
+  "cp01Verifier": {
+    "verifierId": "VERIFY-CP01-NSP-STORAGE-V3",
+    "version": "3.0.0",
+    "maxEvidenceAgeSeconds": 300,
+    "requiredEvidenceKinds": ["resource-configuration", "nsp-perimeter", "nsp-profile", "nsp-association", "nsp-effective-configuration", "nsp-profile-access-rules", "nsp-effective-access-rules"],
+    "assertionIds": [
+      "PRED-NSP-PUBLIC-MODE", "PRED-NSP-ENFORCED-ASSOCIATION", "PRED-NSP-LINKED-RESOURCES",
+      "PRED-NSP-EFFECTIVE-CONFIGURATION", "PRED-NSP-NO-EXTERNAL-RULES", "PRED-NSP-RULE-VERSIONS",
+      "PRED-HTTPS-REQUIRED", "PRED-ANONYMOUS-BLOB-DISABLED", "PRED-SHARED-KEY-DISABLED",
+      "PRED-TLS12-MINIMUM", "PRED-DECLARED-STORAGE-PROFILE"
+    ],
+    "assuranceScope": "observed-management-plane-configuration-only"
+  },
+  "operatorBinding": {
+    "subscriptionId": null, "region": null, "storageId": null, "perimeterId": null,
+    "profileId": null, "associationId": null, "configurationId": null, "deploymentReceipt": null
+  },
+  "dataIntent": "empty-demo-no-upload-or-container",
+  "deploymentAuthorization": "not-authorized-by-contract",
+  "seedProposal": null,
+  "restorationAuthorization": "not-authorized"
+}

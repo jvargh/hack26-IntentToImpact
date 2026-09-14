@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "1.0.0",
+  "bicepVersion": "v0.47.16",
+  "binaryRelativeToLocal09Evidence": "tools\\bicep-v0.47.16\\bin\\bicep.exe",
+  "reason": "Actual 0.34.44 compilation emitted BCP081 missing-type warnings for all four current resource types. Pin a current release discovered by real az bicep list-versions before scoped restore.",
+  "discoveryReceipt": "tool-version-discovery-20260913T012343901411Z\\receipt.json",
+  "externalModules": []
+}

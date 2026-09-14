@@ -1,0 +1,4 @@
+# Generation and authoritative JSON Schema validation; isolated from application dependencies.
+-c requirements.lock.txt
+datamodel-code-generator==0.76.2
+jsonschema[format-nongpl]==4.26.0

@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:intent-to-impact:design:ux-record:1.0.0",
+  "title": "U04 provisional UX decision or checkpoint record",
+  "description": "Technical lane reviews are separate from one demo-human product/UX acceptance. Structure does not authenticate actors or evidence and never passes a gate.",
+  "oneOf": [{"$ref": "#/$defs/decision"}, {"$ref": "#/$defs/checkpoint"}],
+  "$defs": {
+    "text": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "texts": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "evidenceRefs": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+    "checkpointId": {"type": "string", "pattern": "^UX-Checkpoint-0[1-6]$"},
+    "role": {"enum": ["Stakeholder", "A", "B", "C", "D", "E", "operator"]},
+    "roles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/role"}},
+    "technicalRole": {"enum": ["A", "B", "C", "D", "E", "operator"]},
+    "technicalReview": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actorType", "actorRef", "role", "disposition", "recordedAt", "subjectVersion", "evidenceRef"],
+      "properties": {
+        "actorType": {"enum": ["human", "agent"]},
+        "actorRef": {"$ref": "#/$defs/text"},
+        "role": {"$ref": "#/$defs/technicalRole"},
+        "disposition": {"enum": ["approved", "changes-requested"]},
+        "recordedAt": {"type": "string", "format": "date-time"},
+        "subjectVersion": {"const": "1.0.0"},
+        "evidenceRef": {"$ref": "#/$defs/text"}
+      }
+    },
+    "technicalReviews": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "requiredRoles", "records"],
+      "properties": {
+        "status": {"enum": ["pending", "complete", "blocked"]},
+        "requiredRoles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/technicalRole"}},
+        "records": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/technicalReview"}}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"const": "complete"}}}, "then": {"properties": {"records": {"minItems": 1}}}}
+      ]
+    },
+    "humanDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actorType", "actorRef", "purpose", "decision", "recordedAt", "subjectVersion", "evidenceRef"],
+      "properties": {
+        "actorType": {"const": "human"},
+        "actorRef": {"const": "demo-human"},
+        "purpose": {"const": "product-ux-acceptance"},
+        "decision": {"enum": ["approved", "rejected"]},
+        "recordedAt": {"type": "string", "format": "date-time"},
+        "subjectVersion": {"const": "1.0.0"},
+        "evidenceRef": {"$ref": "#/$defs/text"}
+      }
+    },
+    "humanApproval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "decisions"],
+      "properties": {
+        "status": {"enum": ["pending", "approved", "blocked"]},
+        "decisions": {"type": "array", "maxItems": 1, "items": {"$ref": "#/$defs/humanDecision"}}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"const": "pending"}}}, "then": {"properties": {"decisions": {"maxItems": 0}}}},
+        {"if": {"properties": {"status": {"const": "approved"}}}, "then": {"properties": {"decisions": {"minItems": 1}}}}
+      ]
+    },
+    "projectionRef": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "expectedVersion", "bindingStatus"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^P0[1-9]$"},
+        "expectedVersion": {"const": "1.0.0"},
+        "bindingStatus": {"enum": ["pending", "bound"]}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recordType", "schemaVersion", "recordId", "taskId", "scenarioId", "illustrative", "state", "owner", "reporter", "checkpointId", "screenIds", "componentIds", "fixtureIds", "fixtureVersion", "projectionRefs", "observation", "severity", "classification", "proposedChange", "rationale", "acceptanceCriteria", "approvalScope", "technicalReviews", "affectedPlanIds", "affectedTaskIds", "mockAlignmentEvidenceRefs", "liveAlignmentEvidenceRefs", "evidenceOrigin", "dueBy", "sourceRefs"],
+      "properties": {
+        "recordType": {"const": "ux-decision"},
+        "schemaVersion": {"const": "1.0.0"},
+        "recordId": {"type": "string", "pattern": "^UXD-[0-9]{3}$"},
+        "taskId": {"const": "UX-03-01"},
+        "scenarioId": {"const": "DEMO-CASE-CLAIMS-V1"},
+        "illustrative": {"type": "boolean"},
+        "state": {"enum": ["pending-review", "approved", "implemented", "validated", "closed", "blocked"]},
+        "owner": {"$ref": "#/$defs/text"},
+        "reporter": {"$ref": "#/$defs/text"},
+        "checkpointId": {"$ref": "#/$defs/checkpointId"},
+        "screenIds": {"$ref": "#/$defs/texts"},
+        "componentIds": {"$ref": "#/$defs/texts"},
+        "fixtureIds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^FX-(0[0-9]|1[0-9])$"}},
+        "fixtureVersion": {"const": "1.0.0"},
+        "projectionRefs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/projectionRef"}},
+        "observation": {"$ref": "#/$defs/text"},
+        "severity": {"enum": ["cosmetic", "usability", "material", "blocker"]},
+        "classification": {"enum": ["presentation-only", "projection-contract", "domain-policy"]},
+        "proposedChange": {"$ref": "#/$defs/text"},
+        "rationale": {"$ref": "#/$defs/text"},
+        "acceptanceCriteria": {"$ref": "#/$defs/texts"},
+        "approvalScope": {"const": "technical-design-only"},
+        "technicalReviews": {"$ref": "#/$defs/technicalReviews"},
+        "affectedPlanIds": {"$ref": "#/$defs/texts"},
+        "affectedTaskIds": {"$ref": "#/$defs/texts"},
+        "mockAlignmentEvidenceRefs": {"$ref": "#/$defs/evidenceRefs"},
+        "liveAlignmentEvidenceRefs": {"$ref": "#/$defs/evidenceRefs"},
+        "evidenceOrigin": {"const": "ux-mock"},
+        "dueBy": {"$ref": "#/$defs/text"},
+        "sourceRefs": {"$ref": "#/$defs/texts"}
+      },
+      "allOf": [
+        {"if": {"properties": {"illustrative": {"const": true}}}, "then": {"properties": {"state": {"const": "pending-review"}, "technicalReviews": {"properties": {"status": {"const": "pending"}, "records": {"maxItems": 0}}}, "liveAlignmentEvidenceRefs": {"maxItems": 0}}}},
+        {"if": {"properties": {"state": {"const": "pending-review"}}}, "then": {"properties": {"technicalReviews": {"properties": {"status": {"const": "pending"}}}}}},
+        {"if": {"properties": {"state": {"const": "blocked"}}}, "then": {"properties": {"technicalReviews": {"properties": {"status": {"const": "blocked"}}}}}},
+        {"if": {"properties": {"state": {"enum": ["approved", "implemented", "validated", "closed"]}}}, "then": {"properties": {"technicalReviews": {"properties": {"status": {"const": "complete"}}}}}},
+        {"if": {"properties": {"state": {"enum": ["validated", "closed"]}}}, "then": {"properties": {"mockAlignmentEvidenceRefs": {"minItems": 1}, "liveAlignmentEvidenceRefs": {"minItems": 1}}}}
+      ]
+    },
+    "checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recordType", "schemaVersion", "recordId", "taskId", "scenarioId", "gateId", "gateState", "agendaState", "coordinator", "reviewer", "participantRoles", "participantSourceRef", "scope", "prerequisiteIds", "criteriaSourceRefs", "agenda", "acceptanceCriteria", "requiredOutputs", "technicalReviews", "humanApproval", "openDecisionRefs", "evidenceRefs", "evidenceOrigin", "dueBy"],
+      "properties": {
+        "recordType": {"const": "ux-checkpoint"},
+        "schemaVersion": {"const": "1.0.0"},
+        "recordId": {"$ref": "#/$defs/checkpointId"},
+        "taskId": {"const": "UX-03-01"},
+        "scenarioId": {"const": "DEMO-CASE-CLAIMS-V1"},
+        "gateId": {"type": "string", "pattern": "^GATE-UX0[1-6]$"},
+        "gateState": {"enum": ["pending", "passed", "blocked"]},
+        "agendaState": {"enum": ["draft", "ready", "reviewed"]},
+        "coordinator": {"enum": ["D", "E"]},
+        "reviewer": {"const": "implementation-orchestrator"},
+        "participantRoles": {"$ref": "#/$defs/roles"},
+        "participantSourceRef": {"$ref": "#/$defs/text"},
+        "scope": {"$ref": "#/$defs/text"},
+        "prerequisiteIds": {"$ref": "#/$defs/texts"},
+        "criteriaSourceRefs": {"$ref": "#/$defs/texts"},
+        "agenda": {"$ref": "#/$defs/texts"},
+        "acceptanceCriteria": {"$ref": "#/$defs/texts"},
+        "requiredOutputs": {"$ref": "#/$defs/texts"},
+        "technicalReviews": {"$ref": "#/$defs/technicalReviews"},
+        "humanApproval": {"$ref": "#/$defs/humanApproval"},
+        "openDecisionRefs": {"$ref": "#/$defs/evidenceRefs"},
+        "evidenceRefs": {"$ref": "#/$defs/evidenceRefs"},
+        "evidenceOrigin": {"const": "ux-mock"},
+        "dueBy": {"$ref": "#/$defs/text"}
+      },
+      "allOf": [
+        {"if": {"properties": {"gateState": {"const": "passed"}}}, "then": {"properties": {"agendaState": {"const": "reviewed"}, "technicalReviews": {"properties": {"status": {"const": "complete"}}}, "humanApproval": {"properties": {"status": {"const": "approved"}}}, "openDecisionRefs": {"maxItems": 0}, "evidenceRefs": {"minItems": 1}}}},
+        {"if": {"properties": {"gateState": {"const": "blocked"}}}, "then": {"properties": {"openDecisionRefs": {"minItems": 1}}}}
+      ]
+    }
+  }
+}

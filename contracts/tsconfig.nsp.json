@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "generated/2.0.0/typescript/*.d.ts",
+    "../tests/contracts/typescript-nsp-consumer.ts"
+  ]
+}

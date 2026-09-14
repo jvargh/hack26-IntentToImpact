@@ -1,0 +1,258 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "urn:intent-to-impact:studio:1.0.0",
+  "title": "StudioContract",
+  "description": "Live architecture proposal transport, not product approval or deployed-state evidence.",
+  "oneOf": [
+    {"$ref":"#/definitions/AnalysisRequest"}, {"$ref":"#/definitions/ArchitectureAnalysis"},
+    {"$ref":"#/definitions/StudioJob"}, {"$ref":"#/definitions/BuildRequest"}, {"$ref":"#/definitions/BuildResult"},
+    {"$ref":"#/definitions/RunHistory"}, {"$ref":"#/definitions/SavedRun"}
+  ],
+  "definitions": {
+    "SourceDocument": {
+      "type":"object","additionalProperties":false,
+      "properties":{"id":{"type":"string","minLength":1,"maxLength":128},"name":{"type":"string","minLength":1,"maxLength":255},"text":{"type":"string","minLength":1,"maxLength":150000}},
+      "required":["id","name","text"]
+    },
+    "AnalysisRequest": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "title":{"type":"string","maxLength":160},
+        "prompt":{"type":"string","minLength":10,"maxLength":12000},
+        "documents":{"type":"array","maxItems":5,"items":{"$ref":"#/definitions/SourceDocument"}},
+        "refinement":{"type":"string","maxLength":4000},
+        "previousResultId":{"type":["string","null"],"maxLength":80},
+        "idempotencyKey":{"type":"string","minLength":8,"maxLength":128},
+        "consentToModel":{"type":"boolean","const":true},
+        "designChange":{"$ref":"#/definitions/DesignChange"}
+      },
+      "required":["title","prompt","documents","refinement","previousResultId","idempotencyKey","consentToModel"],
+      "allOf":[{
+        "if":{"required":["designChange"]},
+        "then":{"properties":{
+          "refinement":{"type":"string","minLength":10,"maxLength":2000},
+          "previousResultId":{"type":"string","minLength":1,"maxLength":80}
+        }}
+      }]
+    },
+    "DesignChange": {
+      "type":"object","additionalProperties":false,
+      "description":"Explicit permission to revise a particular stored design finding, never risk acceptance.",
+      "properties":{
+        "optionId":{"type":"string","pattern":"^[a-z][a-z0-9-]{0,39}$"},
+        "finding":{"$ref":"#/definitions/ReviewFinding"},
+        "intent":{"type":"string","enum":["recommendation","challenge"]},
+        "confirmRevision":{"type":"boolean","const":true}
+      },
+      "required":["optionId","finding","intent","confirmRevision"]
+    },
+    "ChangeApproval": {
+      "type":"object","additionalProperties":false,
+      "description":"Server-bound demo-human authorization to generate and independently review a revision; not sign-off of its result.",
+      "properties":{
+        "baseResultId":{"type":"string","minLength":1,"maxLength":80},
+        "baseResultHash":{"type":"string","pattern":"^[a-f0-9]{64}$"},
+        "optionId":{"$ref":"#/definitions/DesignChange/properties/optionId"},
+        "finding":{"$ref":"#/definitions/ReviewFinding"},
+        "intent":{"$ref":"#/definitions/DesignChange/properties/intent"},
+        "instruction":{"type":"string","minLength":10,"maxLength":2000},
+        "refinement":{"type":"string","minLength":10,"maxLength":4000},
+        "approvedAt":{"type":"string","format":"date-time"},
+        "actor":{"type":"string","const":"demo-human"},
+        "scope":{"type":"string","const":"design-revision-only"}
+      },
+      "required":["baseResultId","baseResultHash","optionId","finding","intent","instruction","refinement","approvedAt","actor","scope"]
+    },
+    "Requirement": {
+      "type":"object","additionalProperties":false,
+      "properties":{"id":{"type":"string","minLength":1,"maxLength":64},"text":{"type":"string","minLength":1,"maxLength":800},"sourceIds":{"type":"array","minItems":1,"maxItems":6,"uniqueItems":true,"items":{"type":"string","maxLength":128}}},
+      "required":["id","text","sourceIds"]
+    },
+    "Question": {
+      "type":"object","additionalProperties":false,
+      "properties":{"id":{"type":"string","maxLength":64},"question":{"type":"string","minLength":1,"maxLength":500},"why":{"type":"string","minLength":1,"maxLength":500}},
+      "required":["id","question","why"]
+    },
+    "ExternalDependency": {
+      "type":"object","additionalProperties":false,
+      "description":"Named existing integration, distinct from its technical service type, with a literal source quotation.",
+      "properties":{
+        "name":{"type":"string","minLength":1,"maxLength":120},
+        "sourceId":{"type":"string","minLength":1,"maxLength":128},
+        "quote":{"type":"string","minLength":10,"maxLength":2000}
+      },
+      "required":["name","sourceId","quote"]
+    },
+    "Component": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "id":{"type":"string","pattern":"^[a-z][a-z0-9-]{0,39}$"},
+        "label":{"type":"string","minLength":1,"maxLength":100},
+        "kind":{"type":"string","enum":["appservice","functions","storage","servicebus","keyvault","external","client"]},
+        "service":{"type":"string","minLength":1,"maxLength":160},
+        "responsibility":{"type":"string","minLength":1,"maxLength":600},
+        "requirementIds":{"type":"array","minItems":1,"maxItems":20,"uniqueItems":true,"items":{"type":"string","maxLength":64}},
+        "externalDependency":{"anyOf":[{"$ref":"#/definitions/ExternalDependency"},{"type":"null"}]}
+      },
+      "required":["id","label","kind","service","responsibility","requirementIds"]
+    },
+    "Connection": {
+      "type":"object","additionalProperties":false,
+      "properties":{"id":{"type":"string","minLength":1,"maxLength":64},"source":{"type":"string","maxLength":40},"target":{"type":"string","maxLength":40},"label":{"type":"string","minLength":1,"maxLength":160}},
+      "required":["id","source","target","label"]
+    },
+    "ArchitectureOption": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "id":{"type":"string","pattern":"^[a-z][a-z0-9-]{0,39}$"},
+        "name":{"type":"string","minLength":1,"maxLength":120},
+        "rationale":{"type":"string","minLength":1,"maxLength":1200},
+        "tradeoffs":{"type":"array","minItems":1,"maxItems":6,"items":{"type":"string","maxLength":600}},
+        "costNotes":{"type":"string","minLength":1,"maxLength":800},
+        "components":{"type":"array","minItems":2,"maxItems":12,"items":{"$ref":"#/definitions/Component"}},
+        "connections":{"type":"array","minItems":1,"maxItems":20,"items":{"$ref":"#/definitions/Connection"}}
+      },
+      "required":["id","name","rationale","tradeoffs","costNotes","components","connections"]
+    },
+    "ReviewFinding": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "dimension":{"type":"string","enum":["business","security","reliability","performance","cost","integration","compliance","operations","delivery"]},
+        "severity":{"type":"string","enum":["info","warning","blocker"]},
+        "finding":{"type":"string","minLength":1,"maxLength":1000},
+        "recommendation":{"type":"string","minLength":1,"maxLength":1000},
+        "sourceIds":{"type":"array","minItems":1,"maxItems":6,"uniqueItems":true,"items":{"type":"string","maxLength":128}}
+      },
+      "required":["dimension","severity","finding","recommendation","sourceIds"]
+    },
+    "ArchitectureAnalysis": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "title":{"type":"string","minLength":1,"maxLength":160},
+        "summary":{"type":"string","minLength":1,"maxLength":1800},
+        "businessProcess":{"type":"array","minItems":2,"maxItems":10,"items":{"type":"string","maxLength":400}},
+        "requirements":{"type":"array","minItems":2,"maxItems":16,"items":{"$ref":"#/definitions/Requirement"}},
+        "assumptions":{"type":"array","maxItems":10,"items":{"type":"string","maxLength":600}},
+        "questions":{"type":"array","maxItems":6,"items":{"$ref":"#/definitions/Question"}},
+        "options":{"type":"array","minItems":2,"maxItems":3,"items":{"$ref":"#/definitions/ArchitectureOption"}},
+        "recommendedOptionId":{"type":"string","maxLength":40},
+        "review":{"type":"array","minItems":9,"maxItems":9,"items":{"$ref":"#/definitions/ReviewFinding"}},
+        "changeSummary":{"type":"string","minLength":1,"maxLength":1000}
+      },
+      "required":["title","summary","businessProcess","requirements","assumptions","questions","options","recommendedOptionId","review","changeSummary"]
+    },
+    "AssuranceReview": {
+      "type":"object","additionalProperties":false,
+      "properties":{"review":{"type":"array","minItems":9,"maxItems":9,"items":{"$ref":"#/definitions/ReviewFinding"}}},
+      "required":["review"]
+    },
+    "ModelReceipt": {
+      "type":"object","additionalProperties":false,
+      "properties":{"role":{"type":"string","enum":["synthesis","assurance"]},"model":{"type":"string"},"responseId":{"type":"string","minLength":1},"durationMs":{"type":"integer","minimum":0}},
+      "required":["role","model","responseId","durationMs"]
+    },
+    "StudioResult": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "resultId":{"type":"string"},"inputHash":{"type":"string"},"createdAt":{"type":"string"},
+        "origin":{"type":"string","const":"live-model"},
+        "analysis":{"$ref":"#/definitions/ArchitectureAnalysis"},
+        "modelReceipts":{"type":"array","minItems":2,"maxItems":2,"items":{"$ref":"#/definitions/ModelReceipt"}},
+        "sources":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"id":{"type":"string"},"name":{"type":"string"}},"required":["id","name"]}}
+      },
+      "required":["resultId","inputHash","createdAt","origin","analysis","modelReceipts","sources"]
+    },
+    "StudioEvent": {
+      "type":"object","additionalProperties":false,
+      "properties":{"sequence":{"type":"integer","minimum":1},"stage":{"type":"string","enum":["intake","synthesis","assurance","complete","error"]},"message":{"type":"string"},"at":{"type":"string"}},
+      "required":["sequence","stage","message","at"]
+    },
+    "StudioError": {
+      "type":"object","additionalProperties":false,
+      "properties":{"code":{"type":"string"},"message":{"type":"string"},"retryable":{"type":"boolean"}},
+      "required":["code","message","retryable"]
+    },
+    "StudioJob": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "jobId":{"type":"string"},"status":{"type":"string","enum":["queued","running","succeeded","failed"]},
+        "events":{"type":"array","items":{"$ref":"#/definitions/StudioEvent"}},
+        "result":{"anyOf":[{"$ref":"#/definitions/StudioResult"},{"type":"null"}]},
+        "error":{"anyOf":[{"$ref":"#/definitions/StudioError"},{"type":"null"}]},
+        "changeApproval":{"$ref":"#/definitions/ChangeApproval"}
+      },
+      "required":["jobId","status","events","result","error"]
+    },
+    "SavedInputs": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "title":{"$ref":"#/definitions/AnalysisRequest/properties/title"},
+        "prompt":{"$ref":"#/definitions/AnalysisRequest/properties/prompt"},
+        "documents":{"$ref":"#/definitions/AnalysisRequest/properties/documents"},
+        "refinement":{"$ref":"#/definitions/AnalysisRequest/properties/refinement"},
+        "previousResultId":{"$ref":"#/definitions/AnalysisRequest/properties/previousResultId"}
+      },
+      "required":["title","prompt","documents","refinement","previousResultId"]
+    },
+    "RunSummary": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "jobId":{"type":"string"},"title":{"type":"string"},
+        "status":{"$ref":"#/definitions/StudioJob/properties/status"},
+        "createdAt":{"type":"string"},"updatedAt":{"type":"string"},
+        "documentCount":{"type":"integer","minimum":0},
+        "resultId":{"type":["string","null"]},"previousResultId":{"type":["string","null"]},
+        "compiledPackageCount":{"type":"integer","minimum":0},
+        "error":{"$ref":"#/definitions/StudioJob/properties/error"}
+      },
+      "required":["jobId","title","status","createdAt","updatedAt","documentCount","resultId","previousResultId","compiledPackageCount","error"]
+    },
+    "SavedBuild": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "buildId":{"type":"string"},"resultId":{"type":"string"},"optionId":{"type":"string"},
+        "status":{"$ref":"#/definitions/BuildResult/properties/status"},
+        "compilerVersion":{"type":["string","null"]},"exitCode":{"type":["integer","null"]}
+      },
+      "required":["buildId","resultId","optionId","status","compilerVersion","exitCode"]
+    },
+    "RunHistory": {
+      "type":"object","additionalProperties":false,
+      "properties":{"scope":{"type":"string","enum":["session","workspace"]},"runs":{"type":"array","maxItems":64,"items":{"$ref":"#/definitions/RunSummary"}}},
+      "required":["scope","runs"]
+    },
+    "SavedRun": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "scope":{"type":"string","enum":["session","workspace"]},
+        "summary":{"$ref":"#/definitions/RunSummary"},
+        "inputs":{"$ref":"#/definitions/SavedInputs"},
+        "job":{"$ref":"#/definitions/StudioJob"},
+        "builds":{"type":"array","maxItems":64,"items":{"$ref":"#/definitions/SavedBuild"}}
+      },
+      "required":["scope","summary","inputs","job","builds"]
+    },
+    "BuildRequest": {
+      "type":"object","additionalProperties":false,
+      "properties":{"resultId":{"type":"string","minLength":1,"maxLength":80},"optionId":{"type":"string","pattern":"^[a-z][a-z0-9-]{0,39}$"},"confirmGeneration":{"type":"boolean","const":true},"idempotencyKey":{"type":"string","minLength":8,"maxLength":128}},
+      "required":["resultId","optionId","confirmGeneration","idempotencyKey"]
+    },
+    "BuildFile": {
+      "type":"object","additionalProperties":false,
+      "properties":{"path":{"type":"string"},"content":{"type":"string"},"sha256":{"type":"string"}},
+      "required":["path","content","sha256"]
+    },
+    "BuildResult": {
+      "type":"object","additionalProperties":false,
+      "properties":{
+        "buildId":{"type":"string"},"resultId":{"type":"string"},"optionId":{"type":"string"},
+        "status":{"type":"string","enum":["compiled","failed","blocked"]},
+        "compilerVersion":{"type":["string","null"]},"exitCode":{"type":["integer","null"]},
+        "diagnostics":{"type":"string"},"files":{"type":"array","items":{"$ref":"#/definitions/BuildFile"}},
+        "downloadUrl":{"type":["string","null"]},"limitations":{"type":"array","items":{"type":"string"}},
+        "deploymentStatus":{"type":"string","const":"not-deployed"}
+      },
+      "required":["buildId","resultId","optionId","status","compilerVersion","exitCode","diagnostics","files","downloadUrl","limitations","deploymentStatus"]
+    }
+  }
+}

@@ -1,0 +1,230 @@
+{
+  "origin": "fixture",
+  "description": "Invalid examples expressed as replacement/deletion vectors against named positive example files. None is live evidence.",
+  "cases": [
+    {
+      "name": "invalid-run-mode",
+      "base": "run-manifest.json",
+      "path": ["runMode"],
+      "value": "demo",
+      "keyword": "enum"
+    },
+    {
+      "name": "invalid-purpose",
+      "base": "run-manifest.json",
+      "path": ["purpose"],
+      "value": "production",
+      "keyword": "enum"
+    },
+    {
+      "name": "invalid-origin",
+      "base": "evidence-reference.json",
+      "path": ["origin"],
+      "value": "azure",
+      "keyword": "enum"
+    },
+    {
+      "name": "state-is-not-origin",
+      "base": "evidence-reference.json",
+      "path": ["evidenceState"],
+      "value": "live-local",
+      "keyword": "enum"
+    },
+    {
+      "name": "invalid-actor",
+      "base": "authorization-context.json",
+      "path": ["caller", "actor", "actorId"],
+      "value": "admin",
+      "keyword": "const"
+    },
+    {
+      "name": "invalid-identity-assurance",
+      "base": "authorization-context.json",
+      "path": ["caller", "actor", "identityAssurance"],
+      "value": "entra-verified",
+      "keyword": "const"
+    },
+    {
+      "name": "invalid-run-id",
+      "base": "run-manifest.json",
+      "path": ["runId"],
+      "value": "..\\outside",
+      "keyword": "pattern"
+    },
+    {
+      "name": "invalid-case-id",
+      "base": "case.json",
+      "path": ["caseId"],
+      "value": "RUN-WRONG-PREFIX",
+      "keyword": "pattern"
+    },
+    {
+      "name": "invalid-artifact-id",
+      "base": "case.json",
+      "path": ["artifactId"],
+      "value": "",
+      "keyword": "pattern"
+    },
+    {
+      "name": "invalid-work-id",
+      "base": "work-envelope.json",
+      "path": ["workId"],
+      "value": "CASE-WRONG-PREFIX",
+      "keyword": "pattern"
+    },
+    {
+      "name": "invalid-scenario-hash",
+      "base": "run-manifest.json",
+      "path": ["scenarioHash"],
+      "value": "sha256:placeholder",
+      "keyword": "pattern"
+    },
+    {
+      "name": "invalid-source-checksum",
+      "base": "evidence-reference.json",
+      "path": ["sourceChecksum"],
+      "value": "not-a-checksum",
+      "keyword": "pattern"
+    },
+    {
+      "name": "missing-common-revision",
+      "base": "evidence-reference.json",
+      "path": ["caseRevisionAtWrite"],
+      "delete": true,
+      "keyword": "required"
+    },
+    {
+      "name": "invalid-time",
+      "base": "evidence-reference.json",
+      "path": ["observedAt"],
+      "value": "2026-02-30T17:00:00Z",
+      "keyword": "format"
+    },
+    {
+      "name": "timestamp-needs-offset",
+      "base": "evidence-reference.json",
+      "path": ["retrievedAt"],
+      "value": "2026-09-12T17:00:00",
+      "keyword": "format"
+    },
+    {
+      "name": "unknown-root-field",
+      "base": "case.json",
+      "path": ["clientOverride"],
+      "value": true,
+      "keyword": "unevaluatedProperties"
+    },
+    {
+      "name": "only-case-has-logical-revision",
+      "base": "work-envelope.json",
+      "path": ["logicalRevision"],
+      "value": 0,
+      "keyword": "unevaluatedProperties"
+    },
+    {
+      "name": "negative-revision",
+      "base": "case.json",
+      "path": ["logicalRevision"],
+      "value": -1,
+      "keyword": "minimum"
+    },
+    {
+      "name": "invalid-work-status",
+      "base": "work-envelope.json",
+      "path": ["status"],
+      "value": "approved",
+      "keyword": "enum"
+    },
+    {
+      "name": "invalid-event-sequence",
+      "base": "domain-event.json",
+      "path": ["sequence"],
+      "value": 0,
+      "keyword": "minimum"
+    },
+    {
+      "name": "invalid-error-code",
+      "base": "error-envelope.json",
+      "path": ["code"],
+      "value": "oops",
+      "keyword": "enum"
+    },
+    {
+      "name": "invalid-exit-code",
+      "base": "command-execution-receipt.json",
+      "path": ["exitCode"],
+      "value": "0",
+      "keyword": "type"
+    },
+    {
+      "name": "missing-argv",
+      "base": "command-execution-receipt.json",
+      "path": ["argv"],
+      "value": [],
+      "keyword": "minItems"
+    },
+    {
+      "name": "replay-needs-source",
+      "base": "run-manifest.json",
+      "path": ["runMode"],
+      "value": "replay",
+      "keyword": "required"
+    },
+    {
+      "name": "nonreplay-cannot-claim-source",
+      "base": "run-manifest.json",
+      "path": ["sourceRunId"],
+      "value": "RUN-SOURCE",
+      "keyword": "not"
+    },
+    {
+      "name": "model-channel-cannot-be-human",
+      "base": "agent-authorization-context.json",
+      "path": ["caller", "callerClass"],
+      "value": "human",
+      "keyword": "oneOf"
+    },
+    {
+      "name": "agent-cannot-claim-human-assurance",
+      "base": "agent-authorization-context.json",
+      "path": ["caller", "actor", "identityAssurance"],
+      "value": "entra-verified",
+      "keyword": "additionalProperties"
+    },
+    {
+      "name": "automatic-executor-cannot-use-human-id",
+      "base": "automatic-domain-event.json",
+      "path": ["actor", "actorId"],
+      "value": "demo-human",
+      "keyword": "pattern"
+    },
+    {
+      "name": "invalid-human-initiator",
+      "base": "command-execution-receipt.json",
+      "path": ["humanInitiator", "actorId"],
+      "value": "another-human",
+      "keyword": "const"
+    },
+    {
+      "name": "pre-context-error-needs-reason",
+      "base": "pre-context-error.json",
+      "path": ["code"],
+      "delete": true,
+      "keyword": "required"
+    },
+    {
+      "name": "pre-context-error-needs-correlation",
+      "base": "pre-context-error.json",
+      "path": ["correlationId"],
+      "delete": true,
+      "keyword": "required"
+    },
+    {
+      "name": "pre-context-error-needs-diagnostic",
+      "base": "pre-context-error.json",
+      "path": ["diagnosticId"],
+      "delete": true,
+      "keyword": "required"
+    }
+  ]
+}

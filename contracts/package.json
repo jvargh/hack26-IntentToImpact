@@ -1,0 +1,13 @@
+{
+  "name": "intent-to-impact-contracts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pinned JSON Schema-to-TypeScript generator and compile-only validation",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "devDependencies": {
+    "json-schema-to-typescript": "16.0.0",
+    "typescript": "5.9.3"
+  }
+}

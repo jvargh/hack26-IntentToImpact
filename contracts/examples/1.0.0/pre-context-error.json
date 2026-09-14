@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "error-envelope",
+  "createdAt": "2026-09-12T17:00:00Z",
+  "code": "invalid-artifact",
+  "message": "Create a valid local run before creating a case.",
+  "correlationId": "CORRELATION-PRECONTEXT-EXAMPLE",
+  "diagnosticId": "DIAGNOSTIC-PRECONTEXT-EXAMPLE",
+  "retryable": false,
+  "allowedRecoveryActions": ["create-run"]
+}

@@ -1,0 +1,32 @@
+{
+  "exampleOrigin": "fixture",
+  "description": "Invalid replacement/deletion vectors against the canonical V2 scenario or named risk-example records. These are not live evidence.",
+  "cases": [
+    { "name": "scenario-version", "base": "scenario", "path": ["scenarioVersion"], "value": "1.0.0" },
+    { "name": "scenario-id", "base": "scenario", "path": ["scenarioId"], "value": "DEMO-CASE-CLAIMS-V1" },
+    { "name": "public-network-required", "base": "scenario", "path": ["desiredStorageConfiguration", "publicNetworkAccess"], "value": "Disabled" },
+    { "name": "https-required", "base": "scenario", "path": ["desiredStorageConfiguration", "supportsHttpsTrafficOnly"], "value": false },
+    { "name": "anonymous-disabled", "base": "scenario", "path": ["desiredStorageConfiguration", "allowBlobPublicAccess"], "value": true },
+    { "name": "tls12-required", "base": "scenario", "path": ["desiredStorageConfiguration", "minimumTlsVersion"], "value": "TLS1_0" },
+    { "name": "no-auto-rpo-answer", "base": "scenario", "path": ["rpoMinutes"], "value": 15 },
+    { "name": "no-auto-rpo-confirmation", "base": "scenario", "path": ["rpoConfirmation"], "value": "confirmed" },
+    { "name": "no-candidate-verdict", "base": "scenario", "path": ["candidates", 0, "eligibility"], "value": "ineligible" },
+    { "name": "b-needs-profile-fact", "base": "scenario", "path": ["candidates", 1, "regionalRecoveryProfile"], "value": null },
+    { "name": "a-cannot-have-profile", "base": "scenario", "path": ["candidates", 0, "regionalRecoveryProfile"], "value": "PROFILE-ACTIVE-PASSIVE-V2" },
+    { "name": "no-seed-authorization", "base": "scenario", "path": ["seedProposal", "authorizationStatus"], "value": "approved" },
+    { "name": "duplicate-promise-id", "base": "scenario", "path": ["promises", 7, "promiseId"], "value": "CP-01" },
+    { "name": "missing-inherited-run", "base": "risk-snapshot", "path": ["runId"], "delete": true },
+    { "name": "wrong-baseline-reference-type", "base": "risk-snapshot", "path": ["binding", "contractId"], "value": "D13" },
+    { "name": "wrong-operation-reference-type", "base": "runtime-binding", "path": ["operationReceipt", "contractId"], "value": "E01" },
+    { "name": "missing-reference-checksum", "base": "risk-snapshot", "path": ["evidence", 0, "reference", "artifact", "checksum"], "delete": true },
+    { "name": "unsupported-evidence-origin", "base": "risk-snapshot", "path": ["evidence", 0, "origin"], "value": "live" },
+    { "name": "unsupported-runtime-status", "base": "risk-evaluation", "path": ["status"], "value": "approved" },
+    { "name": "design-success-not-runtime", "base": "risk-evaluation", "path": ["status"], "value": "design-supported" },
+    { "name": "agent-not-human-attention", "base": "product-attention", "path": ["actor", "kind"], "value": "agent" },
+    { "name": "unknown-attention-class", "base": "operator-attention", "path": ["activityClass"], "value": "agent-work" },
+    { "name": "missing-projection-metadata", "base": "risk-overview", "path": ["stateChecksum"], "delete": true },
+    { "name": "unsupported-risk-state", "base": "risk-operations", "path": ["riskState"], "value": "safe" },
+    { "name": "unsupported-graph-status", "base": "risk-graph", "path": ["edges", 0, "status"], "value": "verified" },
+    { "name": "artifact-style-issued-action-id", "base": "risk-operations", "path": ["allowedActions", 0, "actionId"], "value": "ACTION-UPPERCASE" }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "exampleOrigin": "fixture",
+  "description": "V3 rejection vectors. Boundary checks validate supplied proof-input shape/relationships; they do not evaluate arbitrary runtime snapshots.",
+  "cases": [
+    { "name": "legacy-envelope-version", "validation": "schema", "path": ["schemaVersion"], "value": "1.0.0" },
+    { "name": "legacy-scenario-id", "validation": "schema", "path": ["scenario", "scenarioId"], "value": "DEMO-CASE-CLAIMS-V2" },
+    { "name": "missing-nsp-association-slot", "validation": "schema", "path": ["observation", "association"], "delete": true },
+    { "name": "unknown-rule-count-not-zero", "validation": "boundary", "path": ["observation", "profileAccessRules", "items"], "value": null },
+    { "name": "missing-rule-items", "validation": "boundary", "path": ["observation", "effectiveAccessRules", "items"], "delete": true },
+    { "name": "partial-empty-rules", "validation": "boundary", "path": ["observation", "profileAccessRules", "collectionState"], "value": "partial" },
+    { "name": "stale-empty-rules", "validation": "boundary", "path": ["observation", "effectiveAccessRules", "collectionState"], "value": "stale" },
+    { "name": "unread-next-page", "validation": "boundary", "path": ["observation", "profileAccessRules", "nextLink"], "value": "https://example.invalid/next-page" },
+    { "name": "external-inbound-rule", "validation": "boundary", "path": ["observation", "profileAccessRules", "items"], "value": [{"name":"external-inbound","direction":"Inbound"}] },
+    { "name": "external-outbound-rule", "validation": "boundary", "path": ["observation", "effectiveAccessRules", "items"], "value": [{"name":"external-outbound","direction":"Outbound"}] },
+    { "name": "transition-mode", "validation": "boundary", "path": ["observation", "association", "value", "accessMode"], "value": "Transition" },
+    { "name": "learning-effective-mode", "validation": "boundary", "path": ["observation", "configuration", "value", "accessMode"], "value": "Learning" },
+    { "name": "unknown-association-profile", "validation": "boundary", "path": ["observation", "association", "value", "profileId"], "value": null },
+    { "name": "wrong-effective-profile-name", "validation": "boundary", "path": ["observation", "configuration", "value", "profileName"], "value": "different-profile" },
+    { "name": "wrong-effective-association-name", "validation": "boundary", "path": ["observation", "configuration", "value", "associationName"], "value": "different-association" },
+    { "name": "stale-effective-rule-version", "validation": "boundary", "path": ["observation", "configuration", "value", "accessRulesVersion"], "value": "0" },
+    { "name": "configuration-not-propagated", "validation": "boundary", "path": ["observation", "configuration", "value", "provisioningState"], "value": "Creating" },
+    { "name": "missing-provisioning-issues", "validation": "boundary", "path": ["observation", "configuration", "value", "provisioningIssues"], "value": null },
+    { "name": "anonymous-access", "validation": "boundary", "path": ["observation", "storage", "value", "allowBlobPublicAccess"], "value": true },
+    { "name": "shared-key-access", "validation": "boundary", "path": ["observation", "storage", "value", "allowSharedKeyAccess"], "value": true },
+    { "name": "https-not-required", "validation": "boundary", "path": ["observation", "storage", "value", "supportsHttpsTrafficOnly"], "value": false },
+    { "name": "weak-tls", "validation": "boundary", "path": ["observation", "storage", "value", "minimumTlsVersion"], "value": "TLS1_0" },
+    { "name": "public-enabled-not-nsp", "validation": "boundary", "path": ["observation", "storage", "value", "publicNetworkAccess"], "value": "Enabled" }
+  ]
+}

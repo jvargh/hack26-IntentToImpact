@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://intent-to-impact.invalid/contracts/2.0.0/envelope.schema.json",
+  "title": "NspEnvelopeTypes",
+  "oneOf": [{ "$ref": "#/definitions/ScenarioEnvelope" }],
+  "definitions": {
+    "SchemaVersion": { "type": "string", "const": "2.0.0" },
+    "ScenarioIdentity": {
+      "type": "object",
+      "properties": {
+        "scenarioId": { "type": "string", "const": "DEMO-CASE-CLAIMS-V3" },
+        "scenarioVersion": { "type": "string", "const": "3.0.0" },
+        "scenarioHash": { "$ref": "../1.0.0/core.schema.json#/definitions/Checksum" }
+      },
+      "required": ["scenarioId", "scenarioVersion", "scenarioHash"],
+      "additionalProperties": false
+    },
+    "CommonEnvelope": {
+      "type": "object",
+      "description": "Schema 2.0.0 successor metadata. It does not intersect or weaken the frozen CommonEnvelope 1.0.0 version constant; unchanged primitives are referenced.",
+      "properties": {
+        "schemaVersion": { "$ref": "#/definitions/SchemaVersion" },
+        "artifactId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "runId": { "$ref": "../1.0.0/core.schema.json#/definitions/RunId" },
+        "caseId": { "$ref": "../1.0.0/core.schema.json#/definitions/CaseId" },
+        "scope": { "$ref": "../1.0.0/core.schema.json#/definitions/Scope" },
+        "caseRevisionAtWrite": { "type": "integer", "minimum": 0 },
+        "createdAt": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" },
+        "updatedAt": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" },
+        "stateChecksum": { "$ref": "../1.0.0/core.schema.json#/definitions/Checksum" },
+        "derivedFrom": { "$ref": "../1.0.0/core.schema.json#/definitions/ChecksumMap" }
+      },
+      "required": ["schemaVersion", "artifactId", "runId", "caseId", "scope", "caseRevisionAtWrite", "createdAt", "updatedAt", "stateChecksum", "derivedFrom"]
+    },
+    "ScenarioEnvelope": {
+      "type": "object",
+      "allOf": [{ "$ref": "#/definitions/CommonEnvelope" }],
+      "properties": {
+        "scenario": { "$ref": "#/definitions/ScenarioIdentity" },
+        "runMode": { "$ref": "../1.0.0/core.schema.json#/definitions/RunMode" },
+        "purpose": { "$ref": "../1.0.0/core.schema.json#/definitions/RunPurpose" }
+      },
+      "required": ["scenario", "runMode", "purpose"]
+    },
+    "VersionedArtifactReference": {
+      "type": "object",
+      "properties": {
+        "contractId": {
+          "type": "string",
+          "enum": ["D02", "D03", "D04", "D05", "D06", "D07", "D08", "D09", "D10", "D11", "D12", "D13", "D14", "D15", "D16", "D17", "E01", "E04", "E05", "P01", "P05", "P06"]
+        },
+        "schemaVersion": { "type": "string", "enum": ["1.0.0", "2.0.0"] },
+        "artifact": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "scenario": { "$ref": "#/definitions/ScenarioIdentity" }
+      },
+      "required": ["contractId", "schemaVersion", "artifact", "scenario"],
+      "additionalProperties": false,
+      "if": { "properties": { "contractId": { "enum": ["E01", "E04", "E05"] } } },
+      "then": { "properties": { "schemaVersion": { "const": "1.0.0" } } },
+      "else": { "properties": { "schemaVersion": { "const": "2.0.0" } } }
+    },
+    "EvidenceReference": {
+      "allOf": [{ "$ref": "#/definitions/VersionedArtifactReference" }],
+      "properties": { "contractId": { "type": "string", "const": "E01" } }
+    },
+    "EvidenceLink": {
+      "type": "object",
+      "properties": {
+        "reference": { "$ref": "#/definitions/EvidenceReference" },
+        "origin": { "$ref": "../1.0.0/core.schema.json#/definitions/EvidenceOrigin" }
+      },
+      "required": ["reference", "origin"],
+      "additionalProperties": false
+    },
+    "EvidenceLinks": {
+      "type": "array", "uniqueItems": true,
+      "items": { "$ref": "#/definitions/EvidenceLink" }
+    },
+    "NullableReference": { "anyOf": [{ "$ref": "#/definitions/VersionedArtifactReference" }, { "type": "null" }] },
+    "NullableTimestamp": { "anyOf": [{ "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" }, { "type": "null" }] },
+    "NullableString": { "type": ["string", "null"], "minLength": 1 },
+    "NullableId": { "anyOf": [{ "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" }, { "type": "null" }] }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "subscriptionId": "463a82d4-1896-4332-aeeb-618ee5a5aa93",
+  "tenantId": "5bb5fa45-2dcc-4310-bbc5-883021e9d84b",
+  "resourceGroup": "az-foundry-rg",
+  "projectEndpoint": "https://jv-eastus2-proj-resource.services.ai.azure.com/api/projects/jv-eastus2-proj",
+  "modelDeployment": "gpt-5.2"
+}

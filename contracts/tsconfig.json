@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": false,
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "types": []
+  },
+  "include": [
+    "generated/1.0.0/typescript/core.d.ts",
+    "../tests/contracts/typescript-consumer.ts"
+  ]
+}

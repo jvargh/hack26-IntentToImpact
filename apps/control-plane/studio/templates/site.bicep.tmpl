@@ -1,0 +1,74 @@
+resource @@SYMBOL@@ 'Microsoft.Web/sites@2023-12-01' = {
+  name: @@NAME@@
+  location: location
+  kind: '@@KIND@@'
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', @@IDENTITY_NAME@@)}': {}
+    }
+  }
+  properties: {
+    serverFarmId: @@SYMBOL@@_plan.outputs.resourceId
+    httpsOnly: true
+    publicNetworkAccess: 'Enabled'
+    clientAffinityEnabled: false
+    siteConfig: {
+      alwaysOn: true
+      minTlsVersion: '1.2'
+      scmMinTlsVersion: '1.2'
+      ftpsState: 'Disabled'
+      http20Enabled: true
+      linuxFxVersion: '@@RUNTIME@@'
+      appSettings: [
+@@SETTINGS@@
+      ]
+    }
+  }
+  dependsOn: [
+@@DEPENDENCIES@@
+  ]
+}
+resource @@SYMBOL@@_ftp 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2023-12-01' = {
+  parent: @@SYMBOL@@
+  name: 'ftp'
+  properties: { allow: false }
+}
+resource @@SYMBOL@@_scm 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2023-12-01' = {
+  parent: @@SYMBOL@@
+  name: 'scm'
+  properties: { allow: false }
+}
+resource @@SYMBOL@@_auth 'Microsoft.Web/sites/config@2023-12-01' = {
+  parent: @@SYMBOL@@
+  name: 'authsettingsV2'
+  properties: {
+    platform: { enabled: true, runtimeVersion: '~1' }
+    globalValidation: {
+      requireAuthentication: true
+      unauthenticatedClientAction: 'Return401'
+    }
+    httpSettings: { requireHttps: true }
+    identityProviders: {
+      azureActiveDirectory: {
+        enabled: true
+        registration: {
+          clientId: entraApplicationClientId
+          openIdIssuer: '${environment().authentication.loginEndpoint}${tenant().tenantId}/v2.0'
+        }
+        validation: {
+          allowedAudiences: [
+            entraApplicationClientId
+            'api://${entraApplicationClientId}'
+          ]
+          defaultAuthorizationPolicy: {
+            allowedApplications: [
+              entraApplicationClientId
+@@ALLOWED_CLIENTS@@
+            ]
+          }
+        }
+      }
+    }
+  }
+}

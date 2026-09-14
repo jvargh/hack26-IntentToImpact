@@ -1,0 +1,39 @@
+{
+  "version": "studio-infrastructure-1.0.0",
+  "compilerMinimum": "0.47.16",
+  "avm": {
+    "plan": "br:mcr.microsoft.com/bicep/avm/res/web/serverfarm:0.7.0",
+    "identity": "br:mcr.microsoft.com/bicep/avm/res/managed-identity/user-assigned-identity:0.6.0",
+    "vault": "br:mcr.microsoft.com/bicep/avm/res/key-vault/vault:0.14.0"
+  },
+  "discovery": {
+    "method": "Official public MCR registry tags and version-tagged Azure/bicep-registry-modules sources",
+    "mcpFailure": "azure_get_azure_verified_module discovery for Microsoft.Web/sites and Microsoft.Web/serverfarms each returned no response within 1800 seconds. Official registry/source fallback used.",
+    "source": "https://github.com/Azure/bicep-registry-modules",
+    "storageFallback": "Official storage-account 0.33.0 unconditionally evaluates listKeys in secure outputs. A local pinned key-free template is required by this generator's no-key policy.",
+    "serviceBusFallback": "Official service-bus/namespace 0.17.0 unconditionally evaluates RootManageSharedAccessKey listkeys outputs. A local pinned key-free template is required by this generator's no-key policy.",
+    "siteFallback": "Actual compilation of official web/site 0.24.0 retains conditional storage and relay listKeys branches in nested templates even when unused. A local key-free site/auth template avoids any embedded key-retrieval expression.",
+    "inspectedOfficialPins": ["br:mcr.microsoft.com/bicep/avm/res/web/site:0.24.0", "br:mcr.microsoft.com/bicep/avm/res/storage/storage-account:0.33.0", "br:mcr.microsoft.com/bicep/avm/res/service-bus/namespace:0.17.0"]
+  },
+  "resourceApis": {
+    "Microsoft.Storage/storageAccounts": "2023-05-01",
+    "Microsoft.Storage/storageAccounts/blobServices": "2023-05-01",
+    "Microsoft.Storage/storageAccounts/blobServices/containers": "2023-05-01",
+    "Microsoft.ServiceBus/namespaces": "2024-01-01",
+    "Microsoft.ServiceBus/namespaces/queues": "2024-01-01",
+    "Microsoft.Authorization/roleAssignments": "2022-04-01",
+    "Microsoft.Web/sites": "2023-12-01",
+    "Microsoft.Web/sites/config": "2023-12-01",
+    "Microsoft.Web/sites/basicPublishingCredentialsPolicies": "2023-12-01",
+    "Microsoft.KeyVault/vaults": "2024-11-01"
+  },
+  "serviceAliases": {
+    "appservice": ["AppService", "Azure App Service", "App Service", "Azure Web App", "Azure App Service Web App"],
+    "functions": ["Azure Functions", "Azure Function App", "Function App", "Functions"],
+    "storage": ["Storage", "Azure Storage", "Azure Blob Storage", "Blob Storage", "Azure Storage Account", "Storage Account", "Azure Storage (Blob)", "Azure Storage (Blob Storage)"],
+    "servicebus": ["ServiceBus", "Azure Service Bus", "Service Bus", "Azure Service Bus Queue", "Azure Service Bus Queues"],
+    "keyvault": ["KeyVault", "Azure Key Vault", "Key Vault"],
+    "external": ["External HTTPS API", "External REST API", "External API", "HTTPS API", "Existing HTTPS API"],
+    "client": ["Browser", "Web Browser", "Web Client", "Client", "User", "Browser Client", "User Browser", "React Web Client"]
+  }
+}

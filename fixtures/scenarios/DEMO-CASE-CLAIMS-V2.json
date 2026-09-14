@@ -1,0 +1,181 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "claims-scenario",
+  "scenarioId": "DEMO-CASE-CLAIMS-V2",
+  "scenarioVersion": "2.0.0",
+  "scenarioOrigin": "fixture",
+  "stateChecksum": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+  "intentId": "INTENT-CLAIMS",
+  "businessIntent": "Fictional Contoso Insurance must prepare digital claims for its customer-confirmed seasonal deadline, protect sensitive claims documents, keep approved US data geography, recover within 60 minutes, and keep the defined estimated workload cost within USD 8,000 per month.",
+  "catalog": {
+    "catalogId": "CATALOG-CLAIMS-V2",
+    "catalogVersion": "2.0.0",
+    "rulePackId": "RULES-CLAIMS-V2",
+    "rulePackVersion": "2.0.0"
+  },
+  "rtoMinutes": 60,
+  "rpoMinutes": null,
+  "rpoConfirmation": "unconfirmed",
+  "rpoQuestionId": "QUESTION-RPO",
+  "scriptedRpoAnswerMinutes": 15,
+  "monthlyBudgetUsd": 8000,
+  "estimateBasis": "synthetic-comparable-monthly-workload",
+  "promises": [
+    {
+      "promiseId": "CP-01",
+      "statement": "Claims storage uses its approved public endpoint with HTTPS required, anonymous blob access disabled, and minimum TLS 1.2. Verification is scoped configuration assurance, not complete access-control proof.",
+      "customerImpact": "Sensitive claims documents must not be exposed through anonymous blob access or transferred without the required HTTPS configuration.",
+      "category": "security",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-ACCESS"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP01-PUBLIC-STORAGE-V2"],
+      "requiredEvidenceKinds": ["resource-configuration"]
+    },
+    {
+      "promiseId": "CP-02",
+      "statement": "Approved managed identities and scoped roles are used for declared data operations; configuration evidence must cover those operations.",
+      "customerImpact": "Only the intended workload identities should perform the declared claims data operations.",
+      "category": "security",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-IDENTITY"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP02-IDENTITY-V2"],
+      "requiredEvidenceKinds": ["identity-role-configuration"]
+    },
+    {
+      "promiseId": "CP-03",
+      "statement": "Approved storage encryption and secure-transfer controls are configured; this does not establish every data-protection property.",
+      "customerImpact": "Claims documents need the approved protection at rest and in transit.",
+      "category": "security",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-ENCRYPTION"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP03-ENCRYPTION-V2"],
+      "requiredEvidenceKinds": ["encryption-configuration"]
+    },
+    {
+      "promiseId": "CP-04",
+      "statement": "Recover within 60 minutes for the specified regional-loss scenario. Runtime verification requires a matching recovery test, not a design estimate.",
+      "customerImpact": "Claims processing needs a bounded interruption during the declared regional-loss event.",
+      "category": "resilience",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-RTO"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP04-REGIONAL-RTO-V2"],
+      "requiredEvidenceKinds": ["regional-recovery-test"]
+    },
+    {
+      "promiseId": "CP-05",
+      "statement": "RPO remains unconfirmed until the customer explicitly answers the consequential question. The scripted acceptance answer is 15 minutes for the same regional-loss scenario; runtime verification requires matching test evidence.",
+      "customerImpact": "The customer must choose the acceptable claims-data loss window rather than have it assumed by an agent.",
+      "category": "resilience",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-RPO"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP05-REGIONAL-RPO-V2"],
+      "requiredEvidenceKinds": ["regional-recovery-test"]
+    },
+    {
+      "promiseId": "CP-06",
+      "statement": "Declared processing, storage, and dependencies remain in approved US geography, with evidence adequate for the declared scope.",
+      "customerImpact": "Claims data must remain within the customer's approved geographic boundary.",
+      "category": "residency",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-US-GEOGRAPHY"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP06-US-GEOGRAPHY-V2"],
+      "requiredEvidenceKinds": ["residency-inventory"]
+    },
+    {
+      "promiseId": "CP-07",
+      "statement": "The defined monthly workload cost basis is at most USD 8,000. Runtime verification requires a complete billed period; synthetic estimates are not actual billing or realized savings.",
+      "customerImpact": "The workload must fit the defined operating budget on a comparable cost basis.",
+      "category": "cost",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-BUDGET"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP07-COST-BASIS-V2"],
+      "requiredEvidenceKinds": ["complete-billing-period"]
+    },
+    {
+      "promiseId": "CP-08",
+      "statement": "Required diagnostics are enabled with configured retention of at least 90 days. Settings alone do not prove that 90 days of logs already exist.",
+      "customerImpact": "Operators need the declared diagnostics and retention configuration to investigate claims-service issues.",
+      "category": "observability",
+      "criticality": "blocking",
+      "requirementIds": ["REQ-CLAIMS-DIAGNOSTICS"],
+      "componentIds": ["CMP-CLAIMS-STORE"],
+      "verifierIds": ["VERIFY-CP08-DIAGNOSTICS-V2"],
+      "requiredEvidenceKinds": ["diagnostic-configuration"]
+    }
+  ],
+  "candidates": [
+    {
+      "candidateId": "A",
+      "monthlyEstimateUsd": 6000,
+      "regionalRecoveryProfile": null,
+      "declaredStorageControls": {
+        "publicNetworkAccess": "Enabled",
+        "supportsHttpsTrafficOnly": true,
+        "allowBlobPublicAccess": false,
+        "minimumTlsVersion": "TLS1_2"
+      }
+    },
+    {
+      "candidateId": "B",
+      "monthlyEstimateUsd": 7200,
+      "regionalRecoveryProfile": "PROFILE-ACTIVE-PASSIVE-V2",
+      "declaredStorageControls": {
+        "publicNetworkAccess": "Enabled",
+        "supportsHttpsTrafficOnly": true,
+        "allowBlobPublicAccess": false,
+        "minimumTlsVersion": "TLS1_2"
+      }
+    }
+  ],
+  "componentId": "CMP-CLAIMS-STORE",
+  "resourceType": "Microsoft.Storage/storageAccounts",
+  "storageKind": "StorageV2",
+  "desiredStorageConfiguration": {
+    "publicNetworkAccess": "Enabled",
+    "supportsHttpsTrafficOnly": true,
+    "allowBlobPublicAccess": false,
+    "minimumTlsVersion": "TLS1_2"
+  },
+  "desiredStateChecksum": "sha256:367283b34f8f311bf1cdb4f7bd3e32d8c1e109c79a85205eef4485c677f3c497",
+  "cp01Verifier": {
+    "verifierId": "VERIFY-CP01-PUBLIC-STORAGE-V2",
+    "version": "2.0.0",
+    "maxEvidenceAgeSeconds": 300,
+    "requiredEvidenceKinds": ["resource-configuration"],
+    "predicates": [
+      { "predicateId": "PRED-PUBLIC-NETWORK-ENABLED", "property": "publicNetworkAccess", "operator": "equals", "expected": "Enabled" },
+      { "predicateId": "PRED-HTTPS-REQUIRED", "property": "supportsHttpsTrafficOnly", "operator": "equals", "expected": true },
+      { "predicateId": "PRED-ANONYMOUS-BLOB-DISABLED", "property": "allowBlobPublicAccess", "operator": "equals", "expected": false },
+      { "predicateId": "PRED-TLS12-MINIMUM", "property": "minimumTlsVersion", "operator": "equals", "expected": "TLS1_2" }
+    ]
+  },
+  "operatorBinding": { "subscriptionId": null, "region": null, "resourceId": null, "deploymentReceipt": null },
+  "baselineCriteria": {
+    "requiresAcknowledgedOperation": true,
+    "requiresExactManifestBinding": true,
+    "desiredStateChecksum": "sha256:367283b34f8f311bf1cdb4f7bd3e32d8c1e109c79a85205eef4485c677f3c497"
+  },
+  "seedProposal": {
+    "property": "supportsHttpsTrafficOnly",
+    "before": true,
+    "after": false,
+    "allowBlobPublicAccess": false,
+    "authorizationStatus": "not-authorized",
+    "requiresEmptySyntheticData": true,
+    "sendRealDataOverHttp": false,
+    "ifPolicyProhibits": "block"
+  },
+  "restorationCriteria": {
+    "desiredStateChecksum": "sha256:367283b34f8f311bf1cdb4f7bd3e32d8c1e109c79a85205eef4485c677f3c497",
+    "requiresFreshEvidence": true,
+    "requiresSameBinding": true,
+    "recheckProperties": ["publicNetworkAccess", "supportsHttpsTrafficOnly", "allowBlobPublicAccess", "minimumTlsVersion"]
+  }
+}

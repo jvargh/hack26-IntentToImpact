@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://intent-to-impact.invalid/contracts/2.0.0/projections.schema.json",
+  "title": "NspProjectionContract",
+  "oneOf": [
+    { "$ref": "#/definitions/ExperienceOverview" },
+    { "$ref": "#/definitions/OperationsRisk" },
+    { "$ref": "#/definitions/IntentContinuityGraph" }
+  ],
+  "definitions": {
+    "ProjectionEnvelope": {
+      "type": "object",
+      "allOf": [{ "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" }],
+      "properties": {
+        "logicalRevision": { "type": "integer", "minimum": 0 },
+        "asOf": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" },
+        "scenarioOrigin": { "$ref": "../1.0.0/core.schema.json#/definitions/EvidenceOrigin" },
+        "evidence": { "$ref": "envelope.schema.json#/definitions/EvidenceLinks" },
+        "currentWork": { "type": "array", "items": { "$ref": "../1.0.0/core.schema.json#/definitions/WorkEnvelope" } },
+        "allowedActions": { "type": "array", "items": { "$ref": "../1.0.0/projections.schema.json#/definitions/AllowedAction" } },
+        "blockers": { "type": "array", "items": { "$ref": "../1.0.0/projections.schema.json#/definitions/Blocker" } },
+        "artifactRefs": { "type": "array", "uniqueItems": true, "items": { "$ref": "envelope.schema.json#/definitions/VersionedArtifactReference" } }
+      },
+      "required": ["logicalRevision", "asOf", "scenarioOrigin", "evidence", "currentWork", "allowedActions", "blockers", "artifactRefs"]
+    },
+    "RestorationSummary": {
+      "type": "object",
+      "properties": {
+        "status": { "$ref": "../1.0.0/projections.schema.json#/definitions/RestorationSummary/properties/status" },
+        "operationReceipt": { "anyOf": [{ "$ref": "risk.schema.json#/definitions/OperationReference" }, { "type": "null" }] },
+        "verificationEvaluation": { "$ref": "risk.schema.json#/definitions/NullableEvaluationReference" }
+      },
+      "required": ["status", "operationReceipt", "verificationEvaluation"],
+      "additionalProperties": false
+    },
+    "OperationsRisk": {
+      "title": "OperationsRisk", "x-contract-id": "P05", "type": "object",
+      "allOf": [{ "$ref": "#/definitions/ProjectionEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "operations-risk" },
+        "riskState": { "type": "string", "enum": ["known-risk", "unknown", "verification-pending", "restoration-pending", "no-known-risk"] },
+        "headline": { "$ref": "../1.0.0/projections.schema.json#/definitions/OperationsRisk/properties/headline" },
+        "customerImpact": { "$ref": "../1.0.0/projections.schema.json#/definitions/OperationsRisk/properties/customerImpact" },
+        "binding": { "$ref": "risk.schema.json#/definitions/NullableBindingReference" },
+        "snapshot": { "$ref": "risk.schema.json#/definitions/NullableSnapshotReference" },
+        "findingRefs": { "type": "array", "uniqueItems": true, "items": { "$ref": "risk.schema.json#/definitions/FindingReference" } },
+        "evaluationRefs": { "type": "array", "uniqueItems": true, "items": { "$ref": "risk.schema.json#/definitions/EvaluationReference" } },
+        "restoration": { "$ref": "#/definitions/RestorationSummary" }
+      },
+      "required": ["artifactType", "riskState", "headline", "customerImpact", "binding", "snapshot", "findingRefs", "evaluationRefs", "restoration"],
+      "unevaluatedProperties": false
+    },
+    "NspMember": { "type": "string", "enum": ["storage", "perimeter", "profile", "association", "configuration"] },
+    "ScenarioNodeSource": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "const": "scenario" },
+        "scenario": { "$ref": "envelope.schema.json#/definitions/ScenarioIdentity" },
+        "entityId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" }
+      },
+      "required": ["kind", "scenario", "entityId"], "additionalProperties": false
+    },
+    "ArtifactNodeSource": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "const": "artifact" },
+        "reference": { "$ref": "envelope.schema.json#/definitions/VersionedArtifactReference" }
+      },
+      "required": ["kind", "reference"], "additionalProperties": false
+    },
+    "NspNodeSource": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "const": "nsp-observation" },
+        "snapshot": { "$ref": "risk.schema.json#/definitions/SnapshotReference" },
+        "member": { "$ref": "#/definitions/NspMember" },
+        "observationState": { "$ref": "nsp.schema.json#/definitions/ObservationState" }
+      },
+      "required": ["kind", "snapshot", "member", "observationState"], "additionalProperties": false
+    },
+    "GapNodeSource": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "const": "gap" },
+        "expectedMember": { "$ref": "#/definitions/NspMember" },
+        "reasonCode": { "$ref": "../1.0.0/core.schema.json#/definitions/ActionId" }
+      },
+      "required": ["kind", "expectedMember", "reasonCode"], "additionalProperties": false
+    },
+    "GraphNode": {
+      "type": "object",
+      "properties": {
+        "nodeId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "nodeType": { "type": "string", "enum": ["intent", "promise", "component", "baseline", "runtime-snapshot", "finding", "evaluation", "evidence", "storage", "perimeter", "profile", "association", "configuration"] },
+        "label": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "source": { "oneOf": [{ "$ref": "#/definitions/ScenarioNodeSource" }, { "$ref": "#/definitions/ArtifactNodeSource" }, { "$ref": "#/definitions/NspNodeSource" }, { "$ref": "#/definitions/GapNodeSource" }] }
+      },
+      "required": ["nodeId", "nodeType", "label", "source"], "additionalProperties": false
+    },
+    "ScenarioEdgeSupport": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "const": "scenario-link" },
+        "scenario": { "$ref": "envelope.schema.json#/definitions/ScenarioIdentity" },
+        "fromEntityId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "toEntityId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" }
+      },
+      "required": ["kind", "scenario", "fromEntityId", "toEntityId"], "additionalProperties": false
+    },
+    "EvaluationEdgeSupport": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "const": "evaluation" },
+        "reference": { "$ref": "risk.schema.json#/definitions/EvaluationReference" },
+        "promiseId": { "$ref": "scenario.schema.json#/definitions/PromiseId" }
+      },
+      "required": ["kind", "reference", "promiseId"], "additionalProperties": false
+    },
+    "ArtifactEdgeSupport": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "const": "artifact-link" },
+        "source": { "$ref": "envelope.schema.json#/definitions/VersionedArtifactReference" },
+        "target": { "$ref": "envelope.schema.json#/definitions/VersionedArtifactReference" }
+      },
+      "required": ["kind", "source", "target"], "additionalProperties": false
+    },
+    "NspEdgeSupport": {
+      "type": "object",
+      "properties": {
+        "kind": { "type": "string", "const": "nsp-relationship" },
+        "snapshot": { "$ref": "risk.schema.json#/definitions/SnapshotReference" },
+        "fromMember": { "$ref": "#/definitions/NspMember" },
+        "toMember": { "$ref": "#/definitions/NspMember" }
+      },
+      "required": ["kind", "snapshot", "fromMember", "toMember"], "additionalProperties": false
+    },
+    "GapEdgeSupport": { "$ref": "../1.0.0/projections.schema.json#/definitions/GapEdgeSupport" },
+    "GraphEdge": {
+      "type": "object",
+      "properties": {
+        "edgeId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "fromNodeId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "toNodeId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "relation": { "type": "string", "enum": ["defines", "implemented-by", "references", "evaluates", "associated-storage", "associated-profile", "profile-of", "configuration-for", "effective-association", "effective-profile"] },
+        "status": { "type": "string", "enum": ["supported", "broken", "pending", "gap"] },
+        "support": { "oneOf": [{ "$ref": "#/definitions/ScenarioEdgeSupport" }, { "$ref": "#/definitions/EvaluationEdgeSupport" }, { "$ref": "#/definitions/ArtifactEdgeSupport" }, { "$ref": "#/definitions/NspEdgeSupport" }, { "$ref": "#/definitions/GapEdgeSupport" }] }
+      },
+      "required": ["edgeId", "fromNodeId", "toNodeId", "relation", "status", "support"], "additionalProperties": false
+    },
+    "IntentContinuityGraph": {
+      "title": "IntentContinuityGraph", "x-contract-id": "P06", "type": "object",
+      "allOf": [{ "$ref": "#/definitions/ProjectionEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "intent-continuity-graph" },
+        "nodes": { "type": "array", "maxItems": 30, "items": { "$ref": "#/definitions/GraphNode" } },
+        "edges": { "type": "array", "maxItems": 60, "items": { "$ref": "#/definitions/GraphEdge" } },
+        "listEntries": { "type": "array", "maxItems": 30, "items": { "$ref": "../1.0.0/projections.schema.json#/definitions/GraphListEntry" } }
+      },
+      "required": ["artifactType", "nodes", "edges", "listEntries"], "unevaluatedProperties": false
+    },
+    "CoverageRow": {
+      "type": "object",
+      "properties": {
+        "promiseId": { "$ref": "scenario.schema.json#/definitions/PromiseId" },
+        "confirmed": { "type": "boolean" },
+        "status": { "$ref": "../1.0.0/risk.schema.json#/definitions/RuntimeStatus" },
+        "reasonCode": { "$ref": "../1.0.0/core.schema.json#/definitions/ActionId" },
+        "evaluation": { "$ref": "risk.schema.json#/definitions/NullableEvaluationReference" }
+      },
+      "required": ["promiseId", "confirmed", "status", "reasonCode", "evaluation"], "additionalProperties": false
+    },
+    "CoverageSummary": {
+      "type": "object",
+      "properties": {
+        "phase": { "type": "string", "const": "runtime" },
+        "assessmentState": { "$ref": "../1.0.0/projections.schema.json#/definitions/CoverageSummary/properties/assessmentState" },
+        "verifiedCount": { "type": ["integer", "null"], "minimum": 0 },
+        "applicableCount": { "type": ["integer", "null"], "minimum": 0 },
+        "rows": { "type": "array", "maxItems": 8, "items": { "$ref": "#/definitions/CoverageRow" } }
+      },
+      "required": ["phase", "assessmentState", "verifiedCount", "applicableCount", "rows"], "additionalProperties": false
+    },
+    "ExperienceOverview": {
+      "title": "ExperienceOverview", "x-contract-id": "P01", "type": "object",
+      "allOf": [{ "$ref": "#/definitions/ProjectionEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "experience-overview" },
+        "businessGoal": { "$ref": "../1.0.0/projections.schema.json#/definitions/ExperienceOverview/properties/businessGoal" },
+        "coverage": { "$ref": "#/definitions/CoverageSummary" },
+        "operationsRisk": { "$ref": "#/definitions/OperationsRisk" },
+        "continuityGraph": { "$ref": "#/definitions/IntentContinuityGraph" }
+      },
+      "required": ["artifactType", "businessGoal", "coverage", "operationsRisk", "continuityGraph"], "unevaluatedProperties": false
+    }
+  }
+}

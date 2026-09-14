@@ -1,0 +1,478 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://intent-to-impact.invalid/contracts/1.0.0/design.schema.json",
+  "title": "DesignDecisionContract",
+  "oneOf": [
+    { "$ref": "#/definitions/Requirements" },
+    { "$ref": "#/definitions/ArchitectureProposal" },
+    { "$ref": "#/definitions/ArchitectureModel" },
+    { "$ref": "#/definitions/ArchitectureDecisionRecord" },
+    { "$ref": "#/definitions/Approval" },
+    { "$ref": "#/definitions/ReviewGateEvaluation" },
+    { "$ref": "#/definitions/GenerationContract" }
+  ],
+  "definitions": {
+    "NullableArtifactReference": { "anyOf": [{ "$ref": "core.schema.json#/definitions/ArtifactReference" }, { "type": "null" }] },
+    "NullableIdentifier": { "anyOf": [{ "$ref": "core.schema.json#/definitions/Identifier" }, { "type": "null" }] },
+    "NullableTimestamp": { "anyOf": [{ "$ref": "core.schema.json#/definitions/Timestamp" }, { "type": "null" }] },
+    "NullableHuman": { "anyOf": [{ "$ref": "core.schema.json#/definitions/HumanExecutionActor" }, { "type": "null" }] },
+    "AttentionEventReference": {
+      "allOf": [{ "$ref": "risk.schema.json#/definitions/ArtifactLink" }],
+      "properties": { "contractId": { "type": "string", "const": "E05" } }
+    },
+    "GateId": {
+      "type": "string",
+      "enum": ["requirements-ready", "design-ready", "generation-ready", "delivery-ready", "operation-ready", "remediation-ready"]
+    },
+    "CheckStatus": { "type": "string", "enum": ["pass", "pass-with-warnings", "stale", "blocked"] },
+    "ApprovalStatus": { "type": "string", "enum": ["pending", "approved", "rejected", "stale", "expired"] },
+    "ApprovalClass": { "type": "string", "enum": ["design", "delivery", "material-correction", "operator"] },
+    "HumanConfirmation": {
+      "type": "object",
+      "properties": {
+        "decisionId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "actionId": { "$ref": "core.schema.json#/definitions/ActionId" },
+        "actor": { "$ref": "core.schema.json#/definitions/HumanExecutionActor" },
+        "confirmedAt": { "$ref": "core.schema.json#/definitions/Timestamp" },
+        "attentionEvent": { "$ref": "#/definitions/AttentionEventReference" }
+      },
+      "required": ["decisionId", "actionId", "actor", "confirmedAt", "attentionEvent"],
+      "additionalProperties": false
+    },
+    "RpoQuestion": {
+      "type": "object",
+      "properties": {
+        "questionId": { "$ref": "scenario.schema.json#/definitions/ClaimsScenarioV2/properties/rpoQuestionId" },
+        "promiseId": { "type": "string", "const": "CP-05" },
+        "prompt": { "type": "string", "minLength": 1, "maxLength": 1200 },
+        "required": { "type": "boolean", "const": true },
+        "status": { "type": "string", "enum": ["unanswered", "answered"] },
+        "valueMinutes": { "anyOf": [{ "type": "null" }, { "$ref": "scenario.schema.json#/definitions/ClaimsScenarioV2/properties/scriptedRpoAnswerMinutes" }] },
+        "confirmation": { "anyOf": [{ "type": "null" }, { "$ref": "#/definitions/HumanConfirmation" }] }
+      },
+      "required": ["questionId", "promiseId", "prompt", "required", "status", "valueMinutes", "confirmation"],
+      "additionalProperties": false,
+      "if": { "properties": { "status": { "const": "answered" } } },
+      "then": {
+        "properties": {
+          "valueMinutes": { "$ref": "scenario.schema.json#/definitions/ClaimsScenarioV2/properties/scriptedRpoAnswerMinutes" },
+          "confirmation": { "$ref": "#/definitions/HumanConfirmation" }
+        }
+      },
+      "else": { "properties": { "valueMinutes": { "type": "null" }, "confirmation": { "type": "null" } } }
+    },
+    "Requirements": {
+      "title": "Requirements",
+      "x-contract-id": "D02",
+      "type": "object",
+      "allOf": [{ "$ref": "risk.schema.json#/definitions/RiskEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "requirements" },
+        "requirementsId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "status": { "type": "string", "enum": ["draft", "awaiting-answers", "confirmed", "stale"] },
+        "businessIntent": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "requirementIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "core.schema.json#/definitions/Identifier" } },
+        "promiseIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "scenario.schema.json#/definitions/PromiseId" } },
+        "rpoQuestion": { "$ref": "#/definitions/RpoQuestion" },
+        "constraints": {
+          "type": "object",
+          "properties": {
+            "rtoMinutes": { "$ref": "scenario.schema.json#/definitions/ClaimsScenarioV2/properties/rtoMinutes" },
+            "monthlyBudgetUsd": { "$ref": "scenario.schema.json#/definitions/ClaimsScenarioV2/properties/monthlyBudgetUsd" },
+            "geography": { "type": "string", "const": "US" },
+            "minimumDiagnosticRetentionDays": { "type": "integer", "minimum": 90 },
+            "storageConfiguration": { "$ref": "scenario.schema.json#/definitions/DesiredStorageConfiguration" }
+          },
+          "required": ["rtoMinutes", "monthlyBudgetUsd", "geography", "minimumDiagnosticRetentionDays", "storageConfiguration"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["artifactType", "requirementsId", "status", "businessIntent", "requirementIds", "promiseIds", "rpoQuestion", "constraints"],
+      "if": { "properties": { "status": { "const": "confirmed" } } },
+      "then": { "properties": { "rpoQuestion": { "properties": { "status": { "const": "answered" } } } } },
+      "unevaluatedProperties": false
+    },
+    "CatalogReference": {
+      "type": "object",
+      "properties": {
+        "catalogId": { "$ref": "scenario.schema.json#/definitions/ClaimsScenarioV2/properties/catalog/properties/catalogId" },
+        "version": { "$ref": "core.schema.json#/definitions/Version" },
+        "checksum": { "$ref": "core.schema.json#/definitions/Checksum" }
+      },
+      "required": ["catalogId", "version", "checksum"],
+      "additionalProperties": false
+    },
+    "ModuleReference": {
+      "type": "object",
+      "description": "Approved catalog token/version/checksum, not executable code or an arbitrary remote URL.",
+      "properties": {
+        "moduleId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "version": { "$ref": "core.schema.json#/definitions/Version" },
+        "checksum": { "$ref": "core.schema.json#/definitions/Checksum" }
+      },
+      "required": ["moduleId", "version", "checksum"],
+      "additionalProperties": false
+    },
+    "ArchitectureComponent": {
+      "type": "object",
+      "description": "Bounded claims-storage component; not a general Azure resource ontology or deployment proof.",
+      "properties": {
+        "componentId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "resourceType": { "$ref": "scenario.schema.json#/definitions/ClaimsScenarioV2/properties/resourceType" },
+        "dataClassification": { "type": "string", "const": "confidential" },
+        "identityMode": { "type": "string", "const": "managed-identity" },
+        "networkExposure": { "type": "string", "const": "public-endpoint" },
+        "geography": { "type": "string", "const": "US" },
+        "storageConfiguration": { "$ref": "scenario.schema.json#/definitions/DesiredStorageConfiguration" },
+        "module": { "$ref": "#/definitions/ModuleReference" },
+        "promiseIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "scenario.schema.json#/definitions/PromiseId" } },
+        "requirementIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "core.schema.json#/definitions/Identifier" } }
+      },
+      "required": ["componentId", "resourceType", "dataClassification", "identityMode", "networkExposure", "geography", "storageConfiguration", "module", "promiseIds", "requirementIds"],
+      "additionalProperties": false
+    },
+    "ArchitectureRelationship": {
+      "type": "object",
+      "properties": {
+        "fromComponentId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "toComponentId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "protocol": { "type": "string", "const": "https" },
+        "authentication": { "type": "string", "const": "managed-identity" }
+      },
+      "required": ["fromComponentId", "toComponentId", "protocol", "authentication"],
+      "additionalProperties": false
+    },
+    "OptionDefinition": {
+      "type": "object",
+      "description": "Proposal/model attributes only. Eligibility belongs to the separate engine-produced D08 assessment.",
+      "properties": {
+        "optionId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 1600 },
+        "catalogFacts": { "$ref": "scenario.schema.json#/definitions/CandidateProfile" },
+        "components": { "type": "array", "minItems": 1, "maxItems": 8, "items": { "$ref": "#/definitions/ArchitectureComponent" } },
+        "relationships": { "type": "array", "maxItems": 16, "items": { "$ref": "#/definitions/ArchitectureRelationship" } },
+        "assumptions": { "type": "array", "maxItems": 20, "items": { "type": "string", "minLength": 1, "maxLength": 800 } },
+        "unresolvedItems": { "type": "array", "maxItems": 20, "items": { "type": "string", "minLength": 1, "maxLength": 800 } }
+      },
+      "required": ["optionId", "title", "summary", "catalogFacts", "components", "relationships", "assumptions", "unresolvedItems"],
+      "additionalProperties": false
+    },
+    "Options": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/definitions/OptionDefinition" } },
+    "ArchitectureProposal": {
+      "title": "ArchitectureProposal",
+      "x-contract-id": "D04",
+      "type": "object",
+      "allOf": [{ "$ref": "risk.schema.json#/definitions/RiskEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "architecture-proposal" },
+        "proposalId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "authority": { "type": "string", "const": "proposal-only" },
+        "producer": { "$ref": "core.schema.json#/definitions/AgentExecutionActor" },
+        "origin": { "$ref": "core.schema.json#/definitions/EvidenceOrigin" },
+        "invocationReceipt": { "$ref": "#/definitions/NullableArtifactReference" },
+        "requirements": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "promiseContract": { "$ref": "risk.schema.json#/definitions/PromiseContractReference" },
+        "catalog": { "$ref": "#/definitions/CatalogReference" },
+        "options": { "$ref": "#/definitions/Options" },
+        "recommendedOptionId": { "$ref": "#/definitions/NullableIdentifier" },
+        "rationale": { "type": "string", "minLength": 1, "maxLength": 2400 }
+      },
+      "required": ["artifactType", "proposalId", "authority", "producer", "origin", "invocationReceipt", "requirements", "promiseContract", "catalog", "options", "recommendedOptionId", "rationale"],
+      "if": { "properties": { "origin": { "const": "live-external" } } },
+      "then": { "properties": { "invocationReceipt": { "$ref": "core.schema.json#/definitions/ArtifactReference" } } },
+      "unevaluatedProperties": false
+    },
+    "ArchitectureModel": {
+      "title": "ArchitectureModel",
+      "x-contract-id": "D05",
+      "type": "object",
+      "allOf": [{ "$ref": "risk.schema.json#/definitions/RiskEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "architecture-model" },
+        "architectureId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "status": { "type": "string", "enum": ["validated", "blocked", "stale"] },
+        "sourceProposal": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "review": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "promiseContract": { "$ref": "risk.schema.json#/definitions/PromiseContractReference" },
+        "options": { "$ref": "#/definitions/Options" },
+        "recommendedOptionId": { "$ref": "#/definitions/NullableIdentifier" },
+        "selectedOptionId": { "$ref": "#/definitions/NullableIdentifier" },
+        "decision": { "$ref": "#/definitions/NullableArtifactReference" }
+      },
+      "required": ["artifactType", "architectureId", "status", "sourceProposal", "review", "promiseContract", "options", "recommendedOptionId", "selectedOptionId", "decision"],
+      "if": { "properties": { "selectedOptionId": { "type": "null" } } },
+      "then": { "properties": { "decision": { "type": "null" } } },
+      "else": { "properties": { "decision": { "$ref": "core.schema.json#/definitions/ArtifactReference" } } },
+      "unevaluatedProperties": false
+    },
+    "DecisionReceipt": {
+      "type": "object",
+      "description": "Nested D06 human option-selection receipt. Selection is not a D07 approval or permission to generate/apply/deploy.",
+      "properties": {
+        "decisionId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "outcome": { "type": "string", "enum": ["selected", "rejected"] },
+        "selectedOptionId": { "$ref": "#/definitions/NullableIdentifier" },
+        "rationale": { "type": "string", "minLength": 1, "maxLength": 2400 },
+        "actor": { "$ref": "core.schema.json#/definitions/HumanExecutionActor" },
+        "actionId": { "$ref": "core.schema.json#/definitions/ActionId" },
+        "decidedAt": { "$ref": "core.schema.json#/definitions/Timestamp" },
+        "attentionEvent": { "$ref": "#/definitions/AttentionEventReference" },
+        "boundChecksums": { "$ref": "core.schema.json#/definitions/ChecksumMap" }
+      },
+      "required": ["decisionId", "outcome", "selectedOptionId", "rationale", "actor", "actionId", "decidedAt", "attentionEvent", "boundChecksums"],
+      "additionalProperties": false,
+      "not": { "properties": { "boundChecksums": { "const": {} } } },
+      "if": { "properties": { "outcome": { "const": "selected" } } },
+      "then": { "properties": { "selectedOptionId": { "$ref": "core.schema.json#/definitions/Identifier" } } },
+      "else": { "properties": { "selectedOptionId": { "type": "null" } } }
+    },
+    "ArchitectureDecisionRecord": {
+      "title": "ArchitectureDecisionRecord",
+      "x-contract-id": "D06",
+      "type": "object",
+      "allOf": [{ "$ref": "risk.schema.json#/definitions/RiskEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "architecture-decision-record" },
+        "adrId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "status": { "type": "string", "enum": ["proposed", "recorded", "superseded"] },
+        "title": { "type": "string", "minLength": 1, "maxLength": 240 },
+        "context": { "type": "string", "minLength": 1, "maxLength": 2400 },
+        "architecture": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "review": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "requirements": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "promiseContract": { "$ref": "risk.schema.json#/definitions/PromiseContractReference" },
+        "consideredOptionIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "core.schema.json#/definitions/Identifier" } },
+        "decisionReceipt": { "anyOf": [{ "$ref": "#/definitions/DecisionReceipt" }, { "type": "null" }] }
+      },
+      "required": ["artifactType", "adrId", "status", "title", "context", "architecture", "review", "requirements", "promiseContract", "consideredOptionIds", "decisionReceipt"],
+      "if": { "properties": { "status": { "const": "proposed" } } },
+      "then": { "properties": { "decisionReceipt": { "type": "null" } } },
+      "else": { "properties": { "decisionReceipt": { "$ref": "#/definitions/DecisionReceipt" } } },
+      "unevaluatedProperties": false
+    },
+    "ApprovalSubjectBinding": {
+      "type": "object",
+      "description": "Exact caller-supplied current comparison target; this is not the policy module's noncanonical ApprovalBinding dataclass.",
+      "properties": {
+        "subjectContractId": { "type": "string", "enum": ["D05", "D06", "D09", "D11", "D13"] },
+        "subject": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "capability": { "$ref": "core.schema.json#/definitions/ActionId" },
+        "actionId": { "$ref": "core.schema.json#/definitions/ActionId" },
+        "expectedRevision": { "type": "integer", "minimum": 0 },
+        "gateId": { "$ref": "#/definitions/GateId" },
+        "boundChecksums": { "$ref": "core.schema.json#/definitions/ChecksumMap" }
+      },
+      "required": ["subjectContractId", "subject", "capability", "actionId", "expectedRevision", "gateId", "boundChecksums"],
+      "not": { "properties": { "boundChecksums": { "const": {} } } },
+      "additionalProperties": false
+    },
+    "Approval": {
+      "title": "Approval",
+      "x-contract-id": "D07",
+      "type": "object",
+      "properties": {
+        "artifactType": { "type": "string", "const": "approval" },
+        "approvalId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "approvalClass": { "$ref": "#/definitions/ApprovalClass" },
+        "status": { "$ref": "#/definitions/ApprovalStatus" },
+        "binding": { "$ref": "#/definitions/ApprovalSubjectBinding" },
+        "gateEvaluation": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "issuedAt": { "$ref": "core.schema.json#/definitions/Timestamp" },
+        "expiresAt": { "$ref": "core.schema.json#/definitions/Timestamp" },
+        "decidedAt": { "$ref": "#/definitions/NullableTimestamp" },
+        "decisionId": { "$ref": "#/definitions/NullableIdentifier" },
+        "actor": { "$ref": "#/definitions/NullableHuman" },
+        "attentionEvent": { "anyOf": [{ "$ref": "#/definitions/AttentionEventReference" }, { "type": "null" }] }
+      },
+      "required": ["artifactType", "approvalId", "approvalClass", "status", "binding", "gateEvaluation", "issuedAt", "expiresAt", "decidedAt", "decisionId", "actor", "attentionEvent"],
+      "allOf": [
+        { "$ref": "risk.schema.json#/definitions/RiskEnvelope" },
+        {
+          "if": { "properties": { "status": { "enum": ["approved", "rejected"] } } },
+          "then": {
+            "properties": {
+              "decidedAt": { "$ref": "core.schema.json#/definitions/Timestamp" },
+              "decisionId": { "$ref": "core.schema.json#/definitions/Identifier" },
+              "actor": { "$ref": "core.schema.json#/definitions/HumanExecutionActor" },
+              "attentionEvent": { "$ref": "#/definitions/AttentionEventReference" }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "status": { "const": "pending" } } },
+          "then": { "properties": { "decidedAt": { "type": "null" }, "decisionId": { "type": "null" }, "actor": { "type": "null" }, "attentionEvent": { "type": "null" } } }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "ReviewFinding": {
+      "type": "object",
+      "properties": {
+        "findingId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "source": { "type": "string", "enum": ["deterministic", "agent"] },
+        "actor": { "oneOf": [{ "$ref": "core.schema.json#/definitions/SystemExecutionActor" }, { "$ref": "core.schema.json#/definitions/AgentExecutionActor" }] },
+        "severity": { "type": "string", "enum": ["blocker", "warning", "info"] },
+        "ruleId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "optionId": { "$ref": "#/definitions/NullableIdentifier" },
+        "message": { "type": "string", "minLength": 1, "maxLength": 1600 },
+        "evidenceRefs": { "type": "array", "items": { "$ref": "core.schema.json#/definitions/ArtifactReference" } }
+      },
+      "required": ["findingId", "source", "actor", "severity", "ruleId", "optionId", "message", "evidenceRefs"],
+      "additionalProperties": false,
+      "if": { "properties": { "source": { "const": "agent" } } },
+      "then": { "properties": { "actor": { "$ref": "core.schema.json#/definitions/AgentExecutionActor" } } },
+      "else": { "properties": { "actor": { "$ref": "core.schema.json#/definitions/SystemExecutionActor" } } }
+    },
+    "DesignRuleResult": {
+      "type": "object",
+      "properties": {
+        "ruleId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "mandatory": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["pass", "fail", "not-run"] },
+        "reasonCode": { "$ref": "core.schema.json#/definitions/ActionId" },
+        "inputChecksum": { "$ref": "core.schema.json#/definitions/Checksum" }
+      },
+      "required": ["ruleId", "mandatory", "status", "reasonCode", "inputChecksum"],
+      "additionalProperties": false
+    },
+    "OptionAssessment": {
+      "type": "object",
+      "description": "An engine-reported design result, separate from catalog facts and agent proposal text. Not a runtime verdict.",
+      "properties": {
+        "assessmentId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "optionId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "evaluationKind": { "type": "string", "const": "design-eligibility" },
+        "producer": { "$ref": "core.schema.json#/definitions/SystemExecutionActor" },
+        "eligibility": { "type": "string", "enum": ["eligible", "ineligible", "unknown"] },
+        "reasonCodes": { "type": "array", "minItems": 1, "items": { "$ref": "core.schema.json#/definitions/ActionId" } },
+        "ruleResults": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/DesignRuleResult" } }
+      },
+      "required": ["assessmentId", "optionId", "evaluationKind", "producer", "eligibility", "reasonCodes", "ruleResults"],
+      "additionalProperties": false
+    },
+    "ReviewResult": {
+      "type": "object",
+      "properties": {
+        "reviewId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "deterministicStatus": { "$ref": "#/definitions/CheckStatus" },
+        "inferenceStatus": { "$ref": "#/definitions/CheckStatus" },
+        "findings": { "type": "array", "maxItems": 100, "items": { "$ref": "#/definitions/ReviewFinding" } },
+        "optionAssessments": { "type": "array", "maxItems": 2, "items": { "$ref": "#/definitions/OptionAssessment" } }
+      },
+      "required": ["reviewId", "deterministicStatus", "inferenceStatus", "findings", "optionAssessments"],
+      "additionalProperties": false
+    },
+    "GateEvaluation": {
+      "type": "object",
+      "description": "Producer-supplied check result and separately sourced approval snapshot. Passing checks alone do not confer approval.",
+      "properties": {
+        "gateId": { "$ref": "#/definitions/GateId" },
+        "version": { "$ref": "core.schema.json#/definitions/Version" },
+        "effectiveStatus": { "$ref": "#/definitions/CheckStatus" },
+        "approvalStatus": { "type": "string", "enum": ["not-required", "pending", "approved", "rejected", "stale"] },
+        "approval": { "$ref": "#/definitions/NullableArtifactReference" },
+        "evaluatedAt": { "$ref": "core.schema.json#/definitions/Timestamp" },
+        "expectedRevision": { "type": "integer", "minimum": 0 },
+        "boundChecksums": { "$ref": "core.schema.json#/definitions/ChecksumMap" }
+      },
+      "required": ["gateId", "version", "effectiveStatus", "approvalStatus", "approval", "evaluatedAt", "expectedRevision", "boundChecksums"],
+      "additionalProperties": false,
+      "not": { "properties": { "boundChecksums": { "const": {} } } },
+      "if": { "properties": { "approvalStatus": { "enum": ["not-required", "pending"] } } },
+      "then": { "properties": { "approval": { "type": "null" } } },
+      "else": { "properties": { "approval": { "$ref": "core.schema.json#/definitions/ArtifactReference" } } }
+    },
+    "ReviewGateEvaluation": {
+      "title": "ReviewGateEvaluation",
+      "x-contract-id": "D08",
+      "type": "object",
+      "allOf": [
+        { "$ref": "risk.schema.json#/definitions/RiskEnvelope" },
+        {
+          "if": { "properties": { "review": { "anyOf": [
+            { "properties": { "deterministicStatus": { "const": "blocked" } } },
+            { "properties": { "inferenceStatus": { "const": "blocked" } } }
+          ] } } },
+          "then": { "properties": { "gate": { "properties": { "effectiveStatus": { "const": "blocked" } } } } }
+        },
+        {
+          "if": { "properties": { "review": { "anyOf": [
+            { "properties": { "deterministicStatus": { "const": "stale" } } },
+            { "properties": { "inferenceStatus": { "const": "stale" } } }
+          ] } } },
+          "then": { "properties": { "gate": { "properties": { "effectiveStatus": { "enum": ["stale", "blocked"] } } } } }
+        },
+        {
+          "if": { "properties": { "review": { "anyOf": [
+            { "properties": { "deterministicStatus": { "const": "pass-with-warnings" } } },
+            { "properties": { "inferenceStatus": { "const": "pass-with-warnings" } } }
+          ] } } },
+          "then": { "properties": { "gate": { "properties": { "effectiveStatus": { "enum": ["pass-with-warnings", "stale", "blocked"] } } } } }
+        }
+      ],
+      "properties": {
+        "artifactType": { "type": "string", "const": "review-gate-evaluation" },
+        "subjectContractId": { "type": "string", "enum": ["D02", "D04", "D05", "D06", "D09"] },
+        "subject": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "requirements": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "promiseContract": { "$ref": "risk.schema.json#/definitions/PromiseContractReference" },
+        "review": { "$ref": "#/definitions/ReviewResult" },
+        "gate": { "$ref": "#/definitions/GateEvaluation" }
+      },
+      "required": ["artifactType", "subjectContractId", "subject", "requirements", "promiseContract", "review", "gate"],
+      "unevaluatedProperties": false
+    },
+    "RelativeOutputPath": {
+      "type": "string",
+      "maxLength": 240,
+      "pattern": "^(?!.*(?:^|/)\\.\\.?(/|$))[A-Za-z0-9][A-Za-z0-9._-]*(/[A-Za-z0-9][A-Za-z0-9._-]*)*$"
+    },
+    "PlannedOutput": {
+      "type": "object",
+      "properties": {
+        "relativePath": { "$ref": "#/definitions/RelativeOutputPath" },
+        "kind": { "type": "string", "enum": ["bicep", "bicep-parameters", "json", "markdown"] },
+        "template": { "$ref": "#/definitions/ModuleReference" },
+        "componentIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "core.schema.json#/definitions/Identifier" } },
+        "promiseIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "scenario.schema.json#/definitions/PromiseId" } }
+      },
+      "required": ["relativePath", "kind", "template", "componentIds", "promiseIds"],
+      "additionalProperties": false,
+      "allOf": [
+        { "if": { "properties": { "kind": { "const": "bicep" } } }, "then": { "properties": { "relativePath": { "pattern": "\\.bicep$" } } } },
+        { "if": { "properties": { "kind": { "const": "bicep-parameters" } } }, "then": { "properties": { "relativePath": { "pattern": "\\.bicepparam$" } } } },
+        { "if": { "properties": { "kind": { "const": "json" } } }, "then": { "properties": { "relativePath": { "pattern": "\\.json$" } } } },
+        { "if": { "properties": { "kind": { "const": "markdown" } } }, "then": { "properties": { "relativePath": { "pattern": "\\.md$" } } } }
+      ]
+    },
+    "GenerationContract": {
+      "title": "GenerationContract",
+      "x-contract-id": "D09",
+      "type": "object",
+      "allOf": [{ "$ref": "risk.schema.json#/definitions/RiskEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "generation-contract" },
+        "generationId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "status": { "type": "string", "enum": ["draft", "ready", "blocked", "stale"] },
+        "requirements": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "promiseContract": { "$ref": "risk.schema.json#/definitions/PromiseContractReference" },
+        "architecture": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "decision": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "gateEvaluation": { "$ref": "core.schema.json#/definitions/ArtifactReference" },
+        "approval": { "$ref": "#/definitions/NullableArtifactReference" },
+        "selectedOptionId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "renderMode": { "type": "string", "const": "approved-templates-only" },
+        "outputRootId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "modules": { "type": "array", "minItems": 1, "maxItems": 8, "items": { "$ref": "#/definitions/ModuleReference" } },
+        "outputs": { "type": "array", "minItems": 1, "maxItems": 40, "items": { "$ref": "#/definitions/PlannedOutput" } },
+        "desiredStorageConfiguration": { "$ref": "scenario.schema.json#/definitions/DesiredStorageConfiguration" },
+        "desiredStateChecksum": { "$ref": "core.schema.json#/definitions/Checksum" }
+      },
+      "required": ["artifactType", "generationId", "status", "requirements", "promiseContract", "architecture", "decision", "gateEvaluation", "approval", "selectedOptionId", "renderMode", "outputRootId", "modules", "outputs", "desiredStorageConfiguration", "desiredStateChecksum"],
+      "if": { "properties": { "status": { "const": "ready" } } },
+      "then": { "properties": { "approval": { "$ref": "core.schema.json#/definitions/ArtifactReference" } } },
+      "unevaluatedProperties": false
+    }
+  }
+}

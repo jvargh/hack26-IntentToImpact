@@ -1,0 +1,81 @@
+/* Generated from U02 tokens.v1.json v1.0.0; do not hand-edit. */
+:root {
+  --iti-border-width: 1px;
+  --iti-breakpoint-narrow: 48rem;
+  --iti-color-action: #0B5C61;
+  --iti-color-action-hover: #06464A;
+  --iti-color-border: #6D7D83;
+  --iti-color-canvas: #F7F5F0;
+  --iti-color-focus: #174EA6;
+  --iti-color-graph-edge: #50666F;
+  --iti-color-ink: #182B35;
+  --iti-color-muted: #4B5D64;
+  --iti-color-on-action: #FFFFFF;
+  --iti-color-surface: #FFFFFF;
+  --iti-control-min-height: 2.75rem;
+  --iti-density-functional-padding: 1.25rem;
+  --iti-density-hero-padding: 2rem;
+  --iti-focus-ring-offset: 3px;
+  --iti-focus-ring-width: 3px;
+  --iti-font-body: "Segoe UI Variable", "Segoe UI", Tahoma, sans-serif;
+  --iti-font-code: "Cascadia Mono", Consolas, monospace;
+  --iti-font-display: "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  --iti-font-size-body: 1rem;
+  --iti-font-size-hero: 2.5rem;
+  --iti-font-size-meta: 0.875rem;
+  --iti-font-size-section: 1.25rem;
+  --iti-font-size-title: 2rem;
+  --iti-font-weight-body: 400;
+  --iti-font-weight-heading: 700;
+  --iti-font-weight-label: 600;
+  --iti-graph-broken-width: 3px;
+  --iti-graph-edge-width: 2px;
+  --iti-layout-card-gap: 1.5rem;
+  --iti-layout-max-width: 80rem;
+  --iti-layout-page-gutter: 2rem;
+  --iti-layout-reading-width: 68ch;
+  --iti-line-height-body: 1.5;
+  --iti-line-height-heading: 1.15;
+  --iti-motion-fast: 120ms;
+  --iti-motion-reduced: 0ms;
+  --iti-motion-standard: 180ms;
+  --iti-radius-badge: 0.25rem;
+  --iti-radius-card: 0.5rem;
+  --iti-space-1: 0.25rem;
+  --iti-space-12: 3rem;
+  --iti-space-2: 0.5rem;
+  --iti-space-3: 0.75rem;
+  --iti-space-4: 1rem;
+  --iti-space-6: 1.5rem;
+  --iti-space-8: 2rem;
+  --iti-status-design-surface: #F2EDF8;
+  --iti-status-design-text: #5B4676;
+  --iti-status-fixture-surface: #F7EEFA;
+  --iti-status-fixture-text: #674775;
+  --iti-status-local-surface: #ECF2F8;
+  --iti-status-local-text: #335C81;
+  --iti-status-neutral-surface: #EDF0F1;
+  --iti-status-neutral-text: #4B5D64;
+  --iti-status-risk-surface: #FFF0ED;
+  --iti-status-risk-text: #9E2A2B;
+  --iti-status-verified-surface: #EAF6EF;
+  --iti-status-verified-text: #236247;
+  --iti-status-warning-surface: #FFF4D6;
+  --iti-status-warning-text: #735313;
+}
+
+@media (max-width: 48rem) {
+  :root {
+    --iti-density-hero-padding: var(--iti-space-6);
+    --iti-font-size-hero: var(--iti-font-size-title);
+    --iti-layout-card-gap: var(--iti-space-4);
+    --iti-layout-page-gutter: var(--iti-space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --iti-motion-fast: var(--iti-motion-reduced);
+    --iti-motion-standard: var(--iti-motion-reduced);
+  }
+}

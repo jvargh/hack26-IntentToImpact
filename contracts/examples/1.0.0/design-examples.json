@@ -1,0 +1,2620 @@
+{
+  "exampleOrigin": "fixture",
+  "description": "Authored contract examples only. No model invocation, real human decision/approval, generation, provider operation or product/UX approval is claimed.",
+  "scenario": {
+    "scenarioId": "DEMO-CASE-CLAIMS-V2",
+    "scenarioVersion": "2.0.0",
+    "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+  },
+  "runManifest": {
+    "schemaVersion": "1.0.0",
+    "artifactType": "local-run-manifest",
+    "artifactId": "ART-RUN-DESIGN-V2",
+    "runId": "RUN-DESIGN-V2",
+    "caseId": "CASE-DESIGN-V2",
+    "scope": {
+      "scopeId": "SCOPE-CONTRACT-V2",
+      "subscriptionId": "00000000-0000-0000-0000-000000000000",
+      "resourceGroup": "rg-contract-fixture",
+      "resourceIds": [
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+      ]
+    },
+    "caseRevisionAtWrite": 0,
+    "createdAt": "2026-09-12T18:30:00Z",
+    "updatedAt": "2026-09-12T18:30:00Z",
+    "stateChecksum": "sha256:f1b634ab02dc4e96b53ee378f2159b874cadb2cef42469128627be7120ab92d0",
+    "derivedFrom": {},
+    "runMode": "fixture",
+    "purpose": "test",
+    "scenarioId": "DEMO-CASE-CLAIMS-V2",
+    "scenarioVersion": "2.0.0",
+    "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+    "rootId": "ROOT-DESIGN-V2",
+    "configId": "CONFIG-DESIGN-V2"
+  },
+  "asOf": "2026-09-12T18:30:00Z",
+  "currentApprovalBindings": {
+    "ART-APPROVAL-APPROVED": {
+      "subjectContractId": "D06",
+      "subject": {
+        "artifactId": "ART-ADR-RECORDED",
+        "checksum": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd"
+      },
+      "capability": "approve-design",
+      "actionId": "approve-design-r1",
+      "expectedRevision": 1,
+      "gateId": "design-ready",
+      "boundChecksums": {
+        "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+        "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+        "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e",
+        "architecture": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7",
+        "decision": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd",
+        "review": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+      }
+    }
+  },
+  "currentInputReferences": {
+    "architecture-proposal": {
+      "requirements": {
+        "artifactId": "ART-REQUIREMENTS-CONFIRMED",
+        "checksum": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be"
+      },
+      "promiseContract": {
+        "contractId": "D03",
+        "artifact": {
+          "artifactId": "ART-PROMISES-CONFIRMED-RPO",
+          "checksum": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        }
+      }
+    }
+  },
+  "records": [
+    {
+      "name": "requirements-unknown-rpo",
+      "contractId": "D02",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "requirements",
+        "artifactId": "ART-REQUIREMENTS-UNKNOWN",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:1ef77e1ee3056bf100f2afc7bc5d7cf91fec571c1bb6c8f46c0f29b4a31b81b2",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "requirementsId": "REQUIREMENTS-CLAIMS",
+        "status": "awaiting-answers",
+        "businessIntent": "Fictional Contoso Insurance must prepare digital claims for its customer-confirmed seasonal deadline, protect sensitive claims documents, keep approved US data geography, recover within 60 minutes, and keep the defined estimated workload cost within USD 8,000 per month.",
+        "requirementIds": [
+          "REQ-CLAIMS-ACCESS",
+          "REQ-CLAIMS-IDENTITY",
+          "REQ-CLAIMS-ENCRYPTION",
+          "REQ-CLAIMS-RTO",
+          "REQ-CLAIMS-RPO",
+          "REQ-CLAIMS-US-GEOGRAPHY",
+          "REQ-CLAIMS-BUDGET",
+          "REQ-CLAIMS-DIAGNOSTICS"
+        ],
+        "promiseIds": [
+          "CP-01",
+          "CP-02",
+          "CP-03",
+          "CP-04",
+          "CP-05",
+          "CP-06",
+          "CP-07",
+          "CP-08"
+        ],
+        "rpoQuestion": {
+          "questionId": "QUESTION-RPO",
+          "promiseId": "CP-05",
+          "prompt": "For the declared regional-loss scenario, explicitly confirm the 15-minute RPO.",
+          "required": true,
+          "status": "unanswered",
+          "valueMinutes": null,
+          "confirmation": null
+        },
+        "constraints": {
+          "rtoMinutes": 60,
+          "monthlyBudgetUsd": 8000,
+          "geography": "US",
+          "minimumDiagnosticRetentionDays": 90,
+          "storageConfiguration": {
+            "publicNetworkAccess": "Enabled",
+            "supportsHttpsTrafficOnly": true,
+            "allowBlobPublicAccess": false,
+            "minimumTlsVersion": "TLS1_2"
+          }
+        }
+      }
+    },
+    {
+      "name": "rpo-confirmed-source-event",
+      "contractId": "E04",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "domain-event",
+        "artifactId": "ART-EVENT-RPO-CONFIRMED",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:152b651ea94305ac926fa176a25132925d33d3f702ffbd0ea60f290aad3fabf1",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "eventId": "EVENT-RPO-CONFIRMED",
+        "sequence": 2,
+        "eventType": "confirm-rpo-r1",
+        "correlationId": "CORRELATION-DESIGN-FIXTURE",
+        "workId": null,
+        "actor": {
+          "kind": "human",
+          "actorId": "demo-human",
+          "identityAssurance": "local-demo"
+        },
+        "payloadRefs": []
+      }
+    },
+    {
+      "name": "rpo-confirmed-attention",
+      "contractId": "E05",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "human-attention-event",
+        "artifactId": "ART-ATTENTION-RPO-CONFIRMED",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:3e05d37837fb72584fa4aac972af35520fe1c1f63e3e004765bf282eb6a0b282",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "eventId": "ATTENTION-EVENT-RPO-CONFIRMED",
+        "attentionId": "ATTENTION-RPO-CONFIRMED",
+        "stepId": "STEP-RPO-CONFIRMED",
+        "questionId": "QUESTION-RPO",
+        "decisionId": "DECISION-RPO-FIXTURE",
+        "activityClass": "product-workflow",
+        "actionId": "confirm-rpo-r1",
+        "attentionKind": "answered",
+        "actor": {
+          "kind": "human",
+          "actorId": "demo-human",
+          "identityAssurance": "local-demo"
+        },
+        "occurredAt": "2026-09-12T18:05:00Z",
+        "durationSeconds": null,
+        "sourceEvent": {
+          "contractId": "E04",
+          "artifact": {
+            "artifactId": "ART-EVENT-RPO-CONFIRMED",
+            "checksum": "sha256:152b651ea94305ac926fa176a25132925d33d3f702ffbd0ea60f290aad3fabf1"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        },
+        "correlationId": "CORRELATION-DESIGN-FIXTURE"
+      }
+    },
+    {
+      "name": "requirements-confirmed-rpo",
+      "contractId": "D02",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "requirements",
+        "artifactId": "ART-REQUIREMENTS-CONFIRMED",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "requirementsId": "REQUIREMENTS-CLAIMS",
+        "status": "confirmed",
+        "businessIntent": "Fictional Contoso Insurance must prepare digital claims for its customer-confirmed seasonal deadline, protect sensitive claims documents, keep approved US data geography, recover within 60 minutes, and keep the defined estimated workload cost within USD 8,000 per month.",
+        "requirementIds": [
+          "REQ-CLAIMS-ACCESS",
+          "REQ-CLAIMS-IDENTITY",
+          "REQ-CLAIMS-ENCRYPTION",
+          "REQ-CLAIMS-RTO",
+          "REQ-CLAIMS-RPO",
+          "REQ-CLAIMS-US-GEOGRAPHY",
+          "REQ-CLAIMS-BUDGET",
+          "REQ-CLAIMS-DIAGNOSTICS"
+        ],
+        "promiseIds": [
+          "CP-01",
+          "CP-02",
+          "CP-03",
+          "CP-04",
+          "CP-05",
+          "CP-06",
+          "CP-07",
+          "CP-08"
+        ],
+        "rpoQuestion": {
+          "questionId": "QUESTION-RPO",
+          "promiseId": "CP-05",
+          "prompt": "For the declared regional-loss scenario, explicitly confirm the 15-minute RPO.",
+          "required": true,
+          "status": "answered",
+          "valueMinutes": 15,
+          "confirmation": {
+            "decisionId": "DECISION-RPO-FIXTURE",
+            "actionId": "confirm-rpo-r1",
+            "actor": {
+              "kind": "human",
+              "actorId": "demo-human",
+              "identityAssurance": "local-demo"
+            },
+            "confirmedAt": "2026-09-12T18:05:00Z",
+            "attentionEvent": {
+              "contractId": "E05",
+              "artifact": {
+                "artifactId": "ART-ATTENTION-RPO-CONFIRMED",
+                "checksum": "sha256:3e05d37837fb72584fa4aac972af35520fe1c1f63e3e004765bf282eb6a0b282"
+              },
+              "scenario": {
+                "scenarioId": "DEMO-CASE-CLAIMS-V2",
+                "scenarioVersion": "2.0.0",
+                "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+              }
+            }
+          }
+        },
+        "constraints": {
+          "rtoMinutes": 60,
+          "monthlyBudgetUsd": 8000,
+          "geography": "US",
+          "minimumDiagnosticRetentionDays": 90,
+          "storageConfiguration": {
+            "publicNetworkAccess": "Enabled",
+            "supportsHttpsTrafficOnly": true,
+            "allowBlobPublicAccess": false,
+            "minimumTlsVersion": "TLS1_2"
+          }
+        }
+      }
+    },
+    {
+      "name": "promises-unknown-rpo",
+      "contractId": "D03",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "customer-promise-contract",
+        "artifactId": "ART-PROMISES-UNKNOWN-RPO",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:ee0ea4f211ab88d418f546d2b70e6ff664f218feb11b63a36c2981a192ef1f36",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "contractId": "PROMISES-CLAIMS-V2",
+        "status": "partially-confirmed",
+        "requirementChecksum": "sha256:1ef77e1ee3056bf100f2afc7bc5d7cf91fec571c1bb6c8f46c0f29b4a31b81b2",
+        "confirmationDecisionId": "DECISION-INITIAL-FIXTURE",
+        "confirmedPromiseIds": [
+          "CP-01",
+          "CP-02",
+          "CP-03",
+          "CP-04",
+          "CP-06",
+          "CP-07",
+          "CP-08"
+        ],
+        "promises": [
+          {
+            "promiseId": "CP-01",
+            "statement": "Claims storage uses its approved public endpoint with HTTPS required, anonymous blob access disabled, and minimum TLS 1.2. Verification is scoped configuration assurance, not complete access-control proof.",
+            "customerImpact": "Sensitive claims documents must not be exposed through anonymous blob access or transferred without the required HTTPS configuration.",
+            "category": "security",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-ACCESS"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP01-PUBLIC-STORAGE-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "resource-configuration"
+            ]
+          },
+          {
+            "promiseId": "CP-02",
+            "statement": "Approved managed identities and scoped roles are used for declared data operations; configuration evidence must cover those operations.",
+            "customerImpact": "Only the intended workload identities should perform the declared claims data operations.",
+            "category": "security",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-IDENTITY"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP02-IDENTITY-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "identity-role-configuration"
+            ]
+          },
+          {
+            "promiseId": "CP-03",
+            "statement": "Approved storage encryption and secure-transfer controls are configured; this does not establish every data-protection property.",
+            "customerImpact": "Claims documents need the approved protection at rest and in transit.",
+            "category": "security",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-ENCRYPTION"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP03-ENCRYPTION-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "encryption-configuration"
+            ]
+          },
+          {
+            "promiseId": "CP-04",
+            "statement": "Recover within 60 minutes for the specified regional-loss scenario. Runtime verification requires a matching recovery test, not a design estimate.",
+            "customerImpact": "Claims processing needs a bounded interruption during the declared regional-loss event.",
+            "category": "resilience",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-RTO"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP04-REGIONAL-RTO-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "regional-recovery-test"
+            ]
+          },
+          {
+            "promiseId": "CP-05",
+            "statement": "RPO remains unconfirmed until the customer explicitly answers the consequential question. The scripted acceptance answer is 15 minutes for the same regional-loss scenario; runtime verification requires matching test evidence.",
+            "customerImpact": "The customer must choose the acceptable claims-data loss window rather than have it assumed by an agent.",
+            "category": "resilience",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-RPO"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP05-REGIONAL-RPO-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "regional-recovery-test"
+            ]
+          },
+          {
+            "promiseId": "CP-06",
+            "statement": "Declared processing, storage, and dependencies remain in approved US geography, with evidence adequate for the declared scope.",
+            "customerImpact": "Claims data must remain within the customer's approved geographic boundary.",
+            "category": "residency",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-US-GEOGRAPHY"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP06-US-GEOGRAPHY-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "residency-inventory"
+            ]
+          },
+          {
+            "promiseId": "CP-07",
+            "statement": "The defined monthly workload cost basis is at most USD 8,000. Runtime verification requires a complete billed period; synthetic estimates are not actual billing or realized savings.",
+            "customerImpact": "The workload must fit the defined operating budget on a comparable cost basis.",
+            "category": "cost",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-BUDGET"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP07-COST-BASIS-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "complete-billing-period"
+            ]
+          },
+          {
+            "promiseId": "CP-08",
+            "statement": "Required diagnostics are enabled with configured retention of at least 90 days. Settings alone do not prove that 90 days of logs already exist.",
+            "customerImpact": "Operators need the declared diagnostics and retention configuration to investigate claims-service issues.",
+            "category": "observability",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-DIAGNOSTICS"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP08-DIAGNOSTICS-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "diagnostic-configuration"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "promises-confirmed-rpo",
+      "contractId": "D03",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "customer-promise-contract",
+        "artifactId": "ART-PROMISES-CONFIRMED-RPO",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "contractId": "PROMISES-CLAIMS-V2",
+        "status": "confirmed",
+        "requirementChecksum": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+        "confirmationDecisionId": "DECISION-RPO-FIXTURE",
+        "confirmedPromiseIds": [
+          "CP-01",
+          "CP-02",
+          "CP-03",
+          "CP-04",
+          "CP-05",
+          "CP-06",
+          "CP-07",
+          "CP-08"
+        ],
+        "promises": [
+          {
+            "promiseId": "CP-01",
+            "statement": "Claims storage uses its approved public endpoint with HTTPS required, anonymous blob access disabled, and minimum TLS 1.2. Verification is scoped configuration assurance, not complete access-control proof.",
+            "customerImpact": "Sensitive claims documents must not be exposed through anonymous blob access or transferred without the required HTTPS configuration.",
+            "category": "security",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-ACCESS"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP01-PUBLIC-STORAGE-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "resource-configuration"
+            ]
+          },
+          {
+            "promiseId": "CP-02",
+            "statement": "Approved managed identities and scoped roles are used for declared data operations; configuration evidence must cover those operations.",
+            "customerImpact": "Only the intended workload identities should perform the declared claims data operations.",
+            "category": "security",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-IDENTITY"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP02-IDENTITY-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "identity-role-configuration"
+            ]
+          },
+          {
+            "promiseId": "CP-03",
+            "statement": "Approved storage encryption and secure-transfer controls are configured; this does not establish every data-protection property.",
+            "customerImpact": "Claims documents need the approved protection at rest and in transit.",
+            "category": "security",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-ENCRYPTION"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP03-ENCRYPTION-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "encryption-configuration"
+            ]
+          },
+          {
+            "promiseId": "CP-04",
+            "statement": "Recover within 60 minutes for the specified regional-loss scenario. Runtime verification requires a matching recovery test, not a design estimate.",
+            "customerImpact": "Claims processing needs a bounded interruption during the declared regional-loss event.",
+            "category": "resilience",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-RTO"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP04-REGIONAL-RTO-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "regional-recovery-test"
+            ]
+          },
+          {
+            "promiseId": "CP-05",
+            "statement": "RPO remains unconfirmed until the customer explicitly answers the consequential question. The scripted acceptance answer is 15 minutes for the same regional-loss scenario; runtime verification requires matching test evidence.",
+            "customerImpact": "The customer must choose the acceptable claims-data loss window rather than have it assumed by an agent.",
+            "category": "resilience",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-RPO"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP05-REGIONAL-RPO-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "regional-recovery-test"
+            ]
+          },
+          {
+            "promiseId": "CP-06",
+            "statement": "Declared processing, storage, and dependencies remain in approved US geography, with evidence adequate for the declared scope.",
+            "customerImpact": "Claims data must remain within the customer's approved geographic boundary.",
+            "category": "residency",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-US-GEOGRAPHY"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP06-US-GEOGRAPHY-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "residency-inventory"
+            ]
+          },
+          {
+            "promiseId": "CP-07",
+            "statement": "The defined monthly workload cost basis is at most USD 8,000. Runtime verification requires a complete billed period; synthetic estimates are not actual billing or realized savings.",
+            "customerImpact": "The workload must fit the defined operating budget on a comparable cost basis.",
+            "category": "cost",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-BUDGET"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP07-COST-BASIS-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "complete-billing-period"
+            ]
+          },
+          {
+            "promiseId": "CP-08",
+            "statement": "Required diagnostics are enabled with configured retention of at least 90 days. Settings alone do not prove that 90 days of logs already exist.",
+            "customerImpact": "Operators need the declared diagnostics and retention configuration to investigate claims-service issues.",
+            "category": "observability",
+            "criticality": "blocking",
+            "requirementIds": [
+              "REQ-CLAIMS-DIAGNOSTICS"
+            ],
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "verifierIds": [
+              "VERIFY-CP08-DIAGNOSTICS-V2"
+            ],
+            "requiredEvidenceKinds": [
+              "diagnostic-configuration"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "architecture-proposal",
+      "contractId": "D04",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "architecture-proposal",
+        "artifactId": "ART-PROPOSAL-CLAIMS",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:d89fe66afd511b31bf845d54de71d27d70efc0ac3a00a3776098cf802c4b893a",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+          "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "proposalId": "PROPOSAL-CLAIMS",
+        "authority": "proposal-only",
+        "producer": {
+          "kind": "agent",
+          "actorId": "AGENT-FIXTURE-SYNTHESIS"
+        },
+        "origin": "fixture",
+        "invocationReceipt": null,
+        "catalog": {
+          "catalogId": "CATALOG-CLAIMS-V2",
+          "version": "2.0.0",
+          "checksum": "sha256:a737d3dcbd0efd29b701ee509146f566813f9c6dc4d7b5f426be959f349de250"
+        },
+        "options": [
+          {
+            "optionId": "OPTION-A",
+            "title": "Catalog candidate A",
+            "summary": "Synthetic USD 6,000/month with no reviewed regional-recovery profile.",
+            "catalogFacts": {
+              "candidateId": "A",
+              "monthlyEstimateUsd": 6000,
+              "regionalRecoveryProfile": null,
+              "declaredStorageControls": {
+                "publicNetworkAccess": "Enabled",
+                "supportsHttpsTrafficOnly": true,
+                "allowBlobPublicAccess": false,
+                "minimumTlsVersion": "TLS1_2"
+              }
+            },
+            "components": [
+              {
+                "componentId": "CMP-CLAIMS-STORE",
+                "resourceType": "Microsoft.Storage/storageAccounts",
+                "dataClassification": "confidential",
+                "identityMode": "managed-identity",
+                "networkExposure": "public-endpoint",
+                "geography": "US",
+                "storageConfiguration": {
+                  "publicNetworkAccess": "Enabled",
+                  "supportsHttpsTrafficOnly": true,
+                  "allowBlobPublicAccess": false,
+                  "minimumTlsVersion": "TLS1_2"
+                },
+                "module": {
+                  "moduleId": "MODULE-CLAIMS-STORAGE-V2",
+                  "version": "1.0.0",
+                  "checksum": "sha256:e54ae3bc19fede760f321042c000ae739545fc7ae7cf09fa0ea333bdcfaf99f1"
+                },
+                "promiseIds": [
+                  "CP-01",
+                  "CP-02",
+                  "CP-03",
+                  "CP-04",
+                  "CP-05",
+                  "CP-06",
+                  "CP-07",
+                  "CP-08"
+                ],
+                "requirementIds": [
+                  "REQ-CLAIMS-ACCESS",
+                  "REQ-CLAIMS-IDENTITY",
+                  "REQ-CLAIMS-ENCRYPTION",
+                  "REQ-CLAIMS-RTO",
+                  "REQ-CLAIMS-RPO",
+                  "REQ-CLAIMS-US-GEOGRAPHY",
+                  "REQ-CLAIMS-BUDGET",
+                  "REQ-CLAIMS-DIAGNOSTICS"
+                ]
+              }
+            ],
+            "relationships": [],
+            "assumptions": [
+              "Operator resource and region bindings are separate preflight inputs."
+            ],
+            "unresolvedItems": []
+          },
+          {
+            "optionId": "OPTION-B",
+            "title": "Catalog candidate B",
+            "summary": "Synthetic USD 7,200/month with the catalog active-passive recovery profile.",
+            "catalogFacts": {
+              "candidateId": "B",
+              "monthlyEstimateUsd": 7200,
+              "regionalRecoveryProfile": "PROFILE-ACTIVE-PASSIVE-V2",
+              "declaredStorageControls": {
+                "publicNetworkAccess": "Enabled",
+                "supportsHttpsTrafficOnly": true,
+                "allowBlobPublicAccess": false,
+                "minimumTlsVersion": "TLS1_2"
+              }
+            },
+            "components": [
+              {
+                "componentId": "CMP-CLAIMS-STORE",
+                "resourceType": "Microsoft.Storage/storageAccounts",
+                "dataClassification": "confidential",
+                "identityMode": "managed-identity",
+                "networkExposure": "public-endpoint",
+                "geography": "US",
+                "storageConfiguration": {
+                  "publicNetworkAccess": "Enabled",
+                  "supportsHttpsTrafficOnly": true,
+                  "allowBlobPublicAccess": false,
+                  "minimumTlsVersion": "TLS1_2"
+                },
+                "module": {
+                  "moduleId": "MODULE-CLAIMS-STORAGE-V2",
+                  "version": "1.0.0",
+                  "checksum": "sha256:e54ae3bc19fede760f321042c000ae739545fc7ae7cf09fa0ea333bdcfaf99f1"
+                },
+                "promiseIds": [
+                  "CP-01",
+                  "CP-02",
+                  "CP-03",
+                  "CP-04",
+                  "CP-05",
+                  "CP-06",
+                  "CP-07",
+                  "CP-08"
+                ],
+                "requirementIds": [
+                  "REQ-CLAIMS-ACCESS",
+                  "REQ-CLAIMS-IDENTITY",
+                  "REQ-CLAIMS-ENCRYPTION",
+                  "REQ-CLAIMS-RTO",
+                  "REQ-CLAIMS-RPO",
+                  "REQ-CLAIMS-US-GEOGRAPHY",
+                  "REQ-CLAIMS-BUDGET",
+                  "REQ-CLAIMS-DIAGNOSTICS"
+                ]
+              }
+            ],
+            "relationships": [],
+            "assumptions": [
+              "Operator resource and region bindings are separate preflight inputs."
+            ],
+            "unresolvedItems": []
+          }
+        ],
+        "recommendedOptionId": "OPTION-A",
+        "rationale": "Fixture-only lower-price proposal. This recommendation has no eligibility or approval authority.",
+        "requirements": {
+          "artifactId": "ART-REQUIREMENTS-CONFIRMED",
+          "checksum": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be"
+        },
+        "promiseContract": {
+          "contractId": "D03",
+          "artifact": {
+            "artifactId": "ART-PROMISES-CONFIRMED-RPO",
+            "checksum": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        }
+      }
+    },
+    {
+      "name": "requirements-blocked-gate",
+      "contractId": "D08",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "review-gate-evaluation",
+        "artifactId": "ART-REQUIREMENTS-BLOCKED-GATE",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:95dbc6ee19adf4da81a954650ecc742f40575fbfe40a784c4d05a9a4788b9b7f",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "subject": "sha256:1ef77e1ee3056bf100f2afc7bc5d7cf91fec571c1bb6c8f46c0f29b4a31b81b2",
+          "requirements": "sha256:1ef77e1ee3056bf100f2afc7bc5d7cf91fec571c1bb6c8f46c0f29b4a31b81b2",
+          "promiseContract": "sha256:ee0ea4f211ab88d418f546d2b70e6ff664f218feb11b63a36c2981a192ef1f36"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "subjectContractId": "D02",
+        "review": {
+          "reviewId": "REVIEW-REQUIREMENTS-BLOCKED-GATE",
+          "deterministicStatus": "blocked",
+          "inferenceStatus": "pass",
+          "findings": [],
+          "optionAssessments": []
+        },
+        "gate": {
+          "gateId": "requirements-ready",
+          "version": "1.0.0",
+          "effectiveStatus": "blocked",
+          "approvalStatus": "pending",
+          "approval": null,
+          "evaluatedAt": "2026-09-12T18:30:00Z",
+          "expectedRevision": 1,
+          "boundChecksums": {
+            "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+            "subject": "sha256:1ef77e1ee3056bf100f2afc7bc5d7cf91fec571c1bb6c8f46c0f29b4a31b81b2",
+            "requirements": "sha256:1ef77e1ee3056bf100f2afc7bc5d7cf91fec571c1bb6c8f46c0f29b4a31b81b2",
+            "promiseContract": "sha256:ee0ea4f211ab88d418f546d2b70e6ff664f218feb11b63a36c2981a192ef1f36"
+          }
+        },
+        "subject": {
+          "artifactId": "ART-REQUIREMENTS-UNKNOWN",
+          "checksum": "sha256:1ef77e1ee3056bf100f2afc7bc5d7cf91fec571c1bb6c8f46c0f29b4a31b81b2"
+        },
+        "requirements": {
+          "artifactId": "ART-REQUIREMENTS-UNKNOWN",
+          "checksum": "sha256:1ef77e1ee3056bf100f2afc7bc5d7cf91fec571c1bb6c8f46c0f29b4a31b81b2"
+        },
+        "promiseContract": {
+          "contractId": "D03",
+          "artifact": {
+            "artifactId": "ART-PROMISES-UNKNOWN-RPO",
+            "checksum": "sha256:ee0ea4f211ab88d418f546d2b70e6ff664f218feb11b63a36c2981a192ef1f36"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        }
+      }
+    },
+    {
+      "name": "design-review",
+      "contractId": "D08",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "review-gate-evaluation",
+        "artifactId": "ART-DESIGN-REVIEW",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "subject": "sha256:d89fe66afd511b31bf845d54de71d27d70efc0ac3a00a3776098cf802c4b893a",
+          "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+          "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "subjectContractId": "D04",
+        "review": {
+          "reviewId": "REVIEW-DESIGN-REVIEW",
+          "deterministicStatus": "pass-with-warnings",
+          "inferenceStatus": "pass",
+          "findings": [
+            {
+              "findingId": "FINDING-DESIGN-A",
+              "source": "deterministic",
+              "actor": {
+                "kind": "system",
+                "actorId": "SYSTEM-REVIEW-ENGINE"
+              },
+              "severity": "blocker",
+              "ruleId": "RULE-RECOVERY-PROFILE-V2",
+              "optionId": "OPTION-A",
+              "message": "A lacks the reviewed recovery profile; lower estimated spend does not make it eligible.",
+              "evidenceRefs": []
+            },
+            {
+              "findingId": "FINDING-AGENT-RECOVERY",
+              "source": "agent",
+              "actor": {
+                "kind": "agent",
+                "actorId": "AGENT-FIXTURE-ASSURANCE"
+              },
+              "severity": "warning",
+              "ruleId": "RULE-RECOVERY-EVIDENCE-V2",
+              "optionId": "OPTION-B",
+              "message": "A supported design profile is not runtime recovery-test evidence or an approval.",
+              "evidenceRefs": []
+            }
+          ],
+          "optionAssessments": [
+            {
+              "assessmentId": "ASSESSMENT-A",
+              "optionId": "OPTION-A",
+              "evaluationKind": "design-eligibility",
+              "producer": {
+                "kind": "system",
+                "actorId": "SYSTEM-REVIEW-ENGINE"
+              },
+              "eligibility": "ineligible",
+              "reasonCodes": [
+                "approved-recovery-profile-missing"
+              ],
+              "ruleResults": [
+                {
+                  "ruleId": "RULE-RECOVERY-PROFILE-V2",
+                  "mandatory": true,
+                  "status": "fail",
+                  "reasonCode": "approved-recovery-profile-missing",
+                  "inputChecksum": "sha256:a737d3dcbd0efd29b701ee509146f566813f9c6dc4d7b5f426be959f349de250"
+                },
+                {
+                  "ruleId": "RULE-MONTHLY-BUDGET-V2",
+                  "mandatory": true,
+                  "status": "pass",
+                  "reasonCode": "within-estimated-budget",
+                  "inputChecksum": "sha256:a737d3dcbd0efd29b701ee509146f566813f9c6dc4d7b5f426be959f349de250"
+                }
+              ]
+            },
+            {
+              "assessmentId": "ASSESSMENT-B",
+              "optionId": "OPTION-B",
+              "evaluationKind": "design-eligibility",
+              "producer": {
+                "kind": "system",
+                "actorId": "SYSTEM-REVIEW-ENGINE"
+              },
+              "eligibility": "eligible",
+              "reasonCodes": [
+                "reviewed-catalog-criteria-supported"
+              ],
+              "ruleResults": [
+                {
+                  "ruleId": "RULE-RECOVERY-PROFILE-V2",
+                  "mandatory": true,
+                  "status": "pass",
+                  "reasonCode": "approved-recovery-profile-present",
+                  "inputChecksum": "sha256:a737d3dcbd0efd29b701ee509146f566813f9c6dc4d7b5f426be959f349de250"
+                },
+                {
+                  "ruleId": "RULE-MONTHLY-BUDGET-V2",
+                  "mandatory": true,
+                  "status": "pass",
+                  "reasonCode": "within-estimated-budget",
+                  "inputChecksum": "sha256:a737d3dcbd0efd29b701ee509146f566813f9c6dc4d7b5f426be959f349de250"
+                }
+              ]
+            }
+          ]
+        },
+        "gate": {
+          "gateId": "design-ready",
+          "version": "1.0.0",
+          "effectiveStatus": "pass-with-warnings",
+          "approvalStatus": "pending",
+          "approval": null,
+          "evaluatedAt": "2026-09-12T18:30:00Z",
+          "expectedRevision": 1,
+          "boundChecksums": {
+            "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+            "subject": "sha256:d89fe66afd511b31bf845d54de71d27d70efc0ac3a00a3776098cf802c4b893a",
+            "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+            "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+          }
+        },
+        "subject": {
+          "artifactId": "ART-PROPOSAL-CLAIMS",
+          "checksum": "sha256:d89fe66afd511b31bf845d54de71d27d70efc0ac3a00a3776098cf802c4b893a"
+        },
+        "requirements": {
+          "artifactId": "ART-REQUIREMENTS-CONFIRMED",
+          "checksum": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be"
+        },
+        "promiseContract": {
+          "contractId": "D03",
+          "artifact": {
+            "artifactId": "ART-PROMISES-CONFIRMED-RPO",
+            "checksum": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        }
+      }
+    },
+    {
+      "name": "architecture-model",
+      "contractId": "D05",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "architecture-model",
+        "artifactId": "ART-ARCHITECTURE-CLAIMS",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "sourceProposal": "sha256:d89fe66afd511b31bf845d54de71d27d70efc0ac3a00a3776098cf802c4b893a",
+          "review": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e",
+          "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "architectureId": "ARCHITECTURE-CLAIMS",
+        "status": "validated",
+        "options": [
+          {
+            "optionId": "OPTION-A",
+            "title": "Catalog candidate A",
+            "summary": "Synthetic USD 6,000/month with no reviewed regional-recovery profile.",
+            "catalogFacts": {
+              "candidateId": "A",
+              "monthlyEstimateUsd": 6000,
+              "regionalRecoveryProfile": null,
+              "declaredStorageControls": {
+                "publicNetworkAccess": "Enabled",
+                "supportsHttpsTrafficOnly": true,
+                "allowBlobPublicAccess": false,
+                "minimumTlsVersion": "TLS1_2"
+              }
+            },
+            "components": [
+              {
+                "componentId": "CMP-CLAIMS-STORE",
+                "resourceType": "Microsoft.Storage/storageAccounts",
+                "dataClassification": "confidential",
+                "identityMode": "managed-identity",
+                "networkExposure": "public-endpoint",
+                "geography": "US",
+                "storageConfiguration": {
+                  "publicNetworkAccess": "Enabled",
+                  "supportsHttpsTrafficOnly": true,
+                  "allowBlobPublicAccess": false,
+                  "minimumTlsVersion": "TLS1_2"
+                },
+                "module": {
+                  "moduleId": "MODULE-CLAIMS-STORAGE-V2",
+                  "version": "1.0.0",
+                  "checksum": "sha256:e54ae3bc19fede760f321042c000ae739545fc7ae7cf09fa0ea333bdcfaf99f1"
+                },
+                "promiseIds": [
+                  "CP-01",
+                  "CP-02",
+                  "CP-03",
+                  "CP-04",
+                  "CP-05",
+                  "CP-06",
+                  "CP-07",
+                  "CP-08"
+                ],
+                "requirementIds": [
+                  "REQ-CLAIMS-ACCESS",
+                  "REQ-CLAIMS-IDENTITY",
+                  "REQ-CLAIMS-ENCRYPTION",
+                  "REQ-CLAIMS-RTO",
+                  "REQ-CLAIMS-RPO",
+                  "REQ-CLAIMS-US-GEOGRAPHY",
+                  "REQ-CLAIMS-BUDGET",
+                  "REQ-CLAIMS-DIAGNOSTICS"
+                ]
+              }
+            ],
+            "relationships": [],
+            "assumptions": [
+              "Operator resource and region bindings are separate preflight inputs."
+            ],
+            "unresolvedItems": []
+          },
+          {
+            "optionId": "OPTION-B",
+            "title": "Catalog candidate B",
+            "summary": "Synthetic USD 7,200/month with the catalog active-passive recovery profile.",
+            "catalogFacts": {
+              "candidateId": "B",
+              "monthlyEstimateUsd": 7200,
+              "regionalRecoveryProfile": "PROFILE-ACTIVE-PASSIVE-V2",
+              "declaredStorageControls": {
+                "publicNetworkAccess": "Enabled",
+                "supportsHttpsTrafficOnly": true,
+                "allowBlobPublicAccess": false,
+                "minimumTlsVersion": "TLS1_2"
+              }
+            },
+            "components": [
+              {
+                "componentId": "CMP-CLAIMS-STORE",
+                "resourceType": "Microsoft.Storage/storageAccounts",
+                "dataClassification": "confidential",
+                "identityMode": "managed-identity",
+                "networkExposure": "public-endpoint",
+                "geography": "US",
+                "storageConfiguration": {
+                  "publicNetworkAccess": "Enabled",
+                  "supportsHttpsTrafficOnly": true,
+                  "allowBlobPublicAccess": false,
+                  "minimumTlsVersion": "TLS1_2"
+                },
+                "module": {
+                  "moduleId": "MODULE-CLAIMS-STORAGE-V2",
+                  "version": "1.0.0",
+                  "checksum": "sha256:e54ae3bc19fede760f321042c000ae739545fc7ae7cf09fa0ea333bdcfaf99f1"
+                },
+                "promiseIds": [
+                  "CP-01",
+                  "CP-02",
+                  "CP-03",
+                  "CP-04",
+                  "CP-05",
+                  "CP-06",
+                  "CP-07",
+                  "CP-08"
+                ],
+                "requirementIds": [
+                  "REQ-CLAIMS-ACCESS",
+                  "REQ-CLAIMS-IDENTITY",
+                  "REQ-CLAIMS-ENCRYPTION",
+                  "REQ-CLAIMS-RTO",
+                  "REQ-CLAIMS-RPO",
+                  "REQ-CLAIMS-US-GEOGRAPHY",
+                  "REQ-CLAIMS-BUDGET",
+                  "REQ-CLAIMS-DIAGNOSTICS"
+                ]
+              }
+            ],
+            "relationships": [],
+            "assumptions": [
+              "Operator resource and region bindings are separate preflight inputs."
+            ],
+            "unresolvedItems": []
+          }
+        ],
+        "recommendedOptionId": "OPTION-B",
+        "selectedOptionId": null,
+        "decision": null,
+        "sourceProposal": {
+          "artifactId": "ART-PROPOSAL-CLAIMS",
+          "checksum": "sha256:d89fe66afd511b31bf845d54de71d27d70efc0ac3a00a3776098cf802c4b893a"
+        },
+        "review": {
+          "artifactId": "ART-DESIGN-REVIEW",
+          "checksum": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+        },
+        "promiseContract": {
+          "contractId": "D03",
+          "artifact": {
+            "artifactId": "ART-PROMISES-CONFIRMED-RPO",
+            "checksum": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        }
+      }
+    },
+    {
+      "name": "adr-proposed",
+      "contractId": "D06",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "architecture-decision-record",
+        "artifactId": "ART-ADR-PROPOSED",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:66d3253991cc7e971f00c926d5d10f8ec0d6a49f3b4ba8e988274e0803512626",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "architecture": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7",
+          "review": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e",
+          "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+          "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "adrId": "ADR-CLAIMS",
+        "status": "proposed",
+        "title": "Claims storage and regional recovery",
+        "context": "Choose against confirmed requirements and reviewed catalog facts; no runtime assurance is implied.",
+        "consideredOptionIds": [
+          "OPTION-A",
+          "OPTION-B"
+        ],
+        "decisionReceipt": null,
+        "architecture": {
+          "artifactId": "ART-ARCHITECTURE-CLAIMS",
+          "checksum": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7"
+        },
+        "review": {
+          "artifactId": "ART-DESIGN-REVIEW",
+          "checksum": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+        },
+        "requirements": {
+          "artifactId": "ART-REQUIREMENTS-CONFIRMED",
+          "checksum": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be"
+        },
+        "promiseContract": {
+          "contractId": "D03",
+          "artifact": {
+            "artifactId": "ART-PROMISES-CONFIRMED-RPO",
+            "checksum": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        }
+      }
+    },
+    {
+      "name": "option-selection-source-event",
+      "contractId": "E04",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "domain-event",
+        "artifactId": "ART-EVENT-OPTION-SELECTION",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:f4edbdf674a6c7157bf7b10029cc5a4e4d7be3594b53f6ed55b1796a61508b5d",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "eventId": "EVENT-OPTION-SELECTION",
+        "sequence": 12,
+        "eventType": "select-option-b-r1",
+        "correlationId": "CORRELATION-DESIGN-FIXTURE",
+        "workId": null,
+        "actor": {
+          "kind": "human",
+          "actorId": "demo-human",
+          "identityAssurance": "local-demo"
+        },
+        "payloadRefs": []
+      }
+    },
+    {
+      "name": "option-selection-attention",
+      "contractId": "E05",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "human-attention-event",
+        "artifactId": "ART-ATTENTION-OPTION-SELECTION",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:f80379110f513d0796f64073349df55350aa6a972151c30128f0322c6b5143a3",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "eventId": "ATTENTION-EVENT-OPTION-SELECTION",
+        "attentionId": "ATTENTION-OPTION-SELECTION",
+        "stepId": "STEP-OPTION-SELECTION",
+        "questionId": null,
+        "decisionId": "DECISION-SELECT-B",
+        "activityClass": "product-workflow",
+        "actionId": "select-option-b-r1",
+        "attentionKind": "confirmed",
+        "actor": {
+          "kind": "human",
+          "actorId": "demo-human",
+          "identityAssurance": "local-demo"
+        },
+        "occurredAt": "2026-09-12T18:15:00Z",
+        "durationSeconds": null,
+        "sourceEvent": {
+          "contractId": "E04",
+          "artifact": {
+            "artifactId": "ART-EVENT-OPTION-SELECTION",
+            "checksum": "sha256:f4edbdf674a6c7157bf7b10029cc5a4e4d7be3594b53f6ed55b1796a61508b5d"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        },
+        "correlationId": "CORRELATION-DESIGN-FIXTURE"
+      }
+    },
+    {
+      "name": "adr-recorded",
+      "contractId": "D06",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "architecture-decision-record",
+        "artifactId": "ART-ADR-RECORDED",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "architecture": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7",
+          "review": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e",
+          "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+          "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "adrId": "ADR-CLAIMS",
+        "status": "recorded",
+        "title": "Claims storage and regional recovery",
+        "context": "Choose against confirmed requirements and reviewed catalog facts; no runtime assurance is implied.",
+        "consideredOptionIds": [
+          "OPTION-A",
+          "OPTION-B"
+        ],
+        "decisionReceipt": {
+          "decisionId": "DECISION-SELECT-B",
+          "outcome": "selected",
+          "selectedOptionId": "OPTION-B",
+          "rationale": "Fixture human selection of the reviewed eligible alternative, not an execution approval.",
+          "actor": {
+            "kind": "human",
+            "actorId": "demo-human",
+            "identityAssurance": "local-demo"
+          },
+          "actionId": "select-option-b-r1",
+          "decidedAt": "2026-09-12T18:15:00Z",
+          "attentionEvent": {
+            "contractId": "E05",
+            "artifact": {
+              "artifactId": "ART-ATTENTION-OPTION-SELECTION",
+              "checksum": "sha256:f80379110f513d0796f64073349df55350aa6a972151c30128f0322c6b5143a3"
+            },
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            }
+          },
+          "boundChecksums": {
+            "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+            "architecture": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7",
+            "review": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e",
+            "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+            "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+          }
+        },
+        "architecture": {
+          "artifactId": "ART-ARCHITECTURE-CLAIMS",
+          "checksum": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7"
+        },
+        "review": {
+          "artifactId": "ART-DESIGN-REVIEW",
+          "checksum": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+        },
+        "requirements": {
+          "artifactId": "ART-REQUIREMENTS-CONFIRMED",
+          "checksum": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be"
+        },
+        "promiseContract": {
+          "contractId": "D03",
+          "artifact": {
+            "artifactId": "ART-PROMISES-CONFIRMED-RPO",
+            "checksum": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        }
+      }
+    },
+    {
+      "name": "approval-pending",
+      "contractId": "D07",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "approval",
+        "artifactId": "ART-APPROVAL-PENDING",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:58d006b4042d4f4bb64f7dd7d803ddfffd3ce15203cf03c16f7dc29c4b7ca692",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "gateEvaluation": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "approvalId": "APPROVAL-DESIGN",
+        "approvalClass": "design",
+        "status": "pending",
+        "binding": {
+          "subjectContractId": "D06",
+          "subject": {
+            "artifactId": "ART-ADR-RECORDED",
+            "checksum": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd"
+          },
+          "capability": "approve-design",
+          "actionId": "approve-design-r1",
+          "expectedRevision": 1,
+          "gateId": "design-ready",
+          "boundChecksums": {
+            "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+            "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+            "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e",
+            "architecture": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7",
+            "decision": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd",
+            "review": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+          }
+        },
+        "issuedAt": "2026-09-12T18:16:00Z",
+        "expiresAt": "2026-09-12T19:00:00Z",
+        "decidedAt": null,
+        "decisionId": null,
+        "actor": null,
+        "attentionEvent": null,
+        "gateEvaluation": {
+          "artifactId": "ART-DESIGN-REVIEW",
+          "checksum": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+        }
+      }
+    },
+    {
+      "name": "design-approval-source-event",
+      "contractId": "E04",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "domain-event",
+        "artifactId": "ART-EVENT-DESIGN-APPROVAL",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:0476de293e659f3d2dc738a6d06f257ff950dbeaa61b7bb5208a247eaf281895",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "eventId": "EVENT-DESIGN-APPROVAL",
+        "sequence": 16,
+        "eventType": "approve-design-r1",
+        "correlationId": "CORRELATION-DESIGN-FIXTURE",
+        "workId": null,
+        "actor": {
+          "kind": "human",
+          "actorId": "demo-human",
+          "identityAssurance": "local-demo"
+        },
+        "payloadRefs": []
+      }
+    },
+    {
+      "name": "design-approval-attention",
+      "contractId": "E05",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "human-attention-event",
+        "artifactId": "ART-ATTENTION-DESIGN-APPROVAL",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:9aba23b8f3db3758307febc6a85c152863ec604eedf3583d9c9982aee22edbad",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "eventId": "ATTENTION-EVENT-DESIGN-APPROVAL",
+        "attentionId": "ATTENTION-DESIGN-APPROVAL",
+        "stepId": "STEP-DESIGN-APPROVAL",
+        "questionId": null,
+        "decisionId": "DECISION-APPROVE-DESIGN",
+        "activityClass": "product-workflow",
+        "actionId": "approve-design-r1",
+        "attentionKind": "approved",
+        "actor": {
+          "kind": "human",
+          "actorId": "demo-human",
+          "identityAssurance": "local-demo"
+        },
+        "occurredAt": "2026-09-12T18:20:00Z",
+        "durationSeconds": null,
+        "sourceEvent": {
+          "contractId": "E04",
+          "artifact": {
+            "artifactId": "ART-EVENT-DESIGN-APPROVAL",
+            "checksum": "sha256:0476de293e659f3d2dc738a6d06f257ff950dbeaa61b7bb5208a247eaf281895"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        },
+        "correlationId": "CORRELATION-DESIGN-FIXTURE"
+      }
+    },
+    {
+      "name": "approval-approved",
+      "contractId": "D07",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "approval",
+        "artifactId": "ART-APPROVAL-APPROVED",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:ad64c0834b2a7a20408f92a880305572b0efd60b3f67287ad33617ab3d6b23f7",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "gateEvaluation": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "approvalId": "APPROVAL-DESIGN",
+        "approvalClass": "design",
+        "status": "approved",
+        "binding": {
+          "subjectContractId": "D06",
+          "subject": {
+            "artifactId": "ART-ADR-RECORDED",
+            "checksum": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd"
+          },
+          "capability": "approve-design",
+          "actionId": "approve-design-r1",
+          "expectedRevision": 1,
+          "gateId": "design-ready",
+          "boundChecksums": {
+            "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+            "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+            "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e",
+            "architecture": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7",
+            "decision": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd",
+            "review": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+          }
+        },
+        "issuedAt": "2026-09-12T18:16:00Z",
+        "expiresAt": "2026-09-12T19:00:00Z",
+        "decidedAt": "2026-09-12T18:20:00Z",
+        "decisionId": "DECISION-APPROVE-DESIGN",
+        "actor": {
+          "kind": "human",
+          "actorId": "demo-human",
+          "identityAssurance": "local-demo"
+        },
+        "attentionEvent": {
+          "contractId": "E05",
+          "artifact": {
+            "artifactId": "ART-ATTENTION-DESIGN-APPROVAL",
+            "checksum": "sha256:9aba23b8f3db3758307febc6a85c152863ec604eedf3583d9c9982aee22edbad"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        },
+        "gateEvaluation": {
+          "artifactId": "ART-DESIGN-REVIEW",
+          "checksum": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+        }
+      }
+    },
+    {
+      "name": "approval-stale",
+      "contractId": "D07",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "approval",
+        "artifactId": "ART-APPROVAL-STALE",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:4c26b0790f8d103a0570ee1c58942aae92eb716fdb39c747a4d698ada3a3d1e7",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "gateEvaluation": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "approvalId": "APPROVAL-DESIGN",
+        "approvalClass": "design",
+        "status": "stale",
+        "binding": {
+          "subjectContractId": "D06",
+          "subject": {
+            "artifactId": "ART-ADR-RECORDED",
+            "checksum": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd"
+          },
+          "capability": "approve-design",
+          "actionId": "approve-design-r1",
+          "expectedRevision": 1,
+          "gateId": "design-ready",
+          "boundChecksums": {
+            "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+            "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+            "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e",
+            "architecture": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7",
+            "decision": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd",
+            "review": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+          }
+        },
+        "issuedAt": "2026-09-12T18:16:00Z",
+        "expiresAt": "2026-09-12T19:00:00Z",
+        "decidedAt": "2026-09-12T18:20:00Z",
+        "decisionId": "DECISION-APPROVE-DESIGN",
+        "actor": {
+          "kind": "human",
+          "actorId": "demo-human",
+          "identityAssurance": "local-demo"
+        },
+        "attentionEvent": {
+          "contractId": "E05",
+          "artifact": {
+            "artifactId": "ART-ATTENTION-DESIGN-APPROVAL",
+            "checksum": "sha256:9aba23b8f3db3758307febc6a85c152863ec604eedf3583d9c9982aee22edbad"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        },
+        "gateEvaluation": {
+          "artifactId": "ART-DESIGN-REVIEW",
+          "checksum": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+        }
+      }
+    },
+    {
+      "name": "approval-expired",
+      "contractId": "D07",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "approval",
+        "artifactId": "ART-APPROVAL-EXPIRED",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:5e651a4a351e765fb6c633db2715e4e947b10733874ee15d1c4aa04e1c5d997f",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "gateEvaluation": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "approvalId": "APPROVAL-DESIGN",
+        "approvalClass": "design",
+        "status": "expired",
+        "binding": {
+          "subjectContractId": "D06",
+          "subject": {
+            "artifactId": "ART-ADR-RECORDED",
+            "checksum": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd"
+          },
+          "capability": "approve-design",
+          "actionId": "approve-design-r1",
+          "expectedRevision": 1,
+          "gateId": "design-ready",
+          "boundChecksums": {
+            "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+            "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+            "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e",
+            "architecture": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7",
+            "decision": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd",
+            "review": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+          }
+        },
+        "issuedAt": "2026-09-12T18:16:00Z",
+        "expiresAt": "2026-09-12T19:00:00Z",
+        "decidedAt": "2026-09-12T18:20:00Z",
+        "decisionId": "DECISION-APPROVE-DESIGN",
+        "actor": {
+          "kind": "human",
+          "actorId": "demo-human",
+          "identityAssurance": "local-demo"
+        },
+        "attentionEvent": {
+          "contractId": "E05",
+          "artifact": {
+            "artifactId": "ART-ATTENTION-DESIGN-APPROVAL",
+            "checksum": "sha256:9aba23b8f3db3758307febc6a85c152863ec604eedf3583d9c9982aee22edbad"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        },
+        "gateEvaluation": {
+          "artifactId": "ART-DESIGN-REVIEW",
+          "checksum": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+        }
+      }
+    },
+    {
+      "name": "design-rejection-source-event",
+      "contractId": "E04",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "domain-event",
+        "artifactId": "ART-EVENT-DESIGN-REJECTION",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:f949e0aae01917daff1df652b3ff86753cecf65fb5953052251f283d2420b96f",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "eventId": "EVENT-DESIGN-REJECTION",
+        "sequence": 21,
+        "eventType": "approve-design-r1",
+        "correlationId": "CORRELATION-DESIGN-FIXTURE",
+        "workId": null,
+        "actor": {
+          "kind": "human",
+          "actorId": "demo-human",
+          "identityAssurance": "local-demo"
+        },
+        "payloadRefs": []
+      }
+    },
+    {
+      "name": "design-rejection-attention",
+      "contractId": "E05",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "human-attention-event",
+        "artifactId": "ART-ATTENTION-DESIGN-REJECTION",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:d1c8bbf791df400bf807188b4818642cb1c16ce0ee1aa78f6c86f80e52d71f0a",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "eventId": "ATTENTION-EVENT-DESIGN-REJECTION",
+        "attentionId": "ATTENTION-DESIGN-REJECTION",
+        "stepId": "STEP-DESIGN-REJECTION",
+        "questionId": null,
+        "decisionId": "DECISION-REJECT-DESIGN",
+        "activityClass": "product-workflow",
+        "actionId": "approve-design-r1",
+        "attentionKind": "rejected",
+        "actor": {
+          "kind": "human",
+          "actorId": "demo-human",
+          "identityAssurance": "local-demo"
+        },
+        "occurredAt": "2026-09-12T18:21:00Z",
+        "durationSeconds": null,
+        "sourceEvent": {
+          "contractId": "E04",
+          "artifact": {
+            "artifactId": "ART-EVENT-DESIGN-REJECTION",
+            "checksum": "sha256:f949e0aae01917daff1df652b3ff86753cecf65fb5953052251f283d2420b96f"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        },
+        "correlationId": "CORRELATION-DESIGN-FIXTURE"
+      }
+    },
+    {
+      "name": "approval-rejected",
+      "contractId": "D07",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "approval",
+        "artifactId": "ART-APPROVAL-REJECTED",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:349c17b4aec0c0c5a7bc0a89d00f030493b9716808dbb1c4a29c18e2acf3571d",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "gateEvaluation": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "approvalId": "APPROVAL-DESIGN",
+        "approvalClass": "design",
+        "status": "rejected",
+        "binding": {
+          "subjectContractId": "D06",
+          "subject": {
+            "artifactId": "ART-ADR-RECORDED",
+            "checksum": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd"
+          },
+          "capability": "approve-design",
+          "actionId": "approve-design-r1",
+          "expectedRevision": 1,
+          "gateId": "design-ready",
+          "boundChecksums": {
+            "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+            "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+            "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e",
+            "architecture": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7",
+            "decision": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd",
+            "review": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+          }
+        },
+        "issuedAt": "2026-09-12T18:16:00Z",
+        "expiresAt": "2026-09-12T19:00:00Z",
+        "decidedAt": "2026-09-12T18:21:00Z",
+        "decisionId": "DECISION-REJECT-DESIGN",
+        "actor": {
+          "kind": "human",
+          "actorId": "demo-human",
+          "identityAssurance": "local-demo"
+        },
+        "attentionEvent": {
+          "contractId": "E05",
+          "artifact": {
+            "artifactId": "ART-ATTENTION-DESIGN-REJECTION",
+            "checksum": "sha256:d1c8bbf791df400bf807188b4818642cb1c16ce0ee1aa78f6c86f80e52d71f0a"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        },
+        "gateEvaluation": {
+          "artifactId": "ART-DESIGN-REVIEW",
+          "checksum": "sha256:1564c13111ab2842e4c14ee05bfcc7b4340a1d37726d6eea526859ec3836280e"
+        }
+      }
+    },
+    {
+      "name": "generation-gate",
+      "contractId": "D08",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "review-gate-evaluation",
+        "artifactId": "ART-GENERATION-GATE",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:6b869a9c60142aee265be4f55517092b2bfd818b43c726e363f1b08b3445977b",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "subject": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd",
+          "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+          "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "subjectContractId": "D06",
+        "review": {
+          "reviewId": "REVIEW-GENERATION-GATE",
+          "deterministicStatus": "pass",
+          "inferenceStatus": "pass",
+          "findings": [],
+          "optionAssessments": []
+        },
+        "gate": {
+          "gateId": "generation-ready",
+          "version": "1.0.0",
+          "effectiveStatus": "pass",
+          "approvalStatus": "approved",
+          "approval": {
+            "artifactId": "ART-APPROVAL-APPROVED",
+            "checksum": "sha256:ad64c0834b2a7a20408f92a880305572b0efd60b3f67287ad33617ab3d6b23f7"
+          },
+          "evaluatedAt": "2026-09-12T18:30:00Z",
+          "expectedRevision": 1,
+          "boundChecksums": {
+            "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+            "subject": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd",
+            "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+            "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+          }
+        },
+        "subject": {
+          "artifactId": "ART-ADR-RECORDED",
+          "checksum": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd"
+        },
+        "requirements": {
+          "artifactId": "ART-REQUIREMENTS-CONFIRMED",
+          "checksum": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be"
+        },
+        "promiseContract": {
+          "contractId": "D03",
+          "artifact": {
+            "artifactId": "ART-PROMISES-CONFIRMED-RPO",
+            "checksum": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        }
+      }
+    },
+    {
+      "name": "blocked-checks-approved-snapshot",
+      "contractId": "D08",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "review-gate-evaluation",
+        "artifactId": "ART-BLOCKED-CHECKS-APPROVED-SNAPSHOT",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:d5cd2629ff3f9b86442448200ddad017739ddc834e40dd12b53155ea8eeee254",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "subject": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd",
+          "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+          "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "subjectContractId": "D06",
+        "review": {
+          "reviewId": "REVIEW-BLOCKED-CHECKS-APPROVED-SNAPSHOT",
+          "deterministicStatus": "blocked",
+          "inferenceStatus": "pass",
+          "findings": [],
+          "optionAssessments": []
+        },
+        "gate": {
+          "gateId": "generation-ready",
+          "version": "1.0.0",
+          "effectiveStatus": "blocked",
+          "approvalStatus": "approved",
+          "approval": {
+            "artifactId": "ART-APPROVAL-APPROVED",
+            "checksum": "sha256:ad64c0834b2a7a20408f92a880305572b0efd60b3f67287ad33617ab3d6b23f7"
+          },
+          "evaluatedAt": "2026-09-12T18:30:00Z",
+          "expectedRevision": 1,
+          "boundChecksums": {
+            "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+            "subject": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd",
+            "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+            "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+          }
+        },
+        "subject": {
+          "artifactId": "ART-ADR-RECORDED",
+          "checksum": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd"
+        },
+        "requirements": {
+          "artifactId": "ART-REQUIREMENTS-CONFIRMED",
+          "checksum": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be"
+        },
+        "promiseContract": {
+          "contractId": "D03",
+          "artifact": {
+            "artifactId": "ART-PROMISES-CONFIRMED-RPO",
+            "checksum": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        }
+      }
+    },
+    {
+      "name": "generation-draft",
+      "contractId": "D09",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "generation-contract",
+        "artifactId": "ART-GENERATION-DRAFT",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:edba2c996f9e5155f99d8f9b26918a2eb5a8aa1aca309c18c15419be170aeb5e",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+          "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e",
+          "architecture": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7",
+          "decision": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd",
+          "gateEvaluation": "sha256:6b869a9c60142aee265be4f55517092b2bfd818b43c726e363f1b08b3445977b"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "generationId": "GENERATION-CLAIMS",
+        "status": "draft",
+        "selectedOptionId": "OPTION-B",
+        "renderMode": "approved-templates-only",
+        "outputRootId": "ROOT-DESIGN-OUTPUT",
+        "modules": [
+          {
+            "moduleId": "MODULE-CLAIMS-STORAGE-V2",
+            "version": "1.0.0",
+            "checksum": "sha256:e54ae3bc19fede760f321042c000ae739545fc7ae7cf09fa0ea333bdcfaf99f1"
+          }
+        ],
+        "outputs": [
+          {
+            "relativePath": "infra/main.bicep",
+            "kind": "bicep",
+            "template": {
+              "moduleId": "MODULE-CLAIMS-STORAGE-V2",
+              "version": "1.0.0",
+              "checksum": "sha256:e54ae3bc19fede760f321042c000ae739545fc7ae7cf09fa0ea333bdcfaf99f1"
+            },
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "promiseIds": [
+              "CP-01",
+              "CP-02",
+              "CP-03",
+              "CP-04",
+              "CP-05",
+              "CP-06",
+              "CP-07",
+              "CP-08"
+            ]
+          }
+        ],
+        "desiredStorageConfiguration": {
+          "publicNetworkAccess": "Enabled",
+          "supportsHttpsTrafficOnly": true,
+          "allowBlobPublicAccess": false,
+          "minimumTlsVersion": "TLS1_2"
+        },
+        "desiredStateChecksum": "sha256:367283b34f8f311bf1cdb4f7bd3e32d8c1e109c79a85205eef4485c677f3c497",
+        "requirements": {
+          "artifactId": "ART-REQUIREMENTS-CONFIRMED",
+          "checksum": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be"
+        },
+        "promiseContract": {
+          "contractId": "D03",
+          "artifact": {
+            "artifactId": "ART-PROMISES-CONFIRMED-RPO",
+            "checksum": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        },
+        "architecture": {
+          "artifactId": "ART-ARCHITECTURE-CLAIMS",
+          "checksum": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7"
+        },
+        "decision": {
+          "artifactId": "ART-ADR-RECORDED",
+          "checksum": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd"
+        },
+        "gateEvaluation": {
+          "artifactId": "ART-GENERATION-GATE",
+          "checksum": "sha256:6b869a9c60142aee265be4f55517092b2bfd818b43c726e363f1b08b3445977b"
+        },
+        "approval": null
+      }
+    },
+    {
+      "name": "generation-ready",
+      "contractId": "D09",
+      "value": {
+        "schemaVersion": "1.0.0",
+        "artifactType": "generation-contract",
+        "artifactId": "ART-GENERATION-READY",
+        "runId": "RUN-DESIGN-V2",
+        "caseId": "CASE-DESIGN-V2",
+        "scope": {
+          "scopeId": "SCOPE-CONTRACT-V2",
+          "subscriptionId": "00000000-0000-0000-0000-000000000000",
+          "resourceGroup": "rg-contract-fixture",
+          "resourceIds": [
+            "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+          ]
+        },
+        "caseRevisionAtWrite": 1,
+        "createdAt": "2026-09-12T18:30:00Z",
+        "updatedAt": "2026-09-12T18:30:00Z",
+        "stateChecksum": "sha256:99a3d490bada27d8b7a89cf8fb229c5e18b00bd1d7466ab6198196d4d30aa244",
+        "derivedFrom": {
+          "scenario": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+          "requirements": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be",
+          "promiseContract": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e",
+          "architecture": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7",
+          "decision": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd",
+          "gateEvaluation": "sha256:6b869a9c60142aee265be4f55517092b2bfd818b43c726e363f1b08b3445977b",
+          "approval": "sha256:ad64c0834b2a7a20408f92a880305572b0efd60b3f67287ad33617ab3d6b23f7"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        },
+        "runMode": "fixture",
+        "purpose": "test",
+        "generationId": "GENERATION-CLAIMS",
+        "status": "ready",
+        "selectedOptionId": "OPTION-B",
+        "renderMode": "approved-templates-only",
+        "outputRootId": "ROOT-DESIGN-OUTPUT",
+        "modules": [
+          {
+            "moduleId": "MODULE-CLAIMS-STORAGE-V2",
+            "version": "1.0.0",
+            "checksum": "sha256:e54ae3bc19fede760f321042c000ae739545fc7ae7cf09fa0ea333bdcfaf99f1"
+          }
+        ],
+        "outputs": [
+          {
+            "relativePath": "infra/main.bicep",
+            "kind": "bicep",
+            "template": {
+              "moduleId": "MODULE-CLAIMS-STORAGE-V2",
+              "version": "1.0.0",
+              "checksum": "sha256:e54ae3bc19fede760f321042c000ae739545fc7ae7cf09fa0ea333bdcfaf99f1"
+            },
+            "componentIds": [
+              "CMP-CLAIMS-STORE"
+            ],
+            "promiseIds": [
+              "CP-01",
+              "CP-02",
+              "CP-03",
+              "CP-04",
+              "CP-05",
+              "CP-06",
+              "CP-07",
+              "CP-08"
+            ]
+          }
+        ],
+        "desiredStorageConfiguration": {
+          "publicNetworkAccess": "Enabled",
+          "supportsHttpsTrafficOnly": true,
+          "allowBlobPublicAccess": false,
+          "minimumTlsVersion": "TLS1_2"
+        },
+        "desiredStateChecksum": "sha256:367283b34f8f311bf1cdb4f7bd3e32d8c1e109c79a85205eef4485c677f3c497",
+        "requirements": {
+          "artifactId": "ART-REQUIREMENTS-CONFIRMED",
+          "checksum": "sha256:93e6834d17fb0e4b25e7bffa2dc7781ff2f11660bb83cf3b69a6f8d6d8d8c1be"
+        },
+        "promiseContract": {
+          "contractId": "D03",
+          "artifact": {
+            "artifactId": "ART-PROMISES-CONFIRMED-RPO",
+            "checksum": "sha256:3a3d1e1ced4b8de2f426cbe2d50698ec25f035a60d197532c7ada14e5479874e"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        },
+        "architecture": {
+          "artifactId": "ART-ARCHITECTURE-CLAIMS",
+          "checksum": "sha256:057c45d6bc22663814747daa026b5b416732e6853f5937203081f286c4b7f4e7"
+        },
+        "decision": {
+          "artifactId": "ART-ADR-RECORDED",
+          "checksum": "sha256:8046aa720f2788b9195d47be1ac1b2ea547e87a181e08abab11b37cb2ee3debd"
+        },
+        "gateEvaluation": {
+          "artifactId": "ART-GENERATION-GATE",
+          "checksum": "sha256:6b869a9c60142aee265be4f55517092b2bfd818b43c726e363f1b08b3445977b"
+        },
+        "approval": {
+          "artifactId": "ART-APPROVAL-APPROVED",
+          "checksum": "sha256:ad64c0834b2a7a20408f92a880305572b0efd60b3f67287ad33617ab3d6b23f7"
+        }
+      }
+    }
+  ]
+}

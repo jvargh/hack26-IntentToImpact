@@ -1,0 +1,81 @@
+{
+  "schemaVersion": "1.0.0",
+  "scenario": {
+    "scenarioId": "DEMO-CASE-CLAIMS-V2",
+    "scenarioVersion": "2.0.0",
+    "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+  },
+  "transport": {
+    "kind": "in-memory-fixture",
+    "networkAccess": false,
+    "liveEndpoints": [],
+    "immutableRunMode": true,
+    "executesWorkflow": false
+  },
+  "navigationMeaning": "Browse independent authored snapshots. A scene change never confirms, approves, materializes, deploys, seeds or restores.",
+  "transitions": [
+    {
+      "fromSceneId": "FX-01",
+      "actionId": "view-risk-example",
+      "toSceneId": "FX-09",
+      "effect": "load-authored-snapshot",
+      "executesWorkflow": false
+    },
+    {
+      "fromSceneId": "FX-09",
+      "actionId": "review-correction-example",
+      "toSceneId": "FX-10",
+      "effect": "load-authored-snapshot",
+      "executesWorkflow": false
+    },
+    {
+      "fromSceneId": "FX-09",
+      "actionId": "view-stale-evidence-example",
+      "toSceneId": "FX-09:stale-evidence",
+      "effect": "load-authored-snapshot",
+      "executesWorkflow": false
+    },
+    {
+      "fromSceneId": "FX-10",
+      "actionId": "view-verification-pending",
+      "toSceneId": "FX-11",
+      "effect": "load-authored-snapshot",
+      "executesWorkflow": false
+    },
+    {
+      "fromSceneId": "FX-11",
+      "actionId": "view-restoration-example",
+      "toSceneId": "FX-12",
+      "effect": "load-authored-snapshot",
+      "executesWorkflow": false
+    },
+    {
+      "fromSceneId": "FX-11",
+      "actionId": "view-missing-evidence-example",
+      "toSceneId": "FX-11:missing-evidence",
+      "effect": "load-authored-snapshot",
+      "executesWorkflow": false
+    },
+    {
+      "fromSceneId": "FX-12",
+      "actionId": "inspect-fixture-evidence",
+      "toSceneId": "FX-12",
+      "effect": "inspect-records",
+      "executesWorkflow": false
+    },
+    {
+      "fromSceneId": "FX-11:missing-evidence",
+      "actionId": "view-verification-pending",
+      "toSceneId": "FX-11",
+      "effect": "load-authored-snapshot",
+      "executesWorkflow": false
+    },
+    {
+      "fromSceneId": "FX-09:stale-evidence",
+      "actionId": "view-current-risk-example",
+      "toSceneId": "FX-09",
+      "effect": "load-authored-snapshot",
+      "executesWorkflow": false
+    }
+  ]
+}

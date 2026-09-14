@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://intent-to-impact.invalid/contracts/1.0.0/scenario.schema.json",
+  "title": "ScenarioContract",
+  "oneOf": [{ "$ref": "#/definitions/ClaimsScenarioV2" }],
+  "definitions": {
+    "ScenarioIdentity": {
+      "type": "object",
+      "properties": {
+        "scenarioId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "scenarioVersion": { "$ref": "core.schema.json#/definitions/Version" },
+        "scenarioHash": { "$ref": "core.schema.json#/definitions/Checksum" }
+      },
+      "required": ["scenarioId", "scenarioVersion", "scenarioHash"],
+      "additionalProperties": false
+    },
+    "PromiseId": { "type": "string", "enum": ["CP-01", "CP-02", "CP-03", "CP-04", "CP-05", "CP-06", "CP-07", "CP-08"] },
+    "EvidenceKind": {
+      "type": "string",
+      "enum": ["resource-configuration", "identity-role-configuration", "encryption-configuration", "regional-recovery-test", "residency-inventory", "complete-billing-period", "diagnostic-configuration"]
+    },
+    "PromiseDefinition": {
+      "type": "object",
+      "properties": {
+        "promiseId": { "$ref": "#/definitions/PromiseId" },
+        "statement": { "type": "string", "minLength": 1, "maxLength": 1200 },
+        "customerImpact": { "type": "string", "minLength": 1, "maxLength": 1200 },
+        "category": { "type": "string", "enum": ["security", "resilience", "residency", "cost", "observability"] },
+        "criticality": { "type": "string", "enum": ["blocking", "non-blocking"] },
+        "requirementIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "core.schema.json#/definitions/Identifier" } },
+        "componentIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "core.schema.json#/definitions/Identifier" } },
+        "verifierIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "core.schema.json#/definitions/Identifier" } },
+        "requiredEvidenceKinds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/definitions/EvidenceKind" } }
+      },
+      "required": ["promiseId", "statement", "customerImpact", "category", "criticality", "requirementIds", "componentIds", "verifierIds", "requiredEvidenceKinds"],
+      "additionalProperties": false
+    },
+    "EightPromises": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "items": { "$ref": "#/definitions/PromiseDefinition" },
+      "allOf": [
+        { "contains": { "properties": { "promiseId": { "const": "CP-01" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-02" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-03" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-04" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-05" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-06" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-07" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-08" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 }
+      ]
+    },
+    "DesiredStorageConfiguration": {
+      "type": "object",
+      "properties": {
+        "publicNetworkAccess": { "type": "string", "const": "Enabled" },
+        "supportsHttpsTrafficOnly": { "type": "boolean", "const": true },
+        "allowBlobPublicAccess": { "type": "boolean", "const": false },
+        "minimumTlsVersion": { "type": "string", "const": "TLS1_2" }
+      },
+      "required": ["publicNetworkAccess", "supportsHttpsTrafficOnly", "allowBlobPublicAccess", "minimumTlsVersion"],
+      "additionalProperties": false
+    },
+    "ConfigurationProperty": {
+      "type": "string",
+      "enum": ["publicNetworkAccess", "supportsHttpsTrafficOnly", "allowBlobPublicAccess", "minimumTlsVersion"]
+    },
+    "Cp01Predicate": {
+      "type": "object",
+      "properties": {
+        "predicateId": { "$ref": "core.schema.json#/definitions/Identifier" },
+        "property": { "$ref": "#/definitions/ConfigurationProperty" },
+        "operator": { "type": "string", "const": "equals" },
+        "expected": { "type": ["string", "boolean"] }
+      },
+      "required": ["predicateId", "property", "operator", "expected"],
+      "additionalProperties": false,
+      "allOf": [
+        { "if": { "properties": { "property": { "const": "publicNetworkAccess" } } }, "then": { "properties": { "predicateId": { "const": "PRED-PUBLIC-NETWORK-ENABLED" }, "expected": { "const": "Enabled" } } } },
+        { "if": { "properties": { "property": { "const": "supportsHttpsTrafficOnly" } } }, "then": { "properties": { "predicateId": { "const": "PRED-HTTPS-REQUIRED" }, "expected": { "const": true } } } },
+        { "if": { "properties": { "property": { "const": "allowBlobPublicAccess" } } }, "then": { "properties": { "predicateId": { "const": "PRED-ANONYMOUS-BLOB-DISABLED" }, "expected": { "const": false } } } },
+        { "if": { "properties": { "property": { "const": "minimumTlsVersion" } } }, "then": { "properties": { "predicateId": { "const": "PRED-TLS12-MINIMUM" }, "expected": { "const": "TLS1_2" } } } }
+      ]
+    },
+    "CandidateProfile": {
+      "type": "object",
+      "description": "Synthetic catalog facts only. Eligibility and recommendation must be derived later by deterministic engines.",
+      "properties": {
+        "candidateId": { "type": "string", "enum": ["A", "B"] },
+        "monthlyEstimateUsd": { "type": "integer", "minimum": 0 },
+        "regionalRecoveryProfile": { "type": ["string", "null"] },
+        "declaredStorageControls": { "$ref": "#/definitions/DesiredStorageConfiguration" }
+      },
+      "required": ["candidateId", "monthlyEstimateUsd", "regionalRecoveryProfile", "declaredStorageControls"],
+      "additionalProperties": false,
+      "allOf": [
+        { "if": { "properties": { "candidateId": { "const": "A" } } }, "then": { "properties": { "monthlyEstimateUsd": { "const": 6000 }, "regionalRecoveryProfile": { "type": "null" } } } },
+        { "if": { "properties": { "candidateId": { "const": "B" } } }, "then": { "properties": { "monthlyEstimateUsd": { "const": 7200 }, "regionalRecoveryProfile": { "const": "PROFILE-ACTIVE-PASSIVE-V2" } } } }
+      ]
+    },
+    "ClaimsScenarioV2": {
+      "title": "ClaimsScenarioV2",
+      "x-contract-id": "SCENARIO-V2",
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0.0" },
+        "artifactType": { "type": "string", "const": "claims-scenario" },
+        "scenarioId": { "type": "string", "const": "DEMO-CASE-CLAIMS-V2" },
+        "scenarioVersion": { "type": "string", "const": "2.0.0" },
+        "scenarioOrigin": { "type": "string", "const": "fixture" },
+        "stateChecksum": { "$ref": "core.schema.json#/definitions/Checksum" },
+        "intentId": { "type": "string", "const": "INTENT-CLAIMS" },
+        "businessIntent": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "catalog": {
+          "type": "object",
+          "properties": {
+            "catalogId": { "type": "string", "const": "CATALOG-CLAIMS-V2" },
+            "catalogVersion": { "type": "string", "const": "2.0.0" },
+            "rulePackId": { "type": "string", "const": "RULES-CLAIMS-V2" },
+            "rulePackVersion": { "type": "string", "const": "2.0.0" }
+          },
+          "required": ["catalogId", "catalogVersion", "rulePackId", "rulePackVersion"],
+          "additionalProperties": false
+        },
+        "rtoMinutes": { "type": "integer", "const": 60 },
+        "rpoMinutes": { "type": "null" },
+        "rpoConfirmation": { "type": "string", "const": "unconfirmed" },
+        "rpoQuestionId": { "type": "string", "const": "QUESTION-RPO" },
+        "scriptedRpoAnswerMinutes": { "type": "integer", "const": 15 },
+        "monthlyBudgetUsd": { "type": "integer", "const": 8000 },
+        "estimateBasis": { "type": "string", "const": "synthetic-comparable-monthly-workload" },
+        "promises": { "$ref": "#/definitions/EightPromises" },
+        "candidates": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": { "$ref": "#/definitions/CandidateProfile" },
+          "allOf": [
+            { "contains": { "properties": { "candidateId": { "const": "A" } }, "required": ["candidateId"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "candidateId": { "const": "B" } }, "required": ["candidateId"] }, "minContains": 1, "maxContains": 1 }
+          ]
+        },
+        "componentId": { "type": "string", "const": "CMP-CLAIMS-STORE" },
+        "resourceType": { "type": "string", "const": "Microsoft.Storage/storageAccounts" },
+        "storageKind": { "type": "string", "const": "StorageV2" },
+        "desiredStorageConfiguration": { "$ref": "#/definitions/DesiredStorageConfiguration" },
+        "desiredStateChecksum": { "$ref": "core.schema.json#/definitions/Checksum" },
+        "cp01Verifier": {
+          "type": "object",
+          "properties": {
+            "verifierId": { "type": "string", "const": "VERIFY-CP01-PUBLIC-STORAGE-V2" },
+            "version": { "type": "string", "const": "2.0.0" },
+            "maxEvidenceAgeSeconds": { "type": "integer", "const": 300 },
+            "requiredEvidenceKinds": { "type": "array", "items": { "const": "resource-configuration", "type": "string" }, "minItems": 1, "maxItems": 1 },
+            "predicates": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "$ref": "#/definitions/Cp01Predicate" } }
+          },
+          "required": ["verifierId", "version", "maxEvidenceAgeSeconds", "requiredEvidenceKinds", "predicates"],
+          "additionalProperties": false
+        },
+        "operatorBinding": {
+          "type": "object",
+          "description": "Deliberately unbound. Actual Azure IDs/receipts belong to operator preflight and immutable run records, never guessed in this scenario.",
+          "properties": {
+            "subscriptionId": { "type": "null" }, "region": { "type": "null" },
+            "resourceId": { "type": "null" }, "deploymentReceipt": { "type": "null" }
+          },
+          "required": ["subscriptionId", "region", "resourceId", "deploymentReceipt"],
+          "additionalProperties": false
+        },
+        "baselineCriteria": {
+          "type": "object",
+          "properties": {
+            "requiresAcknowledgedOperation": { "type": "boolean", "const": true },
+            "requiresExactManifestBinding": { "type": "boolean", "const": true },
+            "desiredStateChecksum": { "$ref": "core.schema.json#/definitions/Checksum" }
+          },
+          "required": ["requiresAcknowledgedOperation", "requiresExactManifestBinding", "desiredStateChecksum"],
+          "additionalProperties": false
+        },
+        "seedProposal": {
+          "type": "object",
+          "properties": {
+            "property": { "type": "string", "const": "supportsHttpsTrafficOnly" },
+            "before": { "type": "boolean", "const": true },
+            "after": { "type": "boolean", "const": false },
+            "allowBlobPublicAccess": { "type": "boolean", "const": false },
+            "authorizationStatus": { "type": "string", "const": "not-authorized" },
+            "requiresEmptySyntheticData": { "type": "boolean", "const": true },
+            "sendRealDataOverHttp": { "type": "boolean", "const": false },
+            "ifPolicyProhibits": { "type": "string", "const": "block" }
+          },
+          "required": ["property", "before", "after", "allowBlobPublicAccess", "authorizationStatus", "requiresEmptySyntheticData", "sendRealDataOverHttp", "ifPolicyProhibits"],
+          "additionalProperties": false
+        },
+        "restorationCriteria": {
+          "type": "object",
+          "properties": {
+            "desiredStateChecksum": { "$ref": "core.schema.json#/definitions/Checksum" },
+            "requiresFreshEvidence": { "type": "boolean", "const": true },
+            "requiresSameBinding": { "type": "boolean", "const": true },
+            "recheckProperties": { "type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": { "$ref": "#/definitions/ConfigurationProperty" } }
+          },
+          "required": ["desiredStateChecksum", "requiresFreshEvidence", "requiresSameBinding", "recheckProperties"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion", "artifactType", "scenarioId", "scenarioVersion", "scenarioOrigin", "stateChecksum",
+        "intentId", "businessIntent", "catalog", "rtoMinutes", "rpoMinutes", "rpoConfirmation", "rpoQuestionId",
+        "scriptedRpoAnswerMinutes", "monthlyBudgetUsd", "estimateBasis", "promises", "candidates",
+        "componentId", "resourceType", "storageKind", "desiredStorageConfiguration", "desiredStateChecksum",
+        "cp01Verifier", "operatorBinding", "baselineCriteria", "seedProposal", "restorationCriteria"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

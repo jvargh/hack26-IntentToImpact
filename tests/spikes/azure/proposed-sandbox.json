@@ -1,0 +1,218 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "SPK-03-01-public-only-prerequisite-proposal",
+  "taskId": "SPK-03-01",
+  "parentPlanId": "SPK-03",
+  "sourceScenarioId": "DEMO-CASE-CLAIMS-V1",
+  "componentId": "CMP-CLAIMS-STORE",
+  "status": "approval-required",
+  "canonicalProductState": false,
+  "runtimeProof": "blocked",
+  "runtimePromiseStatus": "unknown",
+  "deploymentId": null,
+  "azureMutationsPerformed": [],
+  "scenarioChange": {
+    "direction": "User: use public IP where needed. no private needed",
+    "publicEndpointDesignDirected": true,
+    "currentProposedPromise": "HTTPS-only and anonymous-blob-access configuration on an empty public-endpoint StorageV2 account.",
+    "currentCanonicalPromiseId": null,
+    "canonicalScenarioUpdate": "pending implementation-orchestrator; this proposal does not edit product contracts or source plans",
+    "originalCp01PrivateNetworkResult": "not-evaluated-not-passed",
+    "privateConnectivityRequired": false,
+    "allAttackScenariosVerified": false,
+    "historicalBicepFixture": "SPK-04-01 remains genuine historical compile evidence only; its publicNetworkAccess Disabled template is NOT current desired deployment state.",
+    "supersededPrivateFindings": [
+      "tests\\spikes\\azure\\superseded-private-proposed-sandbox.json",
+      "tests\\spikes\\azure\\superseded-private-approval-request.md",
+      ".intent-to-impact\\spikes\\SPK-03-01\\metadata-gaps.json"
+    ],
+    "supersededPrerequisites": "Private Endpoint/DNS/VNet/verifier VM, Compute quota, image selection, private-path scripts and the old private-design costs are not current deployment prerequisites."
+  },
+  "evidenceOrigins": {
+    "publicDocumentationAndPrices": "live-external",
+    "proposalValidation": "live-local",
+    "designChoices": "user-directed-proposal-not-runtime-proof",
+    "fixtureUsedAsProof": false
+  },
+  "target": {
+    "subscriptionId": "463a82d4-1896-4332-aeeb-618ee5a5aa93",
+    "resourceGroupName": "rg-intent-to-impact-demo",
+    "resourceGroupId": null,
+    "resourceGroupExists": false,
+    "existenceEvidence": {
+      "origin": "live-external",
+      "provenance": "orchestrator-reported az group show ResourceGroupNotFound",
+      "independentlyRequeriedInThisProposal": false,
+      "observationTimestamp": null
+    },
+    "region": "eastus2",
+    "regionStatus": "proposed-not-confirmed",
+    "storageAccountName": null,
+    "storageAccountId": null,
+    "nameStatus": "operator must approve a globally available 3-24-character lowercase alphanumeric account name; none is assumed to exist"
+  },
+  "resources": [
+    {
+      "proposedRef": "sandbox-rg",
+      "armType": "Microsoft.Resources/resourceGroups",
+      "quantity": 1,
+      "resourceId": null,
+      "reason": "New dedicated disposable scope, only if still absent at separately approved creation time."
+    },
+    {
+      "proposedRef": "claims-store",
+      "armType": "Microsoft.Storage/storageAccounts",
+      "quantity": 1,
+      "resourceId": null,
+      "kind": "StorageV2",
+      "sku": "Standard_LRS",
+      "accessTier": "Hot",
+      "reason": "One empty non-HNS account using Azure's built-in public service endpoint; no application, containers, blobs, disks or compute."
+    }
+  ],
+  "design": {
+    "strategy": "public-storage-endpoint-configuration-observation",
+    "publicEndpoint": true,
+    "standalonePublicIpResources": 0,
+    "vnetResources": 0,
+    "privateEndpointResources": 0,
+    "privateDnsResources": 0,
+    "vpnResources": 0,
+    "verifierVmResources": 0,
+    "roleAssignmentsToCreate": 0,
+    "localPrivateConnectivityAssumed": false,
+    "networkRationale": "The Azure Storage public endpoint needs no customer public-IP resource or VM. Default network ACL Allow deliberately permits public network reachability; it does not permit anonymous blob authorization."
+  },
+  "storageControls": {
+    "publicNetworkAccess": "Enabled",
+    "supportsHttpsTrafficOnly": true,
+    "allowBlobPublicAccess": false,
+    "minimumTlsVersion": "TLS1_2",
+    "allowSharedKeyAccess": false,
+    "networkAcls": {"defaultAction": "Allow", "bypass": "None", "ipRules": [], "virtualNetworkRules": []},
+    "isHnsEnabled": false,
+    "realDataAllowed": false,
+    "blobWritesAllowed": false,
+    "containersToCreate": 0,
+    "additionalHardening": "Shared-key authorization is also proposed disabled; it is not a new verified promise or a reason to create identity/RBAC infrastructure."
+  },
+  "requiredProofAfterApproval": [
+    {"check": "actual-empty-deployment-baseline", "requiredEvidence": "Successful actual scoped deployment/operation and resource IDs, approved artifact hash, creation time, fresh ownership manifest and account-only empty sandbox. No fabricated baseline."},
+    {"check": "https-only-configuration", "requiredEvidence": "Fresh management-plane storage account read with actual resource ID/time and supportsHttpsTrafficOnly=true."},
+    {"check": "anonymous-blob-configuration", "requiredEvidence": "Same fresh scoped account observation shows allowBlobPublicAccess=false; missing/null properties are unknown, not a pass."},
+    {"check": "public-endpoint-and-tls-configuration", "requiredEvidence": "Observe publicNetworkAccess=Enabled and minimumTlsVersion=TLS1_2; preserve other approved guards."},
+    {"check": "fresh-post-rollback", "requiredEvidence": "New actual property observation after restoring supportsHttpsTrafficOnly=true; allowBlobPublicAccess must remain false before, during and after the seed."}
+  ],
+  "verifier": {
+    "kind": "operator-scoped-management-plane-property-read",
+    "infrastructureRequired": [],
+    "commandShape": "az storage account show --subscription <selected-subscription> --resource-group rg-intent-to-impact-demo --name <actual-approved-storage-name>",
+    "executionStatus": "not-run",
+    "dataPlaneOperationsRequired": false,
+    "privateNetworkPathProofRequired": false,
+    "coverage": "Configuration evidence only. No proof of private connectivity, credential security, exploitation resistance, every HTTP client behavior or all anonymous-access attack scenarios.",
+    "evidenceCapture": "Timestamp, exact scoped command, exit/error, actual account/deployment IDs, relevant observed properties and redacted evidence hashes. Do not retrieve keys or print tokens.",
+    "failureRule": "Failed/missing/stale reads remain unknown; explicit HTTPS or anonymous-access property mismatch is a configuration finding, not proof of successful data exfiltration."
+  },
+  "permissions": {
+    "status": "not-verified-not-granted",
+    "operatorOnlyMutations": true,
+    "requiredOperatorPermissions": [
+      "Create the one named RG in the selected subscription, or ask its authorized owner; no blanket Owner role requested.",
+      "Create/read/update/delete only the new StorageV2 account and its scoped deployment records in that RG.",
+      "Read actual account properties and, if needed to establish emptiness, only that account's management-plane container inventory; no listKeys, data writes or RBAC assignments.",
+      "Separately approved seed/rollback requires storage account write on the one actual empty account.",
+      "Check Microsoft.Storage availability/registration and applicable policy read-only before deployment; provider registration is not authorized."
+    ],
+    "newRoleAssignmentsRequired": false
+  },
+  "seedAndRollback": {
+    "approvalRequired": true,
+    "approved": false,
+    "operatorOnly": true,
+    "scopeRef": "claims-store",
+    "change": {"property": "supportsHttpsTrafficOnly", "from": true, "to": false},
+    "rollbackProperty": "supportsHttpsTrafficOnly",
+    "rollbackValue": true,
+    "anonymousAccessMayBeEnabled": false,
+    "preconditions": [
+      "Separate explicit post-baseline operator seed consent, with a present operator and working same-property rollback path.",
+      "Actual legitimate deployment, fresh complete baseline property evidence, account-only empty inventory, no real data or application traffic.",
+      "Capture exact account ID, desired artifact hash, protected fields/ETag where available, timestamps and ownership; re-read before each write and stop on unexpected changes."
+    ],
+    "unchangedGuards": [
+      "allowBlobPublicAccess=false",
+      "publicNetworkAccess=Enabled",
+      "minimumTlsVersion=TLS1_2",
+      "allowSharedKeyAccess=false",
+      "empty account with no containers, blobs or client traffic",
+      "all other approved settings unchanged"
+    ],
+    "maximumRequestedDurationSeconds": 120,
+    "observation": "Read the actual account properties to detect supportsHttpsTrafficOnly=false and record the time/latency. Do not send HTTP data requests or credentials and never enable anonymous blob access.",
+    "rollback": "Restore only supportsHttpsTrafficOnly=true on that same actual account in the operator's guarded finally path. Compare scope/protected fields before writing and escalate concurrent-change conflicts instead of overwriting unrelated state.",
+    "rollbackOnFailure": "Immediately restore true on error, observation timeout or lost automation using the present operator fallback. No seed without this fallback; 120 seconds is a requested bound, not an unattended guarantee.",
+    "postRollback": "Observe fresh actual supportsHttpsTrafficOnly=true, allowBlobPublicAccess=false, publicNetworkAccess=Enabled and minimumTlsVersion=TLS1_2. Missing fresh proof remains unknown."
+  },
+  "cleanup": {
+    "approvalRequired": true,
+    "approved": false,
+    "operatorOnly": true,
+    "scopeRule": "actual-owned-manifest-only",
+    "maximumRequestedLifetimeHours": 2,
+    "unrelatedResourceDeletionAllowed": false,
+    "automaticCleanupClaimed": false,
+    "plan": [
+      "Restore HTTPS-only first and export nonsecret actual property/rollback evidence.",
+      "Confirm the actual created account is still owned and empty, then delete only that account.",
+      "Delete the named RG only when a fresh inventory proves it contains no unowned resources. Stop and ask the operator if resources/data were added unexpectedly.",
+      "Confirm actual account/RG deletion and check later for residual charges; no automated cleanup is claimed."
+    ]
+  },
+  "pricing": {
+    "status": "current-public-retail-usage-estimate-with-exclusions",
+    "currency": "USD",
+    "region": "eastus2",
+    "apiVersion": "2023-01-01-preview",
+    "retrievedWindowUtc": ["2026-09-12T22:49:32Z", "2026-09-12T22:49:48Z"],
+    "selectedMeters": [
+      {"item": "Hot LRS capacity", "meterId": "10b97fb2-5db4-4ad2-a4e0-69b858d6b52d", "meterName": "Hot LRS Data Stored", "productName": "Blob Storage", "armRegionName": "eastus2", "unitPrice": 0.0184, "unit": "1 GB/Month", "evidenceFile": "public-20260912T224932073951Z\\prices-blob.json"},
+      {"item": "Hot read operations", "meterId": "c12cb4fa-c6cf-4972-98c0-eb65115d669d", "meterName": "Hot Read Operations", "productName": "Blob Storage", "armRegionName": "eastus2", "unitPrice": 0.004, "unit": "10K", "evidenceFile": "public-20260912T224932073951Z\\prices-blob.json"},
+      {"item": "List/create-container operations", "meterId": "d2e20d26-9b33-4492-aefb-c810e51d48a7", "meterName": "LRS List and Create Container Operations", "productName": "Blob Storage", "armRegionName": "eastus2", "unitPrice": 0.05, "unit": "10K", "evidenceFile": "public-20260912T224932073951Z\\prices-blob.json"}
+    ],
+    "assumedStoredGb": 0,
+    "assumedDataPlaneReadOperations": 0,
+    "assumedDataPlaneListOperations": 0,
+    "listedUsageEstimateUsd": 0,
+    "formula": "0 GB-month * 0.0184 + 0/10000 * 0.004 + 0/10000 * 0.05 = USD 0.00 for these listed usage assumptions only.",
+    "operatorMonitoringThresholdUsd": 1,
+    "budgetApproved": false,
+    "exclusions": [
+      "Zero listed usage is not a guaranteed free Azure bill: actual metered usage, metadata/transactions, mandatory security/monitoring policies and residual charges are unmeasured.",
+      "Taxes, negotiated discounts, currency conversion, support and unplanned usage are excluded.",
+      "ARM property observations are not Blob data-plane read/list operations; no such operations, containers or stored blobs are planned.",
+      "No VM, disk, public-IP, Private Endpoint, DNS, NAT or VPN charge is included because none is proposed.",
+      "USD 1 is a proposed operator monitoring/stop threshold, not an enforced Azure budget cap."
+    ]
+  },
+  "evidence": {
+    "root": ".intent-to-impact\\spikes\\SPK-03-01",
+    "publicManifests": ["public-20260912T224932073951Z\\public-evidence.json"],
+    "requiredDocumentIds": ["secure-transfer", "anonymous-blob-access", "minimum-tls", "public-storage-network", "storage-properties", "blob-pricing"],
+    "referenceLimits": "Public docs/prices support proposed configuration semantics and rates, not deployment or runtime proof."
+  },
+  "unknownsAndBlockers": [
+    "Actual creation, seed and cleanup are not authorized. No resource exists according to the supplied RG absence result.",
+    "User confirmation of East US 2, an available storage account name, spend threshold and lifetime is pending.",
+    "Scoped operator permissions, Microsoft.Storage registration/region support and subscription policy require read-only checks; do not auto-register providers.",
+    "Implementation-orchestrator must record the changed scenario/promise semantics before product integration; do not report the original private-network CP-01 as passed.",
+    "This proposal contains no IaC or runtime verifier implementation. Final reviewed artifacts and exact operation approval remain necessary."
+  ],
+  "approval": {
+    "approved": false,
+    "requestedNow": "Confirm the proposed East US 2 public-endpoint-only empty account and authorize preparation/review of exact IaC only; no deployment yet.",
+    "beforeProvisioning": "Separately approve the final available account name, region, reviewed artifact hash, creation of only the named new RG and one account with these settings, USD 1 monitored threshold, two-hour lifetime and manifest-scoped cleanup.",
+    "beforeSeed": "After actual baseline proof, separately authorize supportsHttpsTrafficOnly true -> false -> true on that one empty account for at most the requested 120 seconds. Never enable anonymous blob access or send credentials over HTTP.",
+    "safeNextAction": "Present this minimal proposal; stop before IaC generation, provisioning, role assignment or drift."
+  }
+}

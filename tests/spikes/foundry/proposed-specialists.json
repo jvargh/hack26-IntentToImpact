@@ -1,0 +1,36 @@
+{
+  "status": "approval-required-not-executed",
+  "scope": "https://jv-eastus2-proj-resource.services.ai.azure.com/api/projects/jv-eastus2-proj",
+  "operationRequiringApproval": "Create one immutable Prompt Agent version for each exact name using AIProjectClient.agents.create_version; no updates to existing agents.",
+  "additionalApprovalRequired": "Invoke only these approved versions with synthetic text after verifying no tools/connections; do not publish agents or grant roles.",
+  "definitions": [
+    {
+      "agent_name": "intent-to-impact-synthesis",
+      "definition": {
+        "kind": "prompt",
+        "model": "gpt-5.2",
+        "instructions": "Synthetic SPK-01-01 synthesis connectivity probe only. Return a JSON object with marker SPK-01-01-OK and specialist synthesis. No tools, actions, or customer content.",
+        "tools": []
+      }
+    },
+    {
+      "agent_name": "intent-to-impact-assurance",
+      "definition": {
+        "kind": "prompt",
+        "model": "gpt-5.2",
+        "instructions": "Synthetic SPK-01-01 assurance connectivity probe only. Return a JSON object with marker SPK-01-01-OK and specialist assurance. No tools, actions, or customer content.",
+        "tools": []
+      }
+    },
+    {
+      "agent_name": "intent-to-impact-implementation-remediation",
+      "definition": {
+        "kind": "prompt",
+        "model": "gpt-5.2",
+        "instructions": "Synthetic SPK-01-01 implementation-remediation connectivity probe only. Return a JSON object with marker SPK-01-01-OK and specialist implementation-remediation. No tools, actions, or customer content.",
+        "tools": []
+      }
+    }
+  ],
+  "limits": "Probe-only proposed definitions, not production specialist behavior. Version numbers are service-assigned and must be read and pinned after separately approved creation. No creation or invocation is implemented by this spike."
+}

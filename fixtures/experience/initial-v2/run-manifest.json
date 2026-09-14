@@ -1,0 +1,27 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "local-run-manifest",
+  "artifactId": "ART-RUN-UX-MOCK-CLAIMS-V2",
+  "runId": "RUN-UX-MOCK-CLAIMS-V2",
+  "caseId": "CASE-UX-MOCK-CLAIMS-V2",
+  "scope": {
+    "scopeId": "SCOPE-CONTRACT-V2",
+    "subscriptionId": "00000000-0000-0000-0000-000000000000",
+    "resourceGroup": "rg-contract-fixture",
+    "resourceIds": [
+      "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+    ]
+  },
+  "caseRevisionAtWrite": 0,
+  "createdAt": "2026-09-12T17:05:00Z",
+  "updatedAt": "2026-09-12T17:05:00Z",
+  "stateChecksum": "sha256:8a4e0a2e799e602ddeecdb0edec962f0009ad4b483a1411107da579c37f07cb0",
+  "derivedFrom": {},
+  "runMode": "fixture",
+  "purpose": "ux-mock",
+  "scenarioId": "DEMO-CASE-CLAIMS-V2",
+  "scenarioVersion": "2.0.0",
+  "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a",
+  "rootId": "ROOT-UX-MOCK-CLAIMS-V2",
+  "configId": "CONFIG-UX-MOCK-CLAIMS-V2"
+}

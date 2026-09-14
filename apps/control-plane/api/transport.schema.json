@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:intent-to-impact:local-api-transport:1.0.0",
+  "definitions": {
+    "CreateRequest": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {"const": "1.0.0"},
+        "scenario": {"$ref": "https://intent-to-impact.invalid/contracts/1.0.0/scenario.schema.json#/definitions/ScenarioIdentity"},
+        "idempotencyKey": {"$ref": "https://intent-to-impact.invalid/contracts/1.0.0/core.schema.json#/definitions/IdempotencyRecord/properties/idempotencyKey"}
+      },
+      "required": ["schemaVersion", "scenario", "idempotencyKey"],
+      "additionalProperties": false
+    },
+    "ContextAcknowledgement": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {"const": "1.0.0"},
+        "scenario": {"$ref": "https://intent-to-impact.invalid/contracts/1.0.0/scenario.schema.json#/definitions/ScenarioIdentity"},
+        "runManifestChecksum": {"$ref": "https://intent-to-impact.invalid/contracts/1.0.0/core.schema.json#/definitions/Checksum"},
+        "expectedRevision": {"$ref": "https://intent-to-impact.invalid/contracts/1.0.0/core.schema.json#/definitions/WorkEnvelope/properties/expectedRevision"},
+        "idempotencyKey": {"$ref": "https://intent-to-impact.invalid/contracts/1.0.0/core.schema.json#/definitions/IdempotencyRecord/properties/idempotencyKey"},
+        "acknowledgement": {"const": "known-scenario-context-only"}
+      },
+      "required": ["schemaVersion", "scenario", "runManifestChecksum", "expectedRevision", "idempotencyKey", "acknowledgement"],
+      "additionalProperties": false
+    }
+  }
+}

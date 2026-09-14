@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://intent-to-impact.invalid/contracts/2.0.0/scenario.schema.json",
+  "title": "NspScenarioContract",
+  "oneOf": [{ "$ref": "#/definitions/ClaimsScenarioV3" }],
+  "definitions": {
+    "PromiseId": { "$ref": "../1.0.0/scenario.schema.json#/definitions/PromiseId" },
+    "EvidenceKind": {
+      "type": "string",
+      "enum": ["resource-configuration", "nsp-perimeter", "nsp-profile", "nsp-association", "nsp-effective-configuration", "nsp-profile-access-rules", "nsp-effective-access-rules", "identity-role-configuration", "encryption-configuration", "regional-recovery-test", "residency-inventory", "complete-billing-period", "diagnostic-configuration"]
+    },
+    "PromiseDefinition": {
+      "type": "object",
+      "properties": {
+        "promiseId": { "$ref": "#/definitions/PromiseId" },
+        "statement": { "$ref": "../1.0.0/scenario.schema.json#/definitions/PromiseDefinition/properties/statement" },
+        "customerImpact": { "$ref": "../1.0.0/scenario.schema.json#/definitions/PromiseDefinition/properties/customerImpact" },
+        "category": { "$ref": "../1.0.0/scenario.schema.json#/definitions/PromiseDefinition/properties/category" },
+        "criticality": { "$ref": "../1.0.0/scenario.schema.json#/definitions/PromiseDefinition/properties/criticality" },
+        "requirementIds": { "$ref": "../1.0.0/scenario.schema.json#/definitions/PromiseDefinition/properties/requirementIds" },
+        "componentIds": { "$ref": "../1.0.0/scenario.schema.json#/definitions/PromiseDefinition/properties/componentIds" },
+        "verifierIds": { "$ref": "../1.0.0/scenario.schema.json#/definitions/PromiseDefinition/properties/verifierIds" },
+        "requiredEvidenceKinds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/definitions/EvidenceKind" } }
+      },
+      "required": ["promiseId", "statement", "customerImpact", "category", "criticality", "requirementIds", "componentIds", "verifierIds", "requiredEvidenceKinds"],
+      "additionalProperties": false
+    },
+    "EightPromises": {
+      "type": "array", "minItems": 8, "maxItems": 8,
+      "items": { "$ref": "#/definitions/PromiseDefinition" },
+      "allOf": [
+        { "contains": { "properties": { "promiseId": { "const": "CP-01" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-02" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-03" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-04" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-05" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-06" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-07" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 },
+        { "contains": { "properties": { "promiseId": { "const": "CP-08" } }, "required": ["promiseId"] }, "minContains": 1, "maxContains": 1 }
+      ]
+    },
+    "DesiredStorageConfiguration": {
+      "type": "object",
+      "properties": {
+        "publicNetworkAccess": { "type": "string", "const": "SecuredByPerimeter" },
+        "supportsHttpsTrafficOnly": { "type": "boolean", "const": true },
+        "allowBlobPublicAccess": { "type": "boolean", "const": false },
+        "allowSharedKeyAccess": { "type": "boolean", "const": false },
+        "minimumTlsVersion": { "type": "string", "const": "TLS1_2" },
+        "kind": { "type": "string", "const": "StorageV2" },
+        "skuName": { "type": "string", "const": "Standard_LRS" },
+        "accessTier": { "type": "string", "const": "Hot" },
+        "isHnsEnabled": { "type": "boolean", "const": false },
+        "networkDefaultAction": { "type": "string", "const": "Deny" },
+        "networkBypass": { "type": "string", "const": "None" }
+      },
+      "required": ["publicNetworkAccess", "supportsHttpsTrafficOnly", "allowBlobPublicAccess", "allowSharedKeyAccess", "minimumTlsVersion", "kind", "skuName", "accessTier", "isHnsEnabled", "networkDefaultAction", "networkBypass"],
+      "additionalProperties": false
+    },
+    "DesiredNspConfiguration": {
+      "type": "object",
+      "properties": {
+        "accessMode": { "type": "string", "const": "Enforced" },
+        "inboundAccessRules": { "type": "array", "maxItems": 0, "items": false },
+        "outboundAccessRules": { "type": "array", "maxItems": 0, "items": false },
+        "requiresLinkedAssociation": { "type": "boolean", "const": true },
+        "requiresEffectiveConfiguration": { "type": "boolean", "const": true },
+        "requiresCompleteRuleCollections": { "type": "boolean", "const": true }
+      },
+      "required": ["accessMode", "inboundAccessRules", "outboundAccessRules", "requiresLinkedAssociation", "requiresEffectiveConfiguration", "requiresCompleteRuleCollections"],
+      "additionalProperties": false
+    },
+    "CandidateProfile": {
+      "type": "object",
+      "properties": {
+        "candidateId": { "$ref": "../1.0.0/scenario.schema.json#/definitions/CandidateProfile/properties/candidateId" },
+        "monthlyEstimateUsd": { "type": "integer", "minimum": 0 },
+        "regionalRecoveryProfile": { "type": ["string", "null"] },
+        "declaredStorageControls": { "$ref": "#/definitions/DesiredStorageConfiguration" },
+        "declaredNspControls": { "$ref": "#/definitions/DesiredNspConfiguration" }
+      },
+      "required": ["candidateId", "monthlyEstimateUsd", "regionalRecoveryProfile", "declaredStorageControls", "declaredNspControls"],
+      "additionalProperties": false,
+      "allOf": [
+        { "if": { "properties": { "candidateId": { "const": "A" } } }, "then": { "properties": { "monthlyEstimateUsd": { "const": 6000 }, "regionalRecoveryProfile": { "type": "null" } } } },
+        { "if": { "properties": { "candidateId": { "const": "B" } } }, "then": { "properties": { "monthlyEstimateUsd": { "const": 7200 }, "regionalRecoveryProfile": { "const": "PROFILE-ACTIVE-PASSIVE-V3" } } } }
+      ]
+    },
+    "ClaimsScenarioV3": {
+      "title": "ClaimsScenarioV3",
+      "x-contract-id": "SCENARIO-V3",
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "$ref": "envelope.schema.json#/definitions/SchemaVersion" },
+        "artifactType": { "type": "string", "const": "claims-scenario" },
+        "scenarioId": { "$ref": "envelope.schema.json#/definitions/ScenarioIdentity/properties/scenarioId" },
+        "scenarioVersion": { "$ref": "envelope.schema.json#/definitions/ScenarioIdentity/properties/scenarioVersion" },
+        "scenarioOrigin": { "type": "string", "const": "fixture" },
+        "stateChecksum": { "$ref": "../1.0.0/core.schema.json#/definitions/Checksum" },
+        "networkDecisionId": { "type": "string", "const": "LOCAL-09" },
+        "intentId": { "$ref": "../1.0.0/scenario.schema.json#/definitions/ClaimsScenarioV2/properties/intentId" },
+        "businessIntent": { "$ref": "../1.0.0/scenario.schema.json#/definitions/ClaimsScenarioV2/properties/businessIntent" },
+        "catalog": {
+          "type": "object",
+          "properties": {
+            "catalogId": { "type": "string", "const": "CATALOG-CLAIMS-V3" },
+            "catalogVersion": { "type": "string", "const": "3.0.0" },
+            "rulePackId": { "type": "string", "const": "RULES-CLAIMS-V3" },
+            "rulePackVersion": { "type": "string", "const": "3.0.0" }
+          },
+          "required": ["catalogId", "catalogVersion", "rulePackId", "rulePackVersion"],
+          "additionalProperties": false
+        },
+        "rtoMinutes": { "$ref": "../1.0.0/scenario.schema.json#/definitions/ClaimsScenarioV2/properties/rtoMinutes" },
+        "rpoMinutes": { "type": "null" },
+        "rpoConfirmation": { "type": "string", "const": "unconfirmed" },
+        "rpoQuestionId": { "type": "string", "const": "QUESTION-RPO" },
+        "scriptedRpoAnswerMinutes": { "type": "integer", "const": 15 },
+        "monthlyBudgetUsd": { "type": "integer", "const": 8000 },
+        "estimateBasis": { "type": "string", "const": "synthetic-comparable-monthly-workload" },
+        "promises": { "$ref": "#/definitions/EightPromises" },
+        "candidates": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "items": { "$ref": "#/definitions/CandidateProfile" },
+          "allOf": [
+            { "contains": { "properties": { "candidateId": { "const": "A" } }, "required": ["candidateId"] }, "minContains": 1, "maxContains": 1 },
+            { "contains": { "properties": { "candidateId": { "const": "B" } }, "required": ["candidateId"] }, "minContains": 1, "maxContains": 1 }
+          ]
+        },
+        "componentId": { "type": "string", "const": "CMP-CLAIMS-STORE" },
+        "boundaryComponentIds": {
+          "type": "object",
+          "properties": {
+            "storage": { "type": "string", "const": "CMP-CLAIMS-STORE" },
+            "perimeter": { "type": "string", "const": "CMP-CLAIMS-NSP" },
+            "profile": { "type": "string", "const": "CMP-CLAIMS-NSP-PROFILE" },
+            "association": { "type": "string", "const": "CMP-CLAIMS-NSP-ASSOCIATION" }
+          },
+          "required": ["storage", "perimeter", "profile", "association"],
+          "additionalProperties": false
+        },
+        "desiredStorageConfiguration": { "$ref": "#/definitions/DesiredStorageConfiguration" },
+        "desiredNspConfiguration": { "$ref": "#/definitions/DesiredNspConfiguration" },
+        "desiredStateChecksum": { "$ref": "../1.0.0/core.schema.json#/definitions/Checksum" },
+        "verifierChecksum": { "$ref": "../1.0.0/core.schema.json#/definitions/Checksum" },
+        "cp01Verifier": {
+          "type": "object",
+          "properties": {
+            "verifierId": { "type": "string", "const": "VERIFY-CP01-NSP-STORAGE-V3" },
+            "version": { "type": "string", "const": "3.0.0" },
+            "maxEvidenceAgeSeconds": { "type": "integer", "const": 300 },
+            "requiredEvidenceKinds": { "type": "array", "minItems": 7, "maxItems": 7, "uniqueItems": true, "items": { "enum": ["resource-configuration", "nsp-perimeter", "nsp-profile", "nsp-association", "nsp-effective-configuration", "nsp-profile-access-rules", "nsp-effective-access-rules"] } },
+            "assertionIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" } },
+            "assuranceScope": { "type": "string", "const": "observed-management-plane-configuration-only" }
+          },
+          "required": ["verifierId", "version", "maxEvidenceAgeSeconds", "requiredEvidenceKinds", "assertionIds", "assuranceScope"],
+          "additionalProperties": false
+        },
+        "operatorBinding": {
+          "type": "object",
+          "properties": {
+            "subscriptionId": { "type": "null" }, "region": { "type": "null" },
+            "storageId": { "type": "null" }, "perimeterId": { "type": "null" },
+            "profileId": { "type": "null" }, "associationId": { "type": "null" },
+            "configurationId": { "type": "null" }, "deploymentReceipt": { "type": "null" }
+          },
+          "required": ["subscriptionId", "region", "storageId", "perimeterId", "profileId", "associationId", "configurationId", "deploymentReceipt"],
+          "additionalProperties": false
+        },
+        "dataIntent": { "type": "string", "const": "empty-demo-no-upload-or-container" },
+        "deploymentAuthorization": { "type": "string", "const": "not-authorized-by-contract" },
+        "seedProposal": { "type": "null" },
+        "restorationAuthorization": { "type": "string", "const": "not-authorized" }
+      },
+      "required": ["schemaVersion", "artifactType", "scenarioId", "scenarioVersion", "scenarioOrigin", "stateChecksum", "networkDecisionId", "intentId", "businessIntent", "catalog", "rtoMinutes", "rpoMinutes", "rpoConfirmation", "rpoQuestionId", "scriptedRpoAnswerMinutes", "monthlyBudgetUsd", "estimateBasis", "promises", "candidates", "componentId", "boundaryComponentIds", "desiredStorageConfiguration", "desiredNspConfiguration", "desiredStateChecksum", "verifierChecksum", "cp01Verifier", "operatorBinding", "dataIntent", "deploymentAuthorization", "seedProposal", "restorationAuthorization"],
+      "additionalProperties": false
+    }
+  }
+}

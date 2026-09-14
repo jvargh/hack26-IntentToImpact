@@ -1,0 +1,23 @@
+resource @@SYMBOL@@ 'Microsoft.ServiceBus/namespaces@2024-01-01' = {
+  name: @@NAME@@
+  location: location
+  sku: { name: 'Standard', tier: 'Standard' }
+  properties: {
+    minimumTlsVersion: '1.2'
+    disableLocalAuth: true
+    publicNetworkAccess: 'Enabled'
+  }
+}
+resource @@SYMBOL@@_queue 'Microsoft.ServiceBus/namespaces/queues@2024-01-01' = {
+  parent: @@SYMBOL@@
+  name: 'work'
+  properties: {
+    requiresDuplicateDetection: true
+    duplicateDetectionHistoryTimeWindow: 'PT10M'
+    deadLetteringOnMessageExpiration: true
+    defaultMessageTimeToLive: 'P7D'
+    maxDeliveryCount: 10
+    lockDuration: 'PT1M'
+    enablePartitioning: false
+  }
+}

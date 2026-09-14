@@ -1,0 +1,93 @@
+{
+  "registryVersion": "1.0.0",
+  "schemaVersion": "1.0.0",
+  "bundles": [
+    {
+      "name": "core",
+      "schema": "schemas/1.0.0/core.schema.json",
+      "python": "python/core.py",
+      "typescript": "typescript/core.d.ts",
+      "contracts": {
+        "D01": "CaseState",
+        "D22": "LocalRunManifest",
+        "E01": "EvidenceReference",
+        "E02": "CommandExecutionReceipt",
+        "E03": "WorkEnvelope",
+        "E04": "DomainEvent",
+        "E07": "ErrorEnvelope",
+        "E08": "AuthorizationContext"
+      }
+    },
+    {
+      "name": "scenario",
+      "schema": "schemas/1.0.0/scenario.schema.json",
+      "python": "python/scenario.py",
+      "typescript": "typescript/scenario.d.ts",
+      "contracts": { "SCENARIO-V2": "ClaimsScenarioV2" }
+    },
+    {
+      "name": "risk",
+      "schema": "schemas/1.0.0/risk.schema.json",
+      "python": "python/risk.py",
+      "typescript": "typescript/risk.d.ts",
+      "contracts": {
+        "D03": "CustomerPromiseContract",
+        "D13": "SandboxOperationReceipt",
+        "D14": "RuntimeBinding",
+        "D15": "RuntimeSnapshot",
+        "D16": "DriftFinding",
+        "D17": "PromiseEvaluation",
+        "E05": "HumanAttentionEvent"
+      }
+    },
+    {
+      "name": "projections",
+      "schema": "schemas/1.0.0/projections.schema.json",
+      "python": "python/projections.py",
+      "typescript": "typescript/projections.d.ts",
+      "contracts": {
+        "P01": "ExperienceOverview",
+        "P05": "OperationsRisk",
+        "P06": "IntentContinuityGraph"
+      }
+    },
+    {
+      "name": "design",
+      "schema": "schemas/1.0.0/design.schema.json",
+      "python": "python/design.py",
+      "typescript": "typescript/design.d.ts",
+      "contracts": {
+        "D02": "Requirements",
+        "D04": "ArchitectureProposal",
+        "D05": "ArchitectureModel",
+        "D06": "ArchitectureDecisionRecord",
+        "D07": "Approval",
+        "D08": "ReviewGateEvaluation",
+        "D09": "GenerationContract"
+      }
+    }
+  ],
+  "frozenCoreFiles": {
+    "contracts/schemas/1.0.0/core.schema.json": "2188cefbe3f156776238c029899a35502d8435081639d6deab92e6fdffa39c01",
+    "contracts/generated/1.0.0/python/core.py": "951ecfee9fd09a101f8c074e0808b9db3c5f45fd6b935d12db29210ebe5833f7",
+    "contracts/generated/1.0.0/typescript/core.d.ts": "8a1d31feaa0ce62db7151894e30a5c19b62efe340f4b261307d7e1f569bc2b3e",
+    "tests/contracts/test_contracts.py": "931e6bd788ef3b64332bf5d48e91bf28a0d63a6ef64a8ec3f8b2b64c9c36b4a3",
+    "tests/contracts/typescript-consumer.ts": "16fb1d94b856770b6d1a55712ead130b2137b62619c9a2ba389c78b0f0d43ec2"
+  },
+  "frozenRiskFiles": {
+    "contracts/schemas/1.0.0/scenario.schema.json": "0cc1072d3c532baef5967321e6055740871a61c67d5dd5b60fc1d544c5964bde",
+    "contracts/schemas/1.0.0/risk.schema.json": "7c2305b4a298b812225d329fa1e57fadfb3705618e417a7301e475c84582913f",
+    "contracts/schemas/1.0.0/projections.schema.json": "82334b2f3404362708ace8e8767c32c85f47fdfa8f4b5a4330edd828ed57bb1f",
+    "contracts/generated/1.0.0/python/scenario.py": "528c3c5ca6bb5ab9df613abfc40c03927f2ac600191d6cc1da1a7d017eda95c6",
+    "contracts/generated/1.0.0/python/risk.py": "3db0b1d2c30bbf9358262ea4314f4e00605a48a88afa62a252c9c486ac213fae",
+    "contracts/generated/1.0.0/python/projections.py": "ff194bbcf7ed02452395dd79e52b0d360f3813c3b2164ac42f5e349aacfef7b2",
+    "contracts/generated/1.0.0/typescript/scenario.d.ts": "4c9301b9c854cb65e473b412dc1e1a6b281c69962335bdd19a2602538fdfa6c9",
+    "contracts/generated/1.0.0/typescript/risk.d.ts": "653c720762f6a5e62063009443edf4f3764c6e7565237fb5eda245f59ee5decc",
+    "contracts/generated/1.0.0/typescript/projections.d.ts": "edbe7e8dab2580543d3d2a785b7bcfb0fd93c9ea9452063d5b5f1a2eee13642d",
+    "fixtures/scenarios/DEMO-CASE-CLAIMS-V2.json": "5be0908b430718ceb5aaa995268abe8d61142e878199a11f7b99faae7739b121",
+    "contracts/examples/1.0.0/risk-examples.json": "e37f2b710174efe4e6bd43b264afbfc0424b02b765d236f47af6e6d6b700300e",
+    "contracts/examples/1.0.0/risk-negative-cases.json": "2dcd16a9a74cc7a8b04fdb326c437d3a0d28914e1af35396105619401cc15e7c",
+    "tests/contracts/python_risk_consumer.py": "8992b1b0e63178957f2e03cc55168202e7e725c9414176a63e5491e6a8d43188",
+    "tests/contracts/typescript-risk-consumer.ts": "f27e979c6ba70bb2d1ce61db20d29d860e87cafa98769396f3df21844442e3dd"
+  }
+}

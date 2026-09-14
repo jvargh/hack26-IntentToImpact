@@ -1,0 +1,6 @@
+# Preserve exact bytes, including the mixed historical line endings used by
+# checksum-bound schemas, fixtures, token manifests and generated validators.
+# Do not let an operator's core.autocrlf silently change evidence inputs.
+* -text
+
+*.png binary

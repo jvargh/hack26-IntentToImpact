@@ -1,0 +1,287 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://intent-to-impact.invalid/contracts/2.0.0/design.schema.json",
+  "title": "NspDesignContract",
+  "oneOf": [
+    { "$ref": "#/definitions/Requirements" }, { "$ref": "#/definitions/ArchitectureProposal" },
+    { "$ref": "#/definitions/ArchitectureModel" }, { "$ref": "#/definitions/ArchitectureDecisionRecord" },
+    { "$ref": "#/definitions/Approval" }, { "$ref": "#/definitions/ReviewGateEvaluation" },
+    { "$ref": "#/definitions/GenerationContract" }
+  ],
+  "definitions": {
+    "Requirements": {
+      "title": "Requirements", "x-contract-id": "D02", "type": "object",
+      "allOf": [{ "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "requirements" },
+        "requirementsId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "status": { "$ref": "../1.0.0/design.schema.json#/definitions/Requirements/properties/status" },
+        "businessIntent": { "$ref": "../1.0.0/design.schema.json#/definitions/Requirements/properties/businessIntent" },
+        "requirementIds": { "$ref": "../1.0.0/design.schema.json#/definitions/Requirements/properties/requirementIds" },
+        "promiseIds": { "$ref": "../1.0.0/design.schema.json#/definitions/Requirements/properties/promiseIds" },
+        "rpoQuestion": { "$ref": "../1.0.0/design.schema.json#/definitions/RpoQuestion" },
+        "constraints": {
+          "type": "object",
+          "properties": {
+            "rtoMinutes": { "type": "integer", "const": 60 },
+            "monthlyBudgetUsd": { "type": "integer", "const": 8000 },
+            "geography": { "type": "string", "const": "US" },
+            "minimumDiagnosticRetentionDays": { "type": "integer", "minimum": 90 },
+            "storageConfiguration": { "$ref": "scenario.schema.json#/definitions/DesiredStorageConfiguration" },
+            "nspConfiguration": { "$ref": "scenario.schema.json#/definitions/DesiredNspConfiguration" }
+          },
+          "required": ["rtoMinutes", "monthlyBudgetUsd", "geography", "minimumDiagnosticRetentionDays", "storageConfiguration", "nspConfiguration"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["artifactType", "requirementsId", "status", "businessIntent", "requirementIds", "promiseIds", "rpoQuestion", "constraints"],
+      "if": { "properties": { "status": { "const": "confirmed" } } },
+      "then": { "properties": { "rpoQuestion": { "properties": { "status": { "const": "answered" } } } } },
+      "unevaluatedProperties": false
+    },
+    "CatalogReference": {
+      "type": "object",
+      "properties": {
+        "catalogId": { "type": "string", "const": "CATALOG-CLAIMS-V3" },
+        "version": { "type": "string", "const": "3.0.0" },
+        "checksum": { "$ref": "../1.0.0/core.schema.json#/definitions/Checksum" }
+      },
+      "required": ["catalogId", "version", "checksum"], "additionalProperties": false
+    },
+    "ArchitectureComponent": {
+      "type": "object",
+      "properties": {
+        "componentId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "kind": { "type": "string", "enum": ["storage", "perimeter", "profile", "association"] },
+        "resourceType": {
+          "type": "string",
+          "enum": ["Microsoft.Storage/storageAccounts", "Microsoft.Network/networkSecurityPerimeters", "Microsoft.Network/networkSecurityPerimeters/profiles", "Microsoft.Network/networkSecurityPerimeters/resourceAssociations"]
+        },
+        "parentComponentId": { "$ref": "envelope.schema.json#/definitions/NullableId" },
+        "storageComponentId": { "$ref": "envelope.schema.json#/definitions/NullableId" },
+        "profileComponentId": { "$ref": "envelope.schema.json#/definitions/NullableId" },
+        "storageConfiguration": { "anyOf": [{ "$ref": "scenario.schema.json#/definitions/DesiredStorageConfiguration" }, { "type": "null" }] },
+        "nspConfiguration": { "anyOf": [{ "$ref": "scenario.schema.json#/definitions/DesiredNspConfiguration" }, { "type": "null" }] },
+        "module": { "$ref": "../1.0.0/design.schema.json#/definitions/ModuleReference" },
+        "promiseIds": { "$ref": "../1.0.0/design.schema.json#/definitions/ArchitectureComponent/properties/promiseIds" },
+        "requirementIds": { "$ref": "../1.0.0/design.schema.json#/definitions/ArchitectureComponent/properties/requirementIds" }
+      },
+      "required": ["componentId", "kind", "resourceType", "parentComponentId", "storageComponentId", "profileComponentId", "storageConfiguration", "nspConfiguration", "module", "promiseIds", "requirementIds"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "storage" } } },
+          "then": { "properties": {
+            "componentId": { "const": "CMP-CLAIMS-STORE" }, "resourceType": { "const": "Microsoft.Storage/storageAccounts" },
+            "parentComponentId": { "type": "null" }, "storageComponentId": { "type": "null" }, "profileComponentId": { "type": "null" },
+            "storageConfiguration": { "$ref": "scenario.schema.json#/definitions/DesiredStorageConfiguration" }, "nspConfiguration": { "type": "null" }
+          } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "perimeter" } } },
+          "then": { "properties": {
+            "componentId": { "const": "CMP-CLAIMS-NSP" }, "resourceType": { "const": "Microsoft.Network/networkSecurityPerimeters" },
+            "parentComponentId": { "type": "null" }, "storageComponentId": { "type": "null" }, "profileComponentId": { "type": "null" },
+            "storageConfiguration": { "type": "null" }, "nspConfiguration": { "type": "null" }
+          } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "profile" } } },
+          "then": { "properties": {
+            "componentId": { "const": "CMP-CLAIMS-NSP-PROFILE" }, "resourceType": { "const": "Microsoft.Network/networkSecurityPerimeters/profiles" },
+            "parentComponentId": { "const": "CMP-CLAIMS-NSP" }, "storageComponentId": { "type": "null" }, "profileComponentId": { "type": "null" },
+            "storageConfiguration": { "type": "null" }, "nspConfiguration": { "$ref": "scenario.schema.json#/definitions/DesiredNspConfiguration" }
+          } }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "association" } } },
+          "then": { "properties": {
+            "componentId": { "const": "CMP-CLAIMS-NSP-ASSOCIATION" }, "resourceType": { "const": "Microsoft.Network/networkSecurityPerimeters/resourceAssociations" },
+            "parentComponentId": { "const": "CMP-CLAIMS-NSP" }, "storageComponentId": { "const": "CMP-CLAIMS-STORE" }, "profileComponentId": { "const": "CMP-CLAIMS-NSP-PROFILE" },
+            "storageConfiguration": { "type": "null" }, "nspConfiguration": { "$ref": "scenario.schema.json#/definitions/DesiredNspConfiguration" }
+          } }
+        }
+      ]
+    },
+    "ArchitectureRelationship": {
+      "type": "object",
+      "properties": {
+        "fromComponentId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "toComponentId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "relation": { "type": "string", "enum": ["associated-storage", "associated-profile", "profile-of"] }
+      },
+      "required": ["fromComponentId", "toComponentId", "relation"], "additionalProperties": false
+    },
+    "OptionDefinition": {
+      "type": "object",
+      "properties": {
+        "optionId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "title": { "$ref": "../1.0.0/design.schema.json#/definitions/OptionDefinition/properties/title" },
+        "summary": { "$ref": "../1.0.0/design.schema.json#/definitions/OptionDefinition/properties/summary" },
+        "catalogFacts": { "$ref": "scenario.schema.json#/definitions/CandidateProfile" },
+        "components": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "$ref": "#/definitions/ArchitectureComponent" } },
+        "relationships": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "$ref": "#/definitions/ArchitectureRelationship" } },
+        "assumptions": { "$ref": "../1.0.0/design.schema.json#/definitions/OptionDefinition/properties/assumptions" },
+        "unresolvedItems": { "$ref": "../1.0.0/design.schema.json#/definitions/OptionDefinition/properties/unresolvedItems" }
+      },
+      "required": ["optionId", "title", "summary", "catalogFacts", "components", "relationships", "assumptions", "unresolvedItems"],
+      "additionalProperties": false
+    },
+    "Options": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "$ref": "#/definitions/OptionDefinition" } },
+    "ArchitectureProposal": {
+      "title": "ArchitectureProposal", "x-contract-id": "D04", "type": "object",
+      "allOf": [{ "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "architecture-proposal" },
+        "proposalId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "authority": { "type": "string", "const": "proposal-only" },
+        "producer": { "$ref": "../1.0.0/core.schema.json#/definitions/AgentExecutionActor" },
+        "origin": { "$ref": "../1.0.0/core.schema.json#/definitions/EvidenceOrigin" },
+        "invocationReceipt": { "$ref": "../1.0.0/design.schema.json#/definitions/NullableArtifactReference" },
+        "requirements": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "promiseContract": { "$ref": "risk.schema.json#/definitions/PromiseContractReference" },
+        "catalog": { "$ref": "#/definitions/CatalogReference" },
+        "options": { "$ref": "#/definitions/Options" },
+        "recommendedOptionId": { "$ref": "envelope.schema.json#/definitions/NullableId" },
+        "rationale": { "$ref": "../1.0.0/design.schema.json#/definitions/ArchitectureProposal/properties/rationale" }
+      },
+      "required": ["artifactType", "proposalId", "authority", "producer", "origin", "invocationReceipt", "requirements", "promiseContract", "catalog", "options", "recommendedOptionId", "rationale"],
+      "if": { "properties": { "origin": { "const": "live-external" } } },
+      "then": { "properties": { "invocationReceipt": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" } } },
+      "unevaluatedProperties": false
+    },
+    "ArchitectureModel": {
+      "title": "ArchitectureModel", "x-contract-id": "D05", "type": "object",
+      "allOf": [{ "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "architecture-model" },
+        "architectureId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "status": { "$ref": "../1.0.0/design.schema.json#/definitions/ArchitectureModel/properties/status" },
+        "sourceProposal": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "review": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "promiseContract": { "$ref": "risk.schema.json#/definitions/PromiseContractReference" },
+        "options": { "$ref": "#/definitions/Options" },
+        "recommendedOptionId": { "$ref": "envelope.schema.json#/definitions/NullableId" },
+        "selectedOptionId": { "$ref": "envelope.schema.json#/definitions/NullableId" },
+        "decision": { "$ref": "../1.0.0/design.schema.json#/definitions/NullableArtifactReference" }
+      },
+      "required": ["artifactType", "architectureId", "status", "sourceProposal", "review", "promiseContract", "options", "recommendedOptionId", "selectedOptionId", "decision"],
+      "if": { "properties": { "selectedOptionId": { "type": "null" } } },
+      "then": { "properties": { "decision": { "type": "null" } } },
+      "else": { "properties": { "decision": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" } } },
+      "unevaluatedProperties": false
+    },
+    "ArchitectureDecisionRecord": {
+      "title": "ArchitectureDecisionRecord", "x-contract-id": "D06", "type": "object",
+      "allOf": [{ "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "architecture-decision-record" },
+        "adrId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "status": { "$ref": "../1.0.0/design.schema.json#/definitions/ArchitectureDecisionRecord/properties/status" },
+        "title": { "$ref": "../1.0.0/design.schema.json#/definitions/ArchitectureDecisionRecord/properties/title" },
+        "context": { "$ref": "../1.0.0/design.schema.json#/definitions/ArchitectureDecisionRecord/properties/context" },
+        "architecture": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "review": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "requirements": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "promiseContract": { "$ref": "risk.schema.json#/definitions/PromiseContractReference" },
+        "consideredOptionIds": { "$ref": "../1.0.0/design.schema.json#/definitions/ArchitectureDecisionRecord/properties/consideredOptionIds" },
+        "decisionReceipt": { "anyOf": [{ "$ref": "../1.0.0/design.schema.json#/definitions/DecisionReceipt" }, { "type": "null" }] }
+      },
+      "required": ["artifactType", "adrId", "status", "title", "context", "architecture", "review", "requirements", "promiseContract", "consideredOptionIds", "decisionReceipt"],
+      "if": { "properties": { "status": { "const": "proposed" } } },
+      "then": { "properties": { "decisionReceipt": { "type": "null" } } },
+      "else": { "properties": { "decisionReceipt": { "$ref": "../1.0.0/design.schema.json#/definitions/DecisionReceipt" } } },
+      "unevaluatedProperties": false
+    },
+    "Approval": {
+      "title": "Approval", "x-contract-id": "D07", "type": "object",
+      "allOf": [
+        { "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" },
+        {
+          "if": { "properties": { "status": { "enum": ["approved", "rejected"] } } },
+          "then": { "properties": {
+            "decidedAt": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" },
+            "decisionId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+            "actor": { "$ref": "../1.0.0/core.schema.json#/definitions/HumanExecutionActor" },
+            "attentionEvent": { "$ref": "../1.0.0/design.schema.json#/definitions/AttentionEventReference" }
+          } }
+        },
+        {
+          "if": { "properties": { "status": { "const": "pending" } } },
+          "then": { "properties": { "decidedAt": { "type": "null" }, "decisionId": { "type": "null" }, "actor": { "type": "null" }, "attentionEvent": { "type": "null" } } }
+        }
+      ],
+      "properties": {
+        "artifactType": { "type": "string", "const": "approval" },
+        "approvalId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "approvalClass": { "$ref": "../1.0.0/design.schema.json#/definitions/ApprovalClass" },
+        "status": { "$ref": "../1.0.0/design.schema.json#/definitions/ApprovalStatus" },
+        "binding": { "$ref": "../1.0.0/design.schema.json#/definitions/ApprovalSubjectBinding" },
+        "gateEvaluation": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "issuedAt": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" },
+        "expiresAt": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" },
+        "decidedAt": { "$ref": "envelope.schema.json#/definitions/NullableTimestamp" },
+        "decisionId": { "$ref": "envelope.schema.json#/definitions/NullableId" },
+        "actor": { "$ref": "../1.0.0/design.schema.json#/definitions/NullableHuman" },
+        "attentionEvent": { "anyOf": [{ "$ref": "../1.0.0/design.schema.json#/definitions/AttentionEventReference" }, { "type": "null" }] }
+      },
+      "required": ["artifactType", "approvalId", "approvalClass", "status", "binding", "gateEvaluation", "issuedAt", "expiresAt", "decidedAt", "decisionId", "actor", "attentionEvent"],
+      "unevaluatedProperties": false
+    },
+    "ReviewGateEvaluation": {
+      "title": "ReviewGateEvaluation", "x-contract-id": "D08", "type": "object",
+      "allOf": [
+        { "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" },
+        {
+          "if": { "properties": { "review": { "anyOf": [{ "properties": { "deterministicStatus": { "const": "blocked" } } }, { "properties": { "inferenceStatus": { "const": "blocked" } } }] } } },
+          "then": { "properties": { "gate": { "properties": { "effectiveStatus": { "const": "blocked" } } } } }
+        },
+        {
+          "if": { "properties": { "review": { "anyOf": [{ "properties": { "deterministicStatus": { "const": "stale" } } }, { "properties": { "inferenceStatus": { "const": "stale" } } }] } } },
+          "then": { "properties": { "gate": { "properties": { "effectiveStatus": { "enum": ["stale", "blocked"] } } } } }
+        },
+        {
+          "if": { "properties": { "review": { "anyOf": [{ "properties": { "deterministicStatus": { "const": "pass-with-warnings" } } }, { "properties": { "inferenceStatus": { "const": "pass-with-warnings" } } }] } } },
+          "then": { "properties": { "gate": { "properties": { "effectiveStatus": { "enum": ["pass-with-warnings", "stale", "blocked"] } } } } }
+        }
+      ],
+      "properties": {
+        "artifactType": { "type": "string", "const": "review-gate-evaluation" },
+        "subjectContractId": { "$ref": "../1.0.0/design.schema.json#/definitions/ReviewGateEvaluation/properties/subjectContractId" },
+        "subject": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "requirements": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "promiseContract": { "$ref": "risk.schema.json#/definitions/PromiseContractReference" },
+        "review": { "$ref": "../1.0.0/design.schema.json#/definitions/ReviewResult" },
+        "gate": { "$ref": "../1.0.0/design.schema.json#/definitions/GateEvaluation" }
+      },
+      "required": ["artifactType", "subjectContractId", "subject", "requirements", "promiseContract", "review", "gate"], "unevaluatedProperties": false
+    },
+    "GenerationContract": {
+      "title": "GenerationContract", "x-contract-id": "D09", "type": "object",
+      "allOf": [{ "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "generation-contract" },
+        "generationId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "status": { "$ref": "../1.0.0/design.schema.json#/definitions/GenerationContract/properties/status" },
+        "requirements": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "promiseContract": { "$ref": "risk.schema.json#/definitions/PromiseContractReference" },
+        "architecture": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "decision": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "gateEvaluation": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" },
+        "approval": { "$ref": "../1.0.0/design.schema.json#/definitions/NullableArtifactReference" },
+        "selectedOptionId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "renderMode": { "type": "string", "const": "approved-templates-only" },
+        "outputRootId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "modules": { "$ref": "../1.0.0/design.schema.json#/definitions/GenerationContract/properties/modules" },
+        "outputs": { "$ref": "../1.0.0/design.schema.json#/definitions/GenerationContract/properties/outputs" },
+        "desiredStorageConfiguration": { "$ref": "scenario.schema.json#/definitions/DesiredStorageConfiguration" },
+        "desiredNspConfiguration": { "$ref": "scenario.schema.json#/definitions/DesiredNspConfiguration" },
+        "desiredStateChecksum": { "$ref": "../1.0.0/core.schema.json#/definitions/Checksum" }
+      },
+      "required": ["artifactType", "generationId", "status", "requirements", "promiseContract", "architecture", "decision", "gateEvaluation", "approval", "selectedOptionId", "renderMode", "outputRootId", "modules", "outputs", "desiredStorageConfiguration", "desiredNspConfiguration", "desiredStateChecksum"],
+      "if": { "properties": { "status": { "const": "ready" } } },
+      "then": { "properties": { "approval": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" } } },
+      "unevaluatedProperties": false
+    }
+  }
+}

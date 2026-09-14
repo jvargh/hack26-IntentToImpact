@@ -1,0 +1,720 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "experience-overview",
+  "artifactId": "ART-OVERVIEW-PENDING-V2-MOCK-FX-11",
+  "runId": "RUN-UX-MOCK-CLAIMS-V2",
+  "caseId": "CASE-UX-MOCK-CLAIMS-V2",
+  "scope": {
+    "scopeId": "SCOPE-CONTRACT-V2",
+    "subscriptionId": "00000000-0000-0000-0000-000000000000",
+    "resourceGroup": "rg-contract-fixture",
+    "resourceIds": [
+      "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+    ]
+  },
+  "caseRevisionAtWrite": 3,
+  "createdAt": "2026-09-12T17:05:00Z",
+  "updatedAt": "2026-09-12T17:05:00Z",
+  "stateChecksum": "sha256:fe04e14bd619780dc5cc7d545bc3be4d11d47a0d2e1a81e5c8e345ae41c7edb8",
+  "derivedFrom": {},
+  "scenario": {
+    "scenarioId": "DEMO-CASE-CLAIMS-V2",
+    "scenarioVersion": "2.0.0",
+    "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+  },
+  "runMode": "fixture",
+  "purpose": "ux-mock",
+  "logicalRevision": 3,
+  "asOf": "2026-09-12T17:05:00Z",
+  "scenarioOrigin": "fixture",
+  "evidence": [
+    {
+      "reference": {
+        "contractId": "E01",
+        "artifact": {
+          "artifactId": "EVIDENCE-BREACH-V2-MOCK-FX-11",
+          "checksum": "sha256:287f072f38190d3feafd296d2527def4424681d8c7a7d8492caec6fa148e352b"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        }
+      },
+      "origin": "fixture"
+    }
+  ],
+  "currentWork": [],
+  "allowedActions": [
+    {
+      "actionId": "view-restoration-example",
+      "capability": "read-case",
+      "label": "View authored restoration evidence"
+    },
+    {
+      "actionId": "view-missing-evidence-example",
+      "capability": "read-case",
+      "label": "Inspect missing evidence example"
+    }
+  ],
+  "blockers": [
+    {
+      "code": "fixture-only-no-operation-authority",
+      "message": "Authored fixture only: no deployment, seed, restoration, approval or live proof is performed."
+    }
+  ],
+  "artifactRefs": [
+    {
+      "contractId": "P05",
+      "artifact": {
+        "artifactId": "ART-OPERATIONS-PENDING-V2-MOCK-FX-11",
+        "checksum": "sha256:74c0c730c3f9ff13196a8ed95bfe08203a73f724da5ddd13c9323fad48c8969b"
+      },
+      "scenario": {
+        "scenarioId": "DEMO-CASE-CLAIMS-V2",
+        "scenarioVersion": "2.0.0",
+        "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+      }
+    },
+    {
+      "contractId": "P06",
+      "artifact": {
+        "artifactId": "ART-GRAPH-PENDING-V2-MOCK-FX-11",
+        "checksum": "sha256:b560cee577615f8f69f0a53016df2e7a0b93bf0d1ba39cbdcbf463f71eee19a0"
+      },
+      "scenario": {
+        "scenarioId": "DEMO-CASE-CLAIMS-V2",
+        "scenarioVersion": "2.0.0",
+        "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+      }
+    },
+    {
+      "contractId": "D03",
+      "artifact": {
+        "artifactId": "ART-PROMISES-V2-MOCK-FX-11",
+        "checksum": "sha256:c193dc644d94bc5c6b019d6d2724e9bffdf55ec0d16c4421f3e55db8dc8eba20"
+      },
+      "scenario": {
+        "scenarioId": "DEMO-CASE-CLAIMS-V2",
+        "scenarioVersion": "2.0.0",
+        "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+      }
+    }
+  ],
+  "businessGoal": "Fictional Contoso Insurance must prepare digital claims for its customer-confirmed seasonal deadline, protect sensitive claims documents, keep approved US data geography, recover within 60 minutes, and keep the defined estimated workload cost within USD 8,000 per month.",
+  "coverage": {
+    "phase": "runtime",
+    "assessmentState": "partial",
+    "verifiedCount": null,
+    "applicableCount": null,
+    "rows": [
+      {
+        "promiseId": "CP-01",
+        "confirmed": true,
+        "status": "breached",
+        "reasonCode": "https-not-required",
+        "evaluation": {
+          "contractId": "D17",
+          "artifact": {
+            "artifactId": "ART-EVALUATION-RISK-V2-MOCK-FX-11",
+            "checksum": "sha256:c95e3f551270af278e27e7c3a6e9ec26bb54151cd1e7390cf3a455110a786b63"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        }
+      },
+      {
+        "promiseId": "CP-02",
+        "confirmed": true,
+        "status": "unknown",
+        "reasonCode": "evidence-not-collected",
+        "evaluation": null
+      },
+      {
+        "promiseId": "CP-03",
+        "confirmed": true,
+        "status": "unknown",
+        "reasonCode": "evidence-not-collected",
+        "evaluation": null
+      },
+      {
+        "promiseId": "CP-04",
+        "confirmed": true,
+        "status": "unknown",
+        "reasonCode": "evidence-not-collected",
+        "evaluation": null
+      },
+      {
+        "promiseId": "CP-05",
+        "confirmed": false,
+        "status": "unknown",
+        "reasonCode": "rpo-unconfirmed",
+        "evaluation": null
+      },
+      {
+        "promiseId": "CP-06",
+        "confirmed": true,
+        "status": "unknown",
+        "reasonCode": "evidence-not-collected",
+        "evaluation": null
+      },
+      {
+        "promiseId": "CP-07",
+        "confirmed": true,
+        "status": "unknown",
+        "reasonCode": "evidence-not-collected",
+        "evaluation": null
+      },
+      {
+        "promiseId": "CP-08",
+        "confirmed": true,
+        "status": "unknown",
+        "reasonCode": "evidence-not-collected",
+        "evaluation": null
+      }
+    ]
+  },
+  "operationsRisk": {
+    "schemaVersion": "1.0.0",
+    "artifactType": "operations-risk",
+    "artifactId": "ART-OPERATIONS-PENDING-V2-MOCK-FX-11",
+    "runId": "RUN-UX-MOCK-CLAIMS-V2",
+    "caseId": "CASE-UX-MOCK-CLAIMS-V2",
+    "scope": {
+      "scopeId": "SCOPE-CONTRACT-V2",
+      "subscriptionId": "00000000-0000-0000-0000-000000000000",
+      "resourceGroup": "rg-contract-fixture",
+      "resourceIds": [
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+      ]
+    },
+    "caseRevisionAtWrite": 3,
+    "createdAt": "2026-09-12T17:05:00Z",
+    "updatedAt": "2026-09-12T17:05:00Z",
+    "stateChecksum": "sha256:74c0c730c3f9ff13196a8ed95bfe08203a73f724da5ddd13c9323fad48c8969b",
+    "derivedFrom": {},
+    "scenario": {
+      "scenarioId": "DEMO-CASE-CLAIMS-V2",
+      "scenarioVersion": "2.0.0",
+      "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+    },
+    "runMode": "fixture",
+    "purpose": "ux-mock",
+    "logicalRevision": 3,
+    "asOf": "2026-09-12T17:05:00Z",
+    "scenarioOrigin": "fixture",
+    "evidence": [
+      {
+        "reference": {
+          "contractId": "E01",
+          "artifact": {
+            "artifactId": "EVIDENCE-BREACH-V2-MOCK-FX-11",
+            "checksum": "sha256:287f072f38190d3feafd296d2527def4424681d8c7a7d8492caec6fa148e352b"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        },
+        "origin": "fixture"
+      }
+    ],
+    "currentWork": [],
+    "allowedActions": [
+      {
+        "actionId": "view-restoration-example",
+        "capability": "read-case",
+        "label": "View authored restoration evidence"
+      },
+      {
+        "actionId": "view-missing-evidence-example",
+        "capability": "read-case",
+        "label": "Inspect missing evidence example"
+      }
+    ],
+    "blockers": [
+      {
+        "code": "fixture-only-no-operation-authority",
+        "message": "Authored fixture only: no deployment, seed, restoration, approval or live proof is performed."
+      }
+    ],
+    "artifactRefs": [],
+    "riskState": "restoration-pending",
+    "headline": "Runtime verification pending (mock), not verified by prepared or local files",
+    "customerImpact": "Sensitive claims documents must not be exposed through anonymous blob access or transferred without the required HTTPS configuration.",
+    "binding": {
+      "contractId": "D14",
+      "artifact": {
+        "artifactId": "ART-BINDING-V2-MOCK-FX-11",
+        "checksum": "sha256:b5bbae8348f7ed0bd21283c4ac029cef6cbc0205aea239f40f4cd57e4c148f24"
+      },
+      "scenario": {
+        "scenarioId": "DEMO-CASE-CLAIMS-V2",
+        "scenarioVersion": "2.0.0",
+        "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+      }
+    },
+    "snapshot": {
+      "contractId": "D15",
+      "artifact": {
+        "artifactId": "ART-SNAPSHOT-RISK-V2-MOCK-FX-11",
+        "checksum": "sha256:f004401771e5f3b07e2f7daa2f39479eb98ca93f97eea265ab7784e3879e0827"
+      },
+      "scenario": {
+        "scenarioId": "DEMO-CASE-CLAIMS-V2",
+        "scenarioVersion": "2.0.0",
+        "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+      }
+    },
+    "findingRefs": [
+      {
+        "contractId": "D16",
+        "artifact": {
+          "artifactId": "ART-FINDING-PENDING-V2-MOCK-FX-11",
+          "checksum": "sha256:12f6c70cc4f1b1af33958fef8412ef4cd65eb6336cfaf333769d3879b2ab9d9e"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        }
+      }
+    ],
+    "evaluationRefs": [
+      {
+        "contractId": "D17",
+        "artifact": {
+          "artifactId": "ART-EVALUATION-RISK-V2-MOCK-FX-11",
+          "checksum": "sha256:c95e3f551270af278e27e7c3a6e9ec26bb54151cd1e7390cf3a455110a786b63"
+        },
+        "scenario": {
+          "scenarioId": "DEMO-CASE-CLAIMS-V2",
+          "scenarioVersion": "2.0.0",
+          "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+        }
+      }
+    ],
+    "restoration": {
+      "status": "verification-pending",
+      "operationReceipt": null,
+      "verificationEvaluation": null
+    }
+  },
+  "continuityGraph": {
+    "schemaVersion": "1.0.0",
+    "artifactType": "intent-continuity-graph",
+    "artifactId": "ART-GRAPH-PENDING-V2-MOCK-FX-11",
+    "runId": "RUN-UX-MOCK-CLAIMS-V2",
+    "caseId": "CASE-UX-MOCK-CLAIMS-V2",
+    "scope": {
+      "scopeId": "SCOPE-CONTRACT-V2",
+      "subscriptionId": "00000000-0000-0000-0000-000000000000",
+      "resourceGroup": "rg-contract-fixture",
+      "resourceIds": [
+        "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-contract-fixture/providers/Microsoft.Storage/storageAccounts/claimsfixturev2"
+      ]
+    },
+    "caseRevisionAtWrite": 3,
+    "createdAt": "2026-09-12T17:05:00Z",
+    "updatedAt": "2026-09-12T17:05:00Z",
+    "stateChecksum": "sha256:b560cee577615f8f69f0a53016df2e7a0b93bf0d1ba39cbdcbf463f71eee19a0",
+    "derivedFrom": {},
+    "scenario": {
+      "scenarioId": "DEMO-CASE-CLAIMS-V2",
+      "scenarioVersion": "2.0.0",
+      "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+    },
+    "runMode": "fixture",
+    "purpose": "ux-mock",
+    "logicalRevision": 3,
+    "asOf": "2026-09-12T17:05:00Z",
+    "scenarioOrigin": "fixture",
+    "evidence": [
+      {
+        "reference": {
+          "contractId": "E01",
+          "artifact": {
+            "artifactId": "EVIDENCE-BREACH-V2-MOCK-FX-11",
+            "checksum": "sha256:287f072f38190d3feafd296d2527def4424681d8c7a7d8492caec6fa148e352b"
+          },
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          }
+        },
+        "origin": "fixture"
+      }
+    ],
+    "currentWork": [],
+    "allowedActions": [],
+    "blockers": [],
+    "artifactRefs": [],
+    "nodes": [
+      {
+        "nodeId": "NODE-INTENT",
+        "nodeType": "intent",
+        "label": "Contoso claims intent",
+        "source": {
+          "kind": "scenario",
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          },
+          "entityId": "INTENT-CLAIMS"
+        }
+      },
+      {
+        "nodeId": "NODE-CP01",
+        "nodeType": "promise",
+        "label": "Protected Claims: public endpoint / HTTPS / anonymous access disabled / TLS1.2",
+        "source": {
+          "kind": "scenario",
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          },
+          "entityId": "CP-01"
+        }
+      },
+      {
+        "nodeId": "NODE-STORE",
+        "nodeType": "component",
+        "label": "Claims storage",
+        "source": {
+          "kind": "scenario",
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          },
+          "entityId": "CMP-CLAIMS-STORE"
+        }
+      },
+      {
+        "nodeId": "NODE-EVALUATION",
+        "nodeType": "evaluation",
+        "label": "Fixture CP-01 evaluation: breached — https-not-required",
+        "source": {
+          "kind": "artifact",
+          "reference": {
+            "contractId": "D17",
+            "artifact": {
+              "artifactId": "ART-EVALUATION-RISK-V2-MOCK-FX-11",
+              "checksum": "sha256:c95e3f551270af278e27e7c3a6e9ec26bb54151cd1e7390cf3a455110a786b63"
+            },
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            }
+          }
+        }
+      },
+      {
+        "nodeId": "NODE-SNAPSHOT",
+        "nodeType": "runtime-snapshot",
+        "label": "Observed storage configuration",
+        "source": {
+          "kind": "artifact",
+          "reference": {
+            "contractId": "D15",
+            "artifact": {
+              "artifactId": "ART-SNAPSHOT-RISK-V2-MOCK-FX-11",
+              "checksum": "sha256:f004401771e5f3b07e2f7daa2f39479eb98ca93f97eea265ab7784e3879e0827"
+            },
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            }
+          }
+        }
+      },
+      {
+        "nodeId": "NODE-BASELINE",
+        "nodeType": "baseline",
+        "label": "Acknowledged fixture baseline",
+        "source": {
+          "kind": "artifact",
+          "reference": {
+            "contractId": "D14",
+            "artifact": {
+              "artifactId": "ART-BINDING-V2-MOCK-FX-11",
+              "checksum": "sha256:b5bbae8348f7ed0bd21283c4ac029cef6cbc0205aea239f40f4cd57e4c148f24"
+            },
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            }
+          }
+        }
+      },
+      {
+        "nodeId": "NODE-EVIDENCE",
+        "nodeType": "evidence",
+        "label": "Fixture configuration evidence",
+        "source": {
+          "kind": "artifact",
+          "reference": {
+            "contractId": "E01",
+            "artifact": {
+              "artifactId": "EVIDENCE-BREACH-V2-MOCK-FX-11",
+              "checksum": "sha256:287f072f38190d3feafd296d2527def4424681d8c7a7d8492caec6fa148e352b"
+            },
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            }
+          }
+        }
+      },
+      {
+        "nodeId": "NODE-VERIFICATION-GAP",
+        "nodeType": "evaluation",
+        "label": "Fresh restoration verification pending",
+        "source": {
+          "kind": "gap",
+          "expectedContractId": "D17",
+          "reasonCode": "fresh-evidence-required"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "edgeId": "EDGE-INTENT-PROMISE",
+        "fromNodeId": "NODE-INTENT",
+        "toNodeId": "NODE-CP01",
+        "relation": "defines",
+        "status": "supported",
+        "support": {
+          "kind": "scenario-link",
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          },
+          "fromEntityId": "INTENT-CLAIMS",
+          "toEntityId": "CP-01"
+        }
+      },
+      {
+        "edgeId": "EDGE-PROMISE-STORE",
+        "fromNodeId": "NODE-CP01",
+        "toNodeId": "NODE-STORE",
+        "relation": "implemented-by",
+        "status": "supported",
+        "support": {
+          "kind": "scenario-link",
+          "scenario": {
+            "scenarioId": "DEMO-CASE-CLAIMS-V2",
+            "scenarioVersion": "2.0.0",
+            "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+          },
+          "fromEntityId": "CP-01",
+          "toEntityId": "CMP-CLAIMS-STORE"
+        }
+      },
+      {
+        "edgeId": "EDGE-EVALUATION-PROMISE",
+        "fromNodeId": "NODE-EVALUATION",
+        "toNodeId": "NODE-CP01",
+        "relation": "evaluates",
+        "status": "broken",
+        "support": {
+          "kind": "evaluation",
+          "reference": {
+            "contractId": "D17",
+            "artifact": {
+              "artifactId": "ART-EVALUATION-RISK-V2-MOCK-FX-11",
+              "checksum": "sha256:c95e3f551270af278e27e7c3a6e9ec26bb54151cd1e7390cf3a455110a786b63"
+            },
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            }
+          },
+          "promiseId": "CP-01"
+        }
+      },
+      {
+        "edgeId": "EDGE-EVALUATION-SNAPSHOT",
+        "fromNodeId": "NODE-EVALUATION",
+        "toNodeId": "NODE-SNAPSHOT",
+        "relation": "references",
+        "status": "supported",
+        "support": {
+          "kind": "artifact-link",
+          "source": {
+            "contractId": "D17",
+            "artifact": {
+              "artifactId": "ART-EVALUATION-RISK-V2-MOCK-FX-11",
+              "checksum": "sha256:c95e3f551270af278e27e7c3a6e9ec26bb54151cd1e7390cf3a455110a786b63"
+            },
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            }
+          },
+          "target": {
+            "contractId": "D15",
+            "artifact": {
+              "artifactId": "ART-SNAPSHOT-RISK-V2-MOCK-FX-11",
+              "checksum": "sha256:f004401771e5f3b07e2f7daa2f39479eb98ca93f97eea265ab7784e3879e0827"
+            },
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            }
+          }
+        }
+      },
+      {
+        "edgeId": "EDGE-SNAPSHOT-BASELINE",
+        "fromNodeId": "NODE-SNAPSHOT",
+        "toNodeId": "NODE-BASELINE",
+        "relation": "references",
+        "status": "supported",
+        "support": {
+          "kind": "artifact-link",
+          "source": {
+            "contractId": "D15",
+            "artifact": {
+              "artifactId": "ART-SNAPSHOT-RISK-V2-MOCK-FX-11",
+              "checksum": "sha256:f004401771e5f3b07e2f7daa2f39479eb98ca93f97eea265ab7784e3879e0827"
+            },
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            }
+          },
+          "target": {
+            "contractId": "D14",
+            "artifact": {
+              "artifactId": "ART-BINDING-V2-MOCK-FX-11",
+              "checksum": "sha256:b5bbae8348f7ed0bd21283c4ac029cef6cbc0205aea239f40f4cd57e4c148f24"
+            },
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            }
+          }
+        }
+      },
+      {
+        "edgeId": "EDGE-SNAPSHOT-EVIDENCE",
+        "fromNodeId": "NODE-SNAPSHOT",
+        "toNodeId": "NODE-EVIDENCE",
+        "relation": "references",
+        "status": "supported",
+        "support": {
+          "kind": "artifact-link",
+          "source": {
+            "contractId": "D15",
+            "artifact": {
+              "artifactId": "ART-SNAPSHOT-RISK-V2-MOCK-FX-11",
+              "checksum": "sha256:f004401771e5f3b07e2f7daa2f39479eb98ca93f97eea265ab7784e3879e0827"
+            },
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            }
+          },
+          "target": {
+            "contractId": "E01",
+            "artifact": {
+              "artifactId": "EVIDENCE-BREACH-V2-MOCK-FX-11",
+              "checksum": "sha256:287f072f38190d3feafd296d2527def4424681d8c7a7d8492caec6fa148e352b"
+            },
+            "scenario": {
+              "scenarioId": "DEMO-CASE-CLAIMS-V2",
+              "scenarioVersion": "2.0.0",
+              "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+            }
+          }
+        }
+      },
+      {
+        "edgeId": "EDGE-VERIFICATION-PENDING",
+        "fromNodeId": "NODE-CP01",
+        "toNodeId": "NODE-VERIFICATION-GAP",
+        "relation": "evaluates",
+        "status": "pending",
+        "support": {
+          "kind": "gap",
+          "reasonCode": "fresh-evidence-required"
+        }
+      }
+    ],
+    "listEntries": [
+      {
+        "nodeId": "NODE-INTENT",
+        "relatedEdgeIds": [
+          "EDGE-INTENT-PROMISE"
+        ]
+      },
+      {
+        "nodeId": "NODE-CP01",
+        "relatedEdgeIds": [
+          "EDGE-INTENT-PROMISE",
+          "EDGE-PROMISE-STORE",
+          "EDGE-EVALUATION-PROMISE",
+          "EDGE-VERIFICATION-PENDING"
+        ]
+      },
+      {
+        "nodeId": "NODE-STORE",
+        "relatedEdgeIds": [
+          "EDGE-PROMISE-STORE"
+        ]
+      },
+      {
+        "nodeId": "NODE-EVALUATION",
+        "relatedEdgeIds": [
+          "EDGE-EVALUATION-PROMISE",
+          "EDGE-EVALUATION-SNAPSHOT"
+        ]
+      },
+      {
+        "nodeId": "NODE-SNAPSHOT",
+        "relatedEdgeIds": [
+          "EDGE-EVALUATION-SNAPSHOT",
+          "EDGE-SNAPSHOT-BASELINE",
+          "EDGE-SNAPSHOT-EVIDENCE"
+        ]
+      },
+      {
+        "nodeId": "NODE-BASELINE",
+        "relatedEdgeIds": [
+          "EDGE-SNAPSHOT-BASELINE"
+        ]
+      },
+      {
+        "nodeId": "NODE-EVIDENCE",
+        "relatedEdgeIds": [
+          "EDGE-SNAPSHOT-EVIDENCE"
+        ]
+      },
+      {
+        "nodeId": "NODE-VERIFICATION-GAP",
+        "relatedEdgeIds": [
+          "EDGE-VERIFICATION-PENDING"
+        ]
+      }
+    ]
+  }
+}

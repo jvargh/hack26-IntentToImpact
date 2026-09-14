@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "1.0.0",
+  "designRevision": "2.0.0",
+  "artifactId": "UX-LOCAL-08-CURRENT-V2",
+  "taskIds": ["UX-01-01", "UX-02-01"],
+  "scenarioId": "DEMO-CASE-CLAIMS-V2",
+  "scenarioVersion": "2.0.0",
+  "owner": "D-ux",
+  "reviewer": "implementation-orchestrator",
+  "evidenceOrigin": "ux-mock",
+  "artifacts": {
+    "journey": "design\\journey\\hero-journey.v2.json",
+    "informationArchitecture": "design\\information-architecture\\inventory.v2.json",
+    "componentStates": "design\\components\\component-state-contract.v2.json",
+    "tokens": "design\\tokens\\tokens.v2-manifest.json",
+    "builderGuide": "design\\journey\\README.v2.md",
+    "revisionDecision": "design\\decisions\\UXD-003.json"
+  },
+  "readiness": {
+    "businessWording": "current-v2-complete",
+    "wordingOnlyBlocker": false,
+    "mockDesignConsumption": "ready",
+    "canonicalProjectionBinding": "pending-A-frozen-schema",
+    "fullResponseFixtureValidation": "pending-canonical-projection-schema",
+    "technicalReview": "pending-implementation-orchestrator",
+    "humanGate": "GATE-UX01-pending"
+  },
+  "operationAuthorization": {"deployment": "not-approved", "seed": "not-approved", "restoration": "not-approved"},
+  "pendingDecisionRefs": ["UXD-002", "UXD-003"],
+  "historicalPolicy": "V1 paths and all previous evidence remain unchanged historical records. Use this index for CURRENT V2; do not reinterpret V1 approval/runtime proof. No fixture payload or live execution is supplied."
+}

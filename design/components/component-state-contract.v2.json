@@ -1,0 +1,230 @@
+{
+  "contractId": "U03",
+  "schemaVersion": "1.0.0",
+  "artifactId": "UX-02-01-COMPONENT-STATES-V2",
+  "designRevision": "2.0.0",
+  "currentHandoffRef": "design\\components\\CURRENT.v2.json",
+  "historicalSourceRef": "design\\components\\component-state-contract.v1.json",
+  "taskId": "UX-02-01",
+  "scenarioId": "DEMO-CASE-CLAIMS-V2",
+  "scenarioAlignment": {
+    "sourceScenarioId": "DEMO-CASE-CLAIMS-V2",
+    "targetScenarioId": "DEMO-CASE-CLAIMS-V2",
+    "targetScenarioVersion": "2.0.0",
+    "decisionRef": ".intent-to-impact\\execution\\decisions\\LOCAL-08.json",
+    "status": "current-v2-wording-complete",
+    "liveFixtureBinding": "pending-canonical-projection-schema",
+    "sourceScenarioReinterpreted": false
+  },
+  "claimLabelPolicy": {
+    "topicLabel": "Protected Claims",
+    "controlTopicLabel": "HTTPS",
+    "valueSource": "supplied-projection",
+    "labelIsVerification": false,
+    "note": "Neutral topic headings only. Render the supplied promise statement and confirmation/status; do not require Private Connectivity or Private Claims. LOCAL-08 describes bounded public-endpoint HTTPS/anonymous-access/TLS1.2 configuration, not private-connectivity or complete access-control proof. No private endpoint, private DNS, VNet or verifier VM is required. Promise confirmation and separate operation authorization remain unchanged."
+  },
+  "tokenContract": {"id": "U02", "version": "1.0.0", "path": "design\\tokens\\tokens.v2-manifest.json"},
+  "sourceRefs": ["design\\journey\\hero-journey.v2.json", "design\\information-architecture\\inventory.v2.json"],
+  "scenarioPresentationRef": "design\\journey\\hero-journey.v2.json#cp01DesignReference",
+  "graphRiskProperty": "supportsHttpsTrafficOnly",
+  "revisionDecisionRef": "UXD-003",
+  "intendedConsumers": ["mock", "production"],
+  "status": "provisional-human-checkpoint-pending",
+  "evidenceOrigin": "ux-mock",
+  "checkpointId": "UX-Checkpoint-01",
+  "humanVisualApproval": "pending",
+  "contractBinding": {"status": "pending", "owner": "A/C", "decisionRef": "UXD-002", "expectedProjectionVersion": "1.0.0"},
+  "presentationOnly": true,
+  "primaryActionPolicy": {"maximumDominantActions": 1, "authority": "server-issued allowedActions", "waitingMayHaveNoAction": true},
+  "eventBoundary": "Events below are interaction intents, not API implementations. Bind only accepted server-issued action/artifact references. No local eligibility, approval, coverage, financial or verification rules; no transition engine. Fixture IDs index design examples only.",
+  "sharedStateRefs": ["empty", "loading", "blocked", "stale", "failed", "recovered", "disabled-action"],
+  "sharedVariantRefs": ["loading", "disabled-action", "retry", "narrow-layout", "keyboard-focus", "zoom-200", "reduced-motion"],
+  "sharedTokenRefs": ["font-body", "font-size-body", "line-height-body", "color-ink", "color-surface", "color-focus", "focus-ring-width", "focus-ring-offset", "control-min-height", "motion-fast", "motion-standard", "breakpoint-narrow"],
+  "identityTreatment": {"label": "Demo Identity", "fontToken": "font-size-meta", "foregroundToken": "color-muted", "backgroundToken": "color-surface", "detail": "Fixed demo-human; local-demo assurance only. Compact readable marker, not a production identity/separation-of-duties claim. Evidence origin remains prominent."},
+  "components": [
+    {
+      "id": "CaseShell", "tier": 1, "bindingStatus": "pending",
+      "fixtureRefs": ["FX-00", "FX-01", "FX-02", "FX-03", "FX-04", "FX-05", "FX-06", "FX-07", "FX-08", "FX-09", "FX-10", "FX-11", "FX-12", "FX-13", "FX-14", "FX-15", "FX-16", "FX-17", "FX-18"],
+      "interactionRefs": ["UX-I-16", "UX-I-17", "UX-I-18"],
+      "propDrafts": {"issuedActions": ["P01.allowedActions"], "workAndBlockers": ["P01.currentWork", "P01.blockers"], "runDisclosure": ["P01.asOf", "P01.scenarioOrigin", "D22.runMode", "D22.purpose"]},
+      "displayOrder": ["customer outcome / five moments", "origin and as-of", "current scene", "one current action"],
+      "tokenRefs": ["color-canvas", "layout-page-gutter", "layout-max-width", "font-display", "font-size-title"],
+      "events": ["navigate-local-route", "activate-issued-action"],
+      "accessibility": "Semantic header/nav/main landmarks and skip link; selected moment is text plus state, not color. Narrow layout stacks without hiding origin or action."
+    },
+    {
+      "id": "PromiseCard", "tier": 1, "bindingStatus": "pending", "fixtureRefs": ["FX-01", "FX-02", "FX-09", "FX-12"], "interactionRefs": ["UX-I-01"],
+      "propDrafts": {"customerImpact": ["P02.promiseRows[].customerImpact"], "designStatus": ["P02.promiseRows[].designStatus"], "runtimeStatusAndReason": ["P05.promiseRows[].runtimeStatus", "P05.promiseRows[].reasonCode"]},
+      "displayOrder": ["customer impact", "promise", "design and runtime separately", "reason / evidence limitation"],
+      "tokenRefs": ["font-display", "font-size-hero", "density-hero-padding", "layout-reading-width"],
+      "events": ["inspect-safe-evidence"],
+      "accessibility": "Heading names the promise; statuses always text/icon/color. Unknown remains readable beside a design-supported state."
+    },
+    {
+      "id": "ContractPanel", "tier": 1, "bindingStatus": "pending", "fixtureRefs": ["FX-01", "FX-02"], "interactionRefs": ["UX-I-01"],
+      "propDrafts": {"promiseIds": ["P02.promiseRows[].promiseId"], "confirmedCriteria": ["P02.promiseRows[].acceptanceCriterion"], "evidenceRefs": ["P02.promiseRows[].evidenceIds"]},
+      "displayOrder": ["customer promise", "confirmed criterion or unknown", "evidence"],
+      "tokenRefs": ["font-size-section", "space-4", "color-border"],
+      "events": ["toggle-detail", "inspect-safe-evidence"],
+      "accessibility": "Labelled table/list retains eight promise references and explicit unknowns; no automatic confirmation."
+    },
+    {
+      "id": "QuestionPanel", "tier": 1, "bindingStatus": "pending", "fixtureRefs": ["FX-02", "FX-15"], "interactionRefs": ["UX-I-02"],
+      "propDrafts": {"issuedQuestion": ["P02.questions"], "issuedActions": ["P02.allowedActions"], "blocker": ["P02.blockers"]},
+      "displayOrder": ["why this answer matters", "issued question/options", "answer action", "error/recovery"],
+      "tokenRefs": ["font-size-section", "color-action", "color-on-action", "control-min-height"],
+      "events": ["activate-issued-action"],
+      "accessibility": "Labelled controls, no selected approval default; focus first invalid field, preserve entered answer on recoverable error."
+    },
+    {
+      "id": "OptionComparison", "tier": 1, "bindingStatus": "pending", "fixtureRefs": ["FX-03", "FX-04", "FX-15"], "interactionRefs": ["UX-I-03"],
+      "propDrafts": {"eligibilityAndWhy": ["P03.options[].eligibility", "P03.options[].rejectionReasons"], "estimatedCost": ["P03.options[].estimatedMonthlyCost"], "recommendation": ["P03.recommendation"]},
+      "displayOrder": ["customer trade-off", "A rejection / B eligibility", "labelled estimate", "review recommendation"],
+      "tokenRefs": ["font-size-section", "layout-card-gap", "density-hero-padding", "status-design-text", "status-warning-text"],
+      "events": ["activate-issued-action", "inspect-safe-evidence"],
+      "accessibility": "Comparable table headers on desktop, labelled cards on narrow layout. Rejection is not color-only; never invent a second eligible option or savings."
+    },
+    {
+      "id": "DecisionPanel", "tier": 2, "bindingStatus": "pending", "fixtureRefs": ["FX-04", "FX-07", "FX-10", "FX-14", "FX-15", "FX-16"], "interactionRefs": ["UX-I-04", "UX-I-06", "UX-I-11", "UX-I-17"],
+      "propDrafts": {"subjectAndScope": ["P03.decisions"], "approvalAndChecks": ["P04.approval", "P03.gates"], "issuedActions": ["P04.allowedActions"], "identityDisclosure": ["P03.identity"]},
+      "displayOrder": ["what this decision authorizes", "subject/version/hash", "checks separate from approval", "Demo Identity detail", "one explicit action"],
+      "tokenRefs": ["density-functional-padding", "font-size-meta", "status-warning-text", "status-local-text"],
+      "events": ["activate-issued-action", "inspect-safe-evidence"],
+      "accessibility": "Explicit approval and secondary reject/back remain reachable. Distinct material and delivery decisions; restore focus after response."
+    },
+    {
+      "id": "ChangeSetSummary", "tier": 1, "bindingStatus": "pending", "fixtureRefs": ["FX-06", "FX-07", "FX-08", "FX-10", "FX-11", "FX-16"], "interactionRefs": ["UX-I-05", "UX-I-07", "UX-I-11", "UX-I-12"],
+      "propDrafts": {"localStage": ["P04.localChangeStatus"], "versions": ["P04.baseVersion", "P04.targetVersion"], "checksAndApproval": ["P04.validation", "P04.approval"], "localReceipt": ["P04.localApplication"], "separateAzureFacts": ["P04.azureDeployment", "P04.runtimeVerification"]},
+      "displayOrder": ["customer effect", "Prepared / Approved / Materialized", "files and checks", "separate Azure deployment", "separate runtime verification"],
+      "tokenRefs": ["density-hero-padding", "status-local-text", "status-local-surface", "font-size-section"],
+      "events": ["toggle-detail", "inspect-safe-evidence"],
+      "accessibility": "Persistent stage labels; no universal Done. Explain unchanged Bicep for runtime-only correction rather than fabricate a diff."
+    },
+    {
+      "id": "FileDiff", "tier": 2, "bindingStatus": "pending", "fixtureRefs": ["FX-06", "FX-07", "FX-08", "FX-10", "FX-11", "FX-16"], "interactionRefs": ["UX-I-05", "UX-I-11"],
+      "propDrafts": {"files": ["P04.localImplementation.files"], "diffRef": ["P04.localImplementation.diffArtifactId"], "safeArtifactRefs": ["P04.safeArtifactRefs"]},
+      "displayOrder": ["file and operation", "why it changes", "before/after with line labels", "safe artifact detail"],
+      "tokenRefs": ["font-code", "font-size-meta", "color-border", "density-functional-padding"],
+      "events": ["toggle-detail", "inspect-safe-evidence"],
+      "accessibility": "Per-file keyboard disclosure with textual added/removed labels; narrow layout supports local code scrolling without trapping page focus. Browser never writes files."
+    },
+    {
+      "id": "ValidationList", "tier": 2, "bindingStatus": "pending", "fixtureRefs": ["FX-06", "FX-16"], "interactionRefs": ["UX-I-05"],
+      "propDrafts": {"checks": ["P04.validation"], "blockers": ["P04.blockers"]},
+      "displayOrder": ["check result", "diagnostic / limitation", "source evidence"],
+      "tokenRefs": ["density-functional-padding", "status-neutral-text", "status-risk-text"],
+      "events": ["inspect-safe-evidence"],
+      "accessibility": "Ordered checks with text/icons and correlation references; a passed check is never an approval."
+    },
+    {
+      "id": "ApplyPanel", "tier": 2, "bindingStatus": "pending", "fixtureRefs": ["FX-06", "FX-07", "FX-08", "FX-10", "FX-11", "FX-16"], "interactionRefs": ["UX-I-06", "UX-I-07", "UX-I-11"],
+      "propDrafts": {"issuedActions": ["P04.allowedActions"], "localApplication": ["P04.localApplication"], "approvalAndBlockers": ["P04.approval", "P04.blockers"]},
+      "displayOrder": ["local materialization scope", "current approval", "one Materialize action or pending work", "local receipt"],
+      "tokenRefs": ["density-functional-padding", "color-action", "color-on-action", "motion-fast"],
+      "events": ["activate-issued-action", "inspect-safe-evidence"],
+      "accessibility": "No duplicate submit while applying; disabled action has readable reason. Materialize never means deploy or verify."
+    },
+    {
+      "id": "RiskPanel", "tier": 1, "bindingStatus": "pending", "fixtureRefs": ["FX-09", "FX-10", "FX-11", "FX-12", "FX-15"], "interactionRefs": ["UX-I-08", "UX-I-12", "UX-I-13"],
+      "propDrafts": {"findingAndImpact": ["P05.findings"], "promiseState": ["P05.promiseEvaluations"], "issuedActions": ["P05.allowedActions"], "evidenceGaps": ["P05.evidenceGaps"]},
+      "displayOrder": ["customer impact", "exact broken promise", "observation and gaps", "correction status", "one current action"],
+      "tokenRefs": ["font-display", "font-size-hero", "density-hero-padding", "status-risk-text", "status-risk-surface"],
+      "events": ["activate-issued-action", "inspect-safe-evidence"],
+      "accessibility": "One focused risk scene, text/icon/broken edge; meaningful polite announcements, no pulse or Scan. Pending restoration stays visible until server evidence changes."
+    },
+    {
+      "id": "ContinuityGraph", "tier": 1, "bindingStatus": "pending", "fixtureRefs": ["FX-09", "FX-10", "FX-11", "FX-12", "FX-15"], "interactionRefs": ["UX-I-08", "UX-I-13"],
+      "propDrafts": {"nodes": ["P06.nodes"], "edges": ["P06.edges"], "gaps": ["P06.gaps"], "focusedPromise": ["P06.focusedPromiseId"]},
+      "displayOrder": ["promise", "decision", "local implementation", "bound runtime", "observation / broken edge"],
+      "tokenRefs": ["color-graph-edge", "graph-edge-width", "graph-broken-width", "status-risk-text", "space-8"],
+      "events": ["focus-lineage-item", "inspect-safe-evidence"],
+      "accessibility": "Exact supported server edges only; broken edge uses gap/dash and textual reason, not color alone. ContinuityList is the equivalent reading path; no graph editor."
+    },
+    {
+      "id": "ContinuityList", "tier": 1, "bindingStatus": "pending", "fixtureRefs": ["FX-09", "FX-10", "FX-11", "FX-12", "FX-15"], "interactionRefs": ["UX-I-08", "UX-I-13"],
+      "propDrafts": {"nodes": ["P06.nodes"], "edges": ["P06.edges"], "gaps": ["P06.gaps"], "focusedPromise": ["P06.focusedPromiseId"]},
+      "displayOrder": ["promise", "decision", "local implementation", "bound runtime", "observation / broken edge"],
+      "tokenRefs": ["space-4", "color-graph-edge", "status-risk-text"],
+      "events": ["focus-lineage-item", "inspect-safe-evidence"],
+      "accessibility": "Semantic ordered list with same IDs, edges and evidence gaps as graph. Preferred narrow/keyboard reading path, not a reduced-information fallback."
+    },
+    {
+      "id": "AwaySummary", "tier": 1, "bindingStatus": "pending", "fixtureRefs": ["FX-17", "FX-18"], "interactionRefs": ["UX-I-09", "UX-I-18"],
+      "propDrafts": {"completedAndFailed": ["P07.completedWork", "P07.failedWork"], "currentDecisions": ["P07.currentDecisions"], "windowAndCursor": ["P07.window", "P07.seenCursor"], "issuedActions": ["P07.allowedActions"]},
+      "displayOrder": ["since when", "completed work", "failed / still-pending work", "current decision", "secondary Mark updates seen"],
+      "tokenRefs": ["font-size-section", "density-hero-padding", "space-4"],
+      "events": ["open-current-decision", "mark-seen-issued-action"],
+      "accessibility": "Short grouped lists, meaningful counts only from server. Reading/opening does not mark seen or approve; show retention gaps."
+    },
+    {
+      "id": "AttentionStrip", "tier": 1, "bindingStatus": "pending", "fixtureRefs": ["FX-13", "FX-18"], "interactionRefs": ["UX-I-10"],
+      "propDrafts": {"productAttention": ["P07.productHumanAttention"], "operatorActions": ["P07.demoTestOperatorActions"], "windowAndLimitations": ["P07.measurementWindow", "P07.unavailableReasons"]},
+      "displayOrder": ["Product Human Attention", "measurement window", "separate Demo/Test Operator Actions", "unavailable timing reasons"],
+      "tokenRefs": ["font-size-body", "font-size-meta", "color-muted", "space-3"],
+      "events": ["toggle-detail"],
+      "accessibility": "Readable labels, not tiny counters. Counts/durations are displayed, never computed or replaced with zero."
+    },
+    {
+      "id": "OutcomeReceipt", "tier": 1, "bindingStatus": "pending", "fixtureRefs": ["FX-13", "FX-15", "FX-16"], "interactionRefs": ["UX-I-14"],
+      "propDrafts": {"promiseAnswer": ["P08.promiseCoverage"], "deliveryAnswer": ["P08.delivery"], "valueAnswer": ["P08.value", "P08.financialUnavailableReason"], "receiptAndAsOf": ["P08.reportArtifactRefs", "P08.asOf"]},
+      "displayOrder": ["Did we keep the promise?", "Did we deliver?", "What value did we create?", "evidence / export"],
+      "tokenRefs": ["font-display", "font-size-section", "layout-card-gap", "density-hero-padding"],
+      "events": ["inspect-safe-evidence", "export-issued-artifact"],
+      "accessibility": "Three heading-led cards; same immutable values as eventual JSON/Markdown. Unknown savings stays unavailable, not inferred from rejected options."
+    },
+    {
+      "id": "EvidenceDrawer", "tier": 2, "bindingStatus": "pending", "fixtureRefs": ["FX-19"], "interactionRefs": ["UX-I-15"],
+      "propDrafts": {"sourceTimeAndResource": ["P09.source", "P09.observedAt", "P09.resourceRef"], "supportedPromises": ["P09.supportedPromiseIds"], "originFreshnessAndLimits": ["P09.origin", "P09.freshness", "P09.limitations"], "safeArtifactRefs": ["P09.safeArtifactRefs"]},
+      "displayOrder": ["source / observed time / resource", "supported promise", "origin / freshness / limitations", "expand technical identifiers and artifact"],
+      "tokenRefs": ["density-functional-padding", "font-size-section", "font-code", "layout-reading-width"],
+      "events": ["inspect-safe-evidence", "toggle-detail", "close-and-restore-focus"],
+      "accessibility": "Named dialog, trapped/restored focus, Escape, full-width narrow mode. Missing/stale/fixture limitations remain first-level; no arbitrary URLs."
+    },
+    {
+      "id": "EvidenceBadge", "tier": 2, "bindingStatus": "pending",
+      "fixtureRefs": ["FX-00", "FX-01", "FX-02", "FX-03", "FX-04", "FX-05", "FX-06", "FX-07", "FX-08", "FX-09", "FX-10", "FX-11", "FX-12", "FX-13", "FX-14", "FX-15", "FX-16", "FX-17", "FX-18", "FX-19"],
+      "interactionRefs": ["UX-I-15"],
+      "propDrafts": {"origin": ["P09.origin"], "freshness": ["P09.freshness"], "limitations": ["P09.limitations"]},
+      "displayOrder": ["origin label", "freshness", "limitation"],
+      "tokenRefs": ["font-size-meta", "radius-badge", "status-fixture-text", "status-fixture-surface"],
+      "events": ["inspect-safe-evidence"],
+      "accessibility": "Visible words and icon; never hover-only. If interactive, preserve 44px minimum target without enlarging its quiet label."
+    }
+  ],
+  "statePresentations": [
+    {"stateId": "FX-00", "fixtureId": "FX-00", "tier": 2, "dominantActionCount": 1, "statusIds": ["empty"]},
+    {"stateId": "FX-01", "fixtureId": "FX-01", "tier": 1, "dominantActionCount": 1, "statusIds": ["pending"]},
+    {"stateId": "FX-02", "fixtureId": "FX-02", "tier": 1, "dominantActionCount": 1, "statusIds": ["unknown", "pending"]},
+    {"stateId": "FX-03", "fixtureId": "FX-03", "tier": 1, "dominantActionCount": 1, "statusIds": ["design-supported"]},
+    {"stateId": "FX-04", "fixtureId": "FX-04", "tier": 2, "dominantActionCount": 1, "statusIds": ["pending"]},
+    {"stateId": "FX-05", "fixtureId": "FX-05", "tier": 3, "dominantActionCount": 0, "statusIds": ["design-approved", "pending"]},
+    {"stateId": "FX-06", "fixtureId": "FX-06", "tier": 1, "dominantActionCount": 1, "statusIds": ["prepared"]},
+    {"stateId": "FX-07", "fixtureId": "FX-07", "tier": 2, "dominantActionCount": 1, "statusIds": ["delivery-approved"]},
+    {"stateId": "FX-07:applying-locally", "fixtureId": "FX-07", "tier": 3, "dominantActionCount": 0, "statusIds": ["applying"]},
+    {"stateId": "FX-08", "fixtureId": "FX-08", "tier": 2, "dominantActionCount": 1, "statusIds": ["materialized", "unknown"]},
+    {"stateId": "FX-08:baseline-acknowledged", "fixtureId": "FX-08", "tier": 2, "dominantActionCount": 1, "statusIds": ["materialized", "azure-deployed"]},
+    {"stateId": "FX-09", "fixtureId": "FX-09", "tier": 1, "dominantActionCount": 1, "statusIds": ["at-risk"]},
+    {"stateId": "FX-10", "fixtureId": "FX-10", "tier": 1, "dominantActionCount": 1, "statusIds": ["prepared", "pending"]},
+    {"stateId": "FX-10:material-approval-pending", "fixtureId": "FX-10", "tier": 2, "dominantActionCount": 1, "statusIds": ["pending"]},
+    {"stateId": "FX-10:material-approved-delivery-pending", "fixtureId": "FX-10", "tier": 2, "dominantActionCount": 1, "statusIds": ["pending"]},
+    {"stateId": "FX-10:delivery-approved-not-applied", "fixtureId": "FX-10", "tier": 2, "dominantActionCount": 1, "statusIds": ["delivery-approved"]},
+    {"stateId": "FX-10:applying-locally", "fixtureId": "FX-10", "tier": 3, "dominantActionCount": 0, "statusIds": ["applying"]},
+    {"stateId": "FX-11", "fixtureId": "FX-11", "tier": 1, "dominantActionCount": 1, "statusIds": ["materialized", "pending"]},
+    {"stateId": "FX-11:runtime-restoration-awaiting-consent", "fixtureId": "FX-11", "tier": 2, "dominantActionCount": 1, "statusIds": ["materialized", "pending"]},
+    {"stateId": "FX-11:runtime-verification-pending", "fixtureId": "FX-11", "tier": 2, "dominantActionCount": 1, "statusIds": ["azure-deployed", "pending"]},
+    {"stateId": "FX-12", "fixtureId": "FX-12", "tier": 1, "dominantActionCount": 1, "statusIds": ["runtime-verified", "unknown"]},
+    {"stateId": "FX-13", "fixtureId": "FX-13", "tier": 1, "dominantActionCount": 1, "statusIds": ["fixture"]},
+    {"stateId": "FX-14", "fixtureId": "FX-14", "tier": 2, "dominantActionCount": 1, "statusIds": ["stale"]},
+    {"stateId": "FX-15", "fixtureId": "FX-15", "tier": 2, "dominantActionCount": 1, "statusIds": ["blocked", "unknown"]},
+    {"stateId": "FX-16", "fixtureId": "FX-16", "tier": 2, "dominantActionCount": 1, "statusIds": ["failed"]},
+    {"stateId": "FX-17", "fixtureId": "FX-17", "tier": 3, "dominantActionCount": 1, "statusIds": ["recovered"]},
+    {"stateId": "FX-18", "fixtureId": "FX-18", "tier": 1, "dominantActionCount": 1, "statusIds": ["pending"]},
+    {"stateId": "FX-19", "fixtureId": "FX-19", "tier": 2, "dominantActionCount": 1, "statusIds": ["fixture", "replayed", "stale", "evidence-fresh", "evidence-partial"]}
+  ],
+  "statePresentationBoundary": "These are visual examples, not payload predicates or workflow transitions. Use each accepted journey state's full label and primaryAction text, never replace it with a generic badge. FX-10 material-approved/delivery-pending retains that full distinction even while both examples use pending color. Every mock example additionally shows fixture origin; presentation lists do not fabricate a server status.",
+  "fidelity": {
+    "1": "Hero: deliberate type/space and customer impact; focus risk/graph, promise/options, change/remediation, restoration, receipt and away.",
+    "2": "Functional: clear explicit approval/materialization/evidence and errors, same readable controls and focus.",
+    "3": "Test-focused: progress/recovery and viewport variants remain complete and accessible; no extra animation polish."
+  }
+}

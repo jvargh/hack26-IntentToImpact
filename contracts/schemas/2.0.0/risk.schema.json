@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://intent-to-impact.invalid/contracts/2.0.0/risk.schema.json",
+  "title": "NspRiskContract",
+  "oneOf": [
+    { "$ref": "#/definitions/CustomerPromiseContract" }, { "$ref": "#/definitions/SandboxOperationReceipt" },
+    { "$ref": "#/definitions/RuntimeBinding" }, { "$ref": "#/definitions/RuntimeSnapshot" },
+    { "$ref": "#/definitions/DriftFinding" }, { "$ref": "#/definitions/PromiseEvaluation" }
+  ],
+  "definitions": {
+    "PromiseContractReference": { "allOf": [{ "$ref": "envelope.schema.json#/definitions/VersionedArtifactReference" }], "properties": { "contractId": { "const": "D03", "type": "string" } } },
+    "OperationReference": { "allOf": [{ "$ref": "envelope.schema.json#/definitions/VersionedArtifactReference" }], "properties": { "contractId": { "const": "D13", "type": "string" } } },
+    "BindingReference": { "allOf": [{ "$ref": "envelope.schema.json#/definitions/VersionedArtifactReference" }], "properties": { "contractId": { "const": "D14", "type": "string" } } },
+    "SnapshotReference": { "allOf": [{ "$ref": "envelope.schema.json#/definitions/VersionedArtifactReference" }], "properties": { "contractId": { "const": "D15", "type": "string" } } },
+    "FindingReference": { "allOf": [{ "$ref": "envelope.schema.json#/definitions/VersionedArtifactReference" }], "properties": { "contractId": { "const": "D16", "type": "string" } } },
+    "EvaluationReference": { "allOf": [{ "$ref": "envelope.schema.json#/definitions/VersionedArtifactReference" }], "properties": { "contractId": { "const": "D17", "type": "string" } } },
+    "GenerationReference": { "allOf": [{ "$ref": "envelope.schema.json#/definitions/VersionedArtifactReference" }], "properties": { "contractId": { "const": "D10", "type": "string" } } },
+    "ApplicationReference": { "allOf": [{ "$ref": "envelope.schema.json#/definitions/VersionedArtifactReference" }], "properties": { "contractId": { "const": "D12", "type": "string" } } },
+    "NullableBindingReference": { "anyOf": [{ "$ref": "#/definitions/BindingReference" }, { "type": "null" }] },
+    "NullableSnapshotReference": { "anyOf": [{ "$ref": "#/definitions/SnapshotReference" }, { "type": "null" }] },
+    "NullableEvaluationReference": { "anyOf": [{ "$ref": "#/definitions/EvaluationReference" }, { "type": "null" }] },
+    "CustomerPromiseContract": {
+      "title": "CustomerPromiseContract", "x-contract-id": "D03", "type": "object",
+      "allOf": [{ "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "customer-promise-contract" },
+        "contractId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "status": { "$ref": "../1.0.0/risk.schema.json#/definitions/CustomerPromiseContract/properties/status" },
+        "requirementChecksum": { "$ref": "../1.0.0/core.schema.json#/definitions/Checksum" },
+        "confirmationDecisionId": { "$ref": "envelope.schema.json#/definitions/NullableId" },
+        "confirmedPromiseIds": { "type": "array", "uniqueItems": true, "items": { "$ref": "scenario.schema.json#/definitions/PromiseId" } },
+        "promises": { "$ref": "scenario.schema.json#/definitions/EightPromises" }
+      },
+      "required": ["artifactType", "contractId", "status", "requirementChecksum", "confirmationDecisionId", "confirmedPromiseIds", "promises"],
+      "unevaluatedProperties": false
+    },
+    "SandboxOperationReceipt": {
+      "title": "SandboxOperationReceipt", "x-contract-id": "D13", "type": "object",
+      "allOf": [{ "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "sandbox-operation-receipt" },
+        "operationId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "operation": { "$ref": "../1.0.0/risk.schema.json#/definitions/SandboxOperationReceipt/properties/operation" },
+        "result": { "$ref": "../1.0.0/risk.schema.json#/definitions/SandboxOperationReceipt/properties/result" },
+        "generationManifest": { "$ref": "#/definitions/GenerationReference" },
+        "applicationReceipt": { "$ref": "#/definitions/ApplicationReference" },
+        "desiredStateChecksum": { "$ref": "../1.0.0/core.schema.json#/definitions/Checksum" },
+        "deployedResources": { "anyOf": [{ "$ref": "nsp.schema.json#/definitions/DeploymentResources" }, { "type": "null" }] },
+        "providerOperationId": { "$ref": "envelope.schema.json#/definitions/NullableString" },
+        "operatorConsentId": { "$ref": "envelope.schema.json#/definitions/NullableId" },
+        "actor": { "$ref": "../1.0.0/core.schema.json#/definitions/ExecutionActor" },
+        "humanInitiator": { "$ref": "../1.0.0/core.schema.json#/definitions/DemoIdentity" },
+        "startedAt": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" },
+        "completedAt": { "$ref": "envelope.schema.json#/definitions/NullableTimestamp" },
+        "evidence": { "$ref": "envelope.schema.json#/definitions/EvidenceLinks" },
+        "correlationId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" }
+      },
+      "required": ["artifactType", "operationId", "operation", "result", "generationManifest", "applicationReceipt", "desiredStateChecksum", "deployedResources", "providerOperationId", "operatorConsentId", "actor", "startedAt", "completedAt", "evidence", "correlationId"],
+      "if": { "properties": { "result": { "const": "acknowledged" } } },
+      "then": { "properties": { "deployedResources": { "$ref": "nsp.schema.json#/definitions/DeploymentResources" } } },
+      "unevaluatedProperties": false
+    },
+    "RuntimeBinding": {
+      "title": "RuntimeBinding", "x-contract-id": "D14", "type": "object",
+      "allOf": [{ "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "runtime-binding" },
+        "bindingId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "componentId": { "type": "string", "const": "CMP-CLAIMS-STORE" },
+        "bindingState": { "$ref": "../1.0.0/risk.schema.json#/definitions/RuntimeBinding/properties/bindingState" },
+        "resources": { "$ref": "nsp.schema.json#/definitions/UnresolvedBindingResources" },
+        "operationReceipt": { "anyOf": [{ "$ref": "#/definitions/OperationReference" }, { "type": "null" }] },
+        "generationManifest": { "anyOf": [{ "$ref": "#/definitions/GenerationReference" }, { "type": "null" }] },
+        "applicationReceipt": { "anyOf": [{ "$ref": "#/definitions/ApplicationReference" }, { "type": "null" }] },
+        "desiredStateChecksum": { "anyOf": [{ "$ref": "../1.0.0/core.schema.json#/definitions/Checksum" }, { "type": "null" }] },
+        "boundAt": { "$ref": "envelope.schema.json#/definitions/NullableTimestamp" },
+        "gaps": { "type": "array", "items": { "$ref": "../1.0.0/core.schema.json#/definitions/ActionId" } }
+      },
+      "required": ["artifactType", "bindingId", "componentId", "bindingState", "resources", "operationReceipt", "generationManifest", "applicationReceipt", "desiredStateChecksum", "boundAt", "gaps"],
+      "if": { "properties": { "bindingState": { "const": "bound" } } },
+      "then": {
+        "properties": {
+          "resources": { "$ref": "nsp.schema.json#/definitions/BindingResources" },
+          "operationReceipt": { "$ref": "#/definitions/OperationReference" },
+          "generationManifest": { "$ref": "#/definitions/GenerationReference" },
+          "applicationReceipt": { "$ref": "#/definitions/ApplicationReference" },
+          "desiredStateChecksum": { "$ref": "../1.0.0/core.schema.json#/definitions/Checksum" },
+          "boundAt": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" }
+        }
+      },
+      "unevaluatedProperties": false
+    },
+    "RuntimeSnapshot": {
+      "title": "RuntimeSnapshot", "x-contract-id": "D15", "type": "object",
+      "allOf": [{ "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "runtime-snapshot" },
+        "snapshotId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "binding": { "$ref": "#/definitions/NullableBindingReference" },
+        "collectedAt": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" },
+        "evidenceWindow": { "$ref": "../1.0.0/risk.schema.json#/definitions/EvidenceWindow" },
+        "completeness": { "type": "string", "enum": ["complete", "partial", "missing", "failed", "stale"] },
+        "observation": { "$ref": "nsp.schema.json#/definitions/NspObservationSet" },
+        "evidence": { "$ref": "envelope.schema.json#/definitions/EvidenceLinks" },
+        "missingEvidenceKinds": { "type": "array", "uniqueItems": true, "items": { "$ref": "scenario.schema.json#/definitions/EvidenceKind" } },
+        "collectionErrors": { "type": "array", "items": { "$ref": "../1.0.0/core.schema.json#/definitions/ActionId" } }
+      },
+      "required": ["artifactType", "snapshotId", "binding", "collectedAt", "evidenceWindow", "completeness", "observation", "evidence", "missingEvidenceKinds", "collectionErrors"],
+      "unevaluatedProperties": false
+    },
+    "DriftFinding": {
+      "title": "DriftFinding", "x-contract-id": "D16", "type": "object",
+      "allOf": [{ "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" }],
+      "properties": {
+        "artifactType": { "type": "string", "const": "drift-finding" },
+        "findingId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "promiseId": { "$ref": "scenario.schema.json#/definitions/PromiseId" },
+        "ruleId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "componentId": { "type": "string", "const": "CMP-CLAIMS-STORE" },
+        "resourceId": { "$ref": "nsp.schema.json#/definitions/StorageId" },
+        "severity": { "$ref": "../1.0.0/risk.schema.json#/definitions/DriftFinding/properties/severity" },
+        "status": { "$ref": "../1.0.0/risk.schema.json#/definitions/DriftFinding/properties/status" },
+        "reasonCode": { "$ref": "../1.0.0/core.schema.json#/definitions/ActionId" },
+        "customerImpact": { "$ref": "../1.0.0/risk.schema.json#/definitions/DriftFinding/properties/customerImpact" },
+        "baseline": { "$ref": "#/definitions/NullableBindingReference" },
+        "runtimeSnapshot": { "$ref": "#/definitions/NullableSnapshotReference" },
+        "evaluation": { "$ref": "#/definitions/NullableEvaluationReference" },
+        "proposedCorrection": { "$ref": "envelope.schema.json#/definitions/NullableReference" },
+        "restorationOperation": { "anyOf": [{ "$ref": "#/definitions/OperationReference" }, { "type": "null" }] },
+        "evidence": { "$ref": "envelope.schema.json#/definitions/EvidenceLinks" },
+        "firstObservedAt": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" },
+        "lastObservedAt": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" },
+        "correlationId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" }
+      },
+      "required": ["artifactType", "findingId", "promiseId", "ruleId", "componentId", "resourceId", "severity", "status", "reasonCode", "customerImpact", "baseline", "runtimeSnapshot", "evaluation", "proposedCorrection", "restorationOperation", "evidence", "firstObservedAt", "lastObservedAt", "correlationId"],
+      "unevaluatedProperties": false
+    },
+    "PredicateResult": {
+      "type": "object",
+      "properties": {
+        "predicateId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "result": { "type": "string", "enum": ["pass", "fail", "unknown"] },
+        "reasonCode": { "$ref": "../1.0.0/core.schema.json#/definitions/ActionId" },
+        "evidence": { "$ref": "envelope.schema.json#/definitions/EvidenceLinks" }
+      },
+      "required": ["predicateId", "result", "reasonCode", "evidence"],
+      "additionalProperties": false
+    },
+    "BoundaryEvidence": {
+      "type": "object",
+      "description": "A hash-bound projection of an observed snapshot, required for a reported verified CP-01. The source resolver must confirm equality with the actual loaded snapshot and binding.",
+      "properties": {
+        "binding": { "$ref": "#/definitions/BindingReference" },
+        "snapshot": { "$ref": "#/definitions/SnapshotReference" },
+        "observation": { "$ref": "nsp.schema.json#/definitions/VerifiedBoundaryObservation" }
+      },
+      "required": ["binding", "snapshot", "observation"],
+      "additionalProperties": false
+    },
+    "PromiseEvaluation": {
+      "title": "PromiseEvaluation", "x-contract-id": "D17", "type": "object",
+      "allOf": [
+        { "$ref": "envelope.schema.json#/definitions/ScenarioEnvelope" },
+        { "if": { "properties": { "phase": { "const": "runtime" } } }, "then": { "properties": { "status": { "$ref": "../1.0.0/risk.schema.json#/definitions/RuntimeStatus" }, "assuranceScope": { "const": "observed-management-plane-configuration-only" } } } },
+        { "if": { "properties": { "phase": { "const": "design" } } }, "then": { "properties": { "status": { "enum": ["design-supported", "contradicted", "unknown", "stale", "not-applicable"] }, "assuranceScope": { "const": "design-support" } } } },
+        { "if": { "properties": { "phase": { "const": "delivery" } } }, "then": { "properties": { "status": { "enum": ["implementation-validated", "contradicted", "unknown", "stale", "not-applicable"] }, "assuranceScope": { "const": "implementation-validation" } } } },
+        { "if": { "properties": { "status": { "const": "not-applicable" } } }, "then": { "properties": { "notApplicableDecision": { "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" } } } }
+      ],
+      "properties": {
+        "artifactType": { "type": "string", "const": "promise-evaluation" },
+        "evaluationId": { "$ref": "../1.0.0/core.schema.json#/definitions/Identifier" },
+        "promiseId": { "$ref": "scenario.schema.json#/definitions/PromiseId" },
+        "phase": { "type": "string", "enum": ["design", "delivery", "runtime"] },
+        "status": { "$ref": "../1.0.0/risk.schema.json#/definitions/EvaluationStatus" },
+        "reasonCode": { "$ref": "../1.0.0/core.schema.json#/definitions/ActionId" },
+        "evaluatedAt": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" },
+        "evidenceWindow": { "$ref": "../1.0.0/risk.schema.json#/definitions/EvidenceWindow" },
+        "promiseContract": { "$ref": "#/definitions/PromiseContractReference" },
+        "binding": { "$ref": "#/definitions/NullableBindingReference" },
+        "runtimeSnapshot": { "$ref": "#/definitions/NullableSnapshotReference" },
+        "verifier": { "$ref": "../1.0.0/risk.schema.json#/definitions/PromiseEvaluation/properties/verifier" },
+        "predicateResults": { "type": "array", "items": { "$ref": "#/definitions/PredicateResult" } },
+        "evidence": { "$ref": "envelope.schema.json#/definitions/EvidenceLinks" },
+        "findingId": { "$ref": "envelope.schema.json#/definitions/NullableId" },
+        "notApplicableDecision": { "anyOf": [{ "$ref": "../1.0.0/core.schema.json#/definitions/ArtifactReference" }, { "type": "null" }] },
+        "boundaryEvidence": { "anyOf": [{ "$ref": "#/definitions/BoundaryEvidence" }, { "type": "null" }] },
+        "assuranceScope": { "type": "string", "enum": ["observed-management-plane-configuration-only", "design-support", "implementation-validation"] }
+      },
+      "required": ["artifactType", "evaluationId", "promiseId", "phase", "status", "reasonCode", "evaluatedAt", "evidenceWindow", "promiseContract", "binding", "runtimeSnapshot", "verifier", "predicateResults", "evidence", "findingId", "notApplicableDecision", "boundaryEvidence", "assuranceScope"],
+      "if": { "properties": { "promiseId": { "const": "CP-01" }, "status": { "const": "verified" } } },
+      "then": {
+        "properties": {
+          "binding": { "$ref": "#/definitions/BindingReference" },
+          "runtimeSnapshot": { "$ref": "#/definitions/SnapshotReference" },
+          "boundaryEvidence": { "$ref": "#/definitions/BoundaryEvidence" }
+        }
+      },
+      "unevaluatedProperties": false
+    }
+  }
+}

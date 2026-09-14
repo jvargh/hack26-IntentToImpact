@@ -1,0 +1,31 @@
+{
+  "contractId": "U02",
+  "schemaVersion": "1.0.0",
+  "designRevision": "2.0.0",
+  "artifactId": "UX-02-01-TOKENS-CURRENT-V2",
+  "taskId": "UX-02-01",
+  "scenarioId": "DEMO-CASE-CLAIMS-V2",
+  "scenarioVersion": "2.0.0",
+  "currentHandoffRef": "design\\components\\CURRENT.v2.json",
+  "evidenceOrigin": "ux-mock",
+  "intendedConsumers": ["mock", "production"],
+  "wordingAlignment": "current-v2-complete",
+  "humanVisualApproval": "pending",
+  "checkpointId": "UX-Checkpoint-01",
+  "projectionBinding": {"status": "pending", "decisionRef": "UXD-002"},
+  "valueSource": {
+    "path": "design\\tokens\\tokens.v1.json",
+    "sha256": "8ca3d5ad89d28c0635fae2cfb650eaf956c0125b230081a67dd708b8d35e916a",
+    "tokenVersion": "1.0.0",
+    "consumeSections": ["tokens", "contrastPairs", "focus", "responsive", "reducedMotion", "statusPresentations"],
+    "scope": "Immutable shared token values and neutral status vocabulary only. Historical scenarioId/scenarioAlignment/scopeNote on the source bundle are not the current handoff; CURRENT.v2.json governs V2 design readiness."
+  },
+  "css": {
+    "path": "design\\tokens\\tokens.v1.css",
+    "sha256": "98d71a754ef5d3b769b9994ff5f6aaeb9b0adbb73d76107b8f6191b1a1f0c752",
+    "namespace": "--iti-",
+    "usage": "Both future transports import this exact unchanged CSS once through shared components; no fork or aesthetic redesign."
+  },
+  "claimLabelPolicy": {"topicLabel": "Protected Claims", "controlTopicLabel": "HTTPS", "valueSource": "supplied-projection", "labelIsVerification": false},
+  "runtimeProofClaimed": false
+}

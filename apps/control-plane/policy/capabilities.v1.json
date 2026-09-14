@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "capabilities": {
+    "read-case": {"profile": "read", "activityClass": "product-workflow"},
+    "inspect-local-change": {"profile": "read", "activityClass": "product-workflow"},
+    "inspect-evidence": {"profile": "read", "activityClass": "product-workflow"},
+    "validate-contracts": {"profile": "read", "activityClass": "demo-operator"},
+    "propose-architecture": {"profile": "propose", "activityClass": "product-workflow"},
+    "propose-remediation": {"profile": "propose", "activityClass": "product-workflow"},
+    "request-generation": {"profile": "propose", "activityClass": "product-workflow"},
+    "request-observation": {"profile": "propose", "activityClass": "product-workflow"},
+    "request-reasoning": {"profile": "propose", "activityClass": "product-workflow"},
+    "create-case": {"profile": "human", "activityClass": "product-workflow"},
+    "acknowledge-run-context": {"profile": "human", "activityClass": "product-workflow"},
+    "confirm-requirements": {"profile": "human", "activityClass": "product-workflow"},
+    "approve-design": {"profile": "human", "activityClass": "product-workflow"},
+    "reject-design": {"profile": "human", "activityClass": "product-workflow"},
+    "approve-local-delivery": {"profile": "human", "activityClass": "product-workflow"},
+    "apply-local-change": {"profile": "materialize", "activityClass": "product-workflow"},
+    "invoke-foundry-model": {"profile": "provider", "activityClass": "product-workflow"},
+    "observe-azure": {"profile": "provider", "activityClass": "product-workflow"},
+    "collect-live-proof": {"profile": "proof", "activityClass": "demo-operator"},
+    "deploy-approved-sandbox": {"profile": "operator", "activityClass": "demo-operator"},
+    "seed-approved-drift": {"profile": "operator", "activityClass": "demo-operator"},
+    "reset-demo": {"profile": "operator", "activityClass": "demo-operator"},
+    "verify-sandbox": {"profile": "operator", "activityClass": "demo-operator"}
+  }
+}

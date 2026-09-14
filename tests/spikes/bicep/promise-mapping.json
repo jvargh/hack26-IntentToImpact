@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "spike-only-template-resource-mapping",
+  "canonicalProductState": false,
+  "scenarioId": "DEMO-CASE-CLAIMS-V1",
+  "evidenceOrigin": "fixture",
+  "source": "main.bicep",
+  "externalModules": [],
+  "resources": [
+    {
+      "sourceSymbol": "claimsStore",
+      "compiledResourcePointer": "/resources/0",
+      "resourceType": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2023-05-01",
+      "componentId": "CMP-CLAIMS-STORE",
+      "componentTag": "architecture-component-id",
+      "promiseIds": ["CP-01"],
+      "coverage": "partial-desired-state-example-only",
+      "assertedProperties": {
+        "publicNetworkAccess": "Disabled",
+        "allowBlobPublicAccess": false,
+        "supportsHttpsTrafficOnly": true,
+        "minimumTlsVersion": "TLS1_2",
+        "networkAcls": {
+          "defaultAction": "Deny",
+          "bypass": "None"
+        }
+      }
+    }
+  ],
+  "limits": [
+    "The component tag and promise association are synthetic fixture assumptions, not generated canonical contracts.",
+    "Secure transfer is an extra sample control; this does not redefine CP-03 or verify any promise.",
+    "No Private Endpoint, DNS, approved network path, authentication, authorization, runtime observation or deployment proof."
+  ]
+}

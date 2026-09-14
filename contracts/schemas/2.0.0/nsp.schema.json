@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://intent-to-impact.invalid/contracts/2.0.0/nsp.schema.json",
+  "title": "NspObservationTypes",
+  "oneOf": [{ "$ref": "#/definitions/NspObservationSet" }],
+  "definitions": {
+    "StorageId": { "$ref": "../1.0.0/risk.schema.json#/definitions/StorageResourceId" },
+    "PerimeterId": { "type": "string", "pattern": "^/subscriptions/[0-9a-fA-F-]{36}/resourceGroups/[^/]+/providers/Microsoft\\.Network/networkSecurityPerimeters/[^/]+$" },
+    "ProfileId": { "type": "string", "pattern": "^/subscriptions/[0-9a-fA-F-]{36}/resourceGroups/[^/]+/providers/Microsoft\\.Network/networkSecurityPerimeters/[^/]+/profiles/[^/]+$" },
+    "AssociationId": { "type": "string", "pattern": "^/subscriptions/[0-9a-fA-F-]{36}/resourceGroups/[^/]+/providers/Microsoft\\.Network/networkSecurityPerimeters/[^/]+/resourceAssociations/[^/]+$" },
+    "ConfigurationId": { "type": "string", "pattern": "^/subscriptions/[0-9a-fA-F-]{36}/resourceGroups/[^/]+/providers/Microsoft\\.Storage/storageAccounts/[a-z0-9]{3,24}/networkSecurityPerimeterConfigurations/[^/]+$" },
+    "NullableStorageId": { "anyOf": [{ "$ref": "#/definitions/StorageId" }, { "type": "null" }] },
+    "NullablePerimeterId": { "anyOf": [{ "$ref": "#/definitions/PerimeterId" }, { "type": "null" }] },
+    "NullableProfileId": { "anyOf": [{ "$ref": "#/definitions/ProfileId" }, { "type": "null" }] },
+    "CounterVersion": { "type": ["string", "null"], "pattern": "^(0|[1-9][0-9]*)$" },
+    "AccessMode": { "type": ["string", "null"], "enum": ["Enforced", "Learning", "Transition", "Audit", null] },
+    "ObservationState": { "type": "string", "enum": ["complete", "partial", "missing", "failed", "stale"] },
+    "ObservationMetadata": {
+      "type": "object",
+      "properties": {
+        "observationState": { "$ref": "#/definitions/ObservationState" },
+        "observedAt": { "$ref": "envelope.schema.json#/definitions/NullableTimestamp" },
+        "evidence": { "$ref": "envelope.schema.json#/definitions/EvidenceLinks" }
+      },
+      "required": ["observationState", "observedAt", "evidence"],
+      "allOf": [
+        {
+          "if": { "properties": { "observationState": { "const": "missing" } } },
+          "then": { "properties": { "value": { "type": "null" }, "observedAt": { "type": "null" } } }
+        }
+      ],
+      "if": { "properties": { "observationState": { "const": "complete" } } },
+      "then": {
+        "properties": {
+          "observedAt": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" },
+          "evidence": { "minItems": 1 }
+        }
+      }
+    },
+    "StorageValue": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/definitions/StorageId" },
+        "publicNetworkAccess": { "type": ["string", "null"], "enum": ["Enabled", "Disabled", "SecuredByPerimeter", null] },
+        "supportsHttpsTrafficOnly": { "type": ["boolean", "null"] },
+        "allowBlobPublicAccess": { "type": ["boolean", "null"] },
+        "allowSharedKeyAccess": { "type": ["boolean", "null"] },
+        "minimumTlsVersion": { "$ref": "envelope.schema.json#/definitions/NullableString" },
+        "kind": { "$ref": "envelope.schema.json#/definitions/NullableString" },
+        "skuName": { "$ref": "envelope.schema.json#/definitions/NullableString" },
+        "accessTier": { "$ref": "envelope.schema.json#/definitions/NullableString" },
+        "isHnsEnabled": { "type": ["boolean", "null"] },
+        "networkDefaultAction": { "$ref": "envelope.schema.json#/definitions/NullableString" },
+        "networkBypass": { "$ref": "envelope.schema.json#/definitions/NullableString" }
+      },
+      "required": ["id", "publicNetworkAccess", "supportsHttpsTrafficOnly", "allowBlobPublicAccess", "allowSharedKeyAccess", "minimumTlsVersion", "kind", "skuName", "accessTier", "isHnsEnabled", "networkDefaultAction", "networkBypass"],
+      "additionalProperties": false
+    },
+    "PerimeterValue": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/definitions/PerimeterId" },
+        "perimeterGuid": { "type": ["string", "null"], "format": "uuid" },
+        "provisioningState": { "$ref": "envelope.schema.json#/definitions/NullableString" }
+      },
+      "required": ["id", "perimeterGuid", "provisioningState"],
+      "additionalProperties": false
+    },
+    "ProfileValue": {
+      "type": "object",
+      "description": "Network profile GET exposes accessRulesVersion, not an assumed provisioningState.",
+      "properties": {
+        "id": { "$ref": "#/definitions/ProfileId" },
+        "name": { "$ref": "envelope.schema.json#/definitions/NullableString" },
+        "accessRulesVersion": { "$ref": "#/definitions/CounterVersion" }
+      },
+      "required": ["id", "name", "accessRulesVersion"],
+      "additionalProperties": false
+    },
+    "AssociationValue": {
+      "type": "object",
+      "properties": {
+        "id": { "$ref": "#/definitions/AssociationId" },
+        "name": { "$ref": "envelope.schema.json#/definitions/NullableString" },
+        "privateLinkResourceId": { "$ref": "#/definitions/NullableStorageId" },
+        "profileId": { "$ref": "#/definitions/NullableProfileId" },
+        "accessMode": { "$ref": "#/definitions/AccessMode" }
+      },
+      "required": ["id", "name", "privateLinkResourceId", "profileId", "accessMode"],
+      "additionalProperties": false
+    },
+    "ProvisioningIssue": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "issueType": { "$ref": "envelope.schema.json#/definitions/NullableString" },
+        "severity": { "$ref": "envelope.schema.json#/definitions/NullableString" }
+      },
+      "required": ["name", "issueType", "severity"],
+      "additionalProperties": false
+    },
+    "ConfigurationValue": {
+      "type": "object",
+      "description": "Storage-reported effective NSP configuration; fields are mapped from its perimeter, resourceAssociation and profile properties.",
+      "properties": {
+        "id": { "$ref": "#/definitions/ConfigurationId" },
+        "perimeterId": { "$ref": "#/definitions/NullablePerimeterId" },
+        "perimeterGuid": { "type": ["string", "null"], "format": "uuid" },
+        "associationName": { "$ref": "envelope.schema.json#/definitions/NullableString" },
+        "accessMode": { "$ref": "#/definitions/AccessMode" },
+        "profileName": { "$ref": "envelope.schema.json#/definitions/NullableString" },
+        "accessRulesVersion": { "$ref": "#/definitions/CounterVersion" },
+        "provisioningState": { "$ref": "envelope.schema.json#/definitions/NullableString" },
+        "provisioningIssues": { "type": ["array", "null"], "items": { "$ref": "#/definitions/ProvisioningIssue" } }
+      },
+      "required": ["id", "perimeterId", "perimeterGuid", "associationName", "accessMode", "profileName", "accessRulesVersion", "provisioningState", "provisioningIssues"],
+      "additionalProperties": false
+    },
+    "StorageObservation": {
+      "type": "object", "allOf": [{ "$ref": "#/definitions/ObservationMetadata" }],
+      "properties": { "value": { "anyOf": [{ "$ref": "#/definitions/StorageValue" }, { "type": "null" }] } },
+      "required": ["value"], "unevaluatedProperties": false,
+      "if": { "properties": { "observationState": { "const": "complete" } } },
+      "then": { "properties": { "value": { "$ref": "#/definitions/StorageValue" } } }
+    },
+    "PerimeterObservation": {
+      "type": "object", "allOf": [{ "$ref": "#/definitions/ObservationMetadata" }],
+      "properties": { "value": { "anyOf": [{ "$ref": "#/definitions/PerimeterValue" }, { "type": "null" }] } },
+      "required": ["value"], "unevaluatedProperties": false,
+      "if": { "properties": { "observationState": { "const": "complete" } } },
+      "then": { "properties": { "value": { "$ref": "#/definitions/PerimeterValue" } } }
+    },
+    "ProfileObservation": {
+      "type": "object", "allOf": [{ "$ref": "#/definitions/ObservationMetadata" }],
+      "properties": { "value": { "anyOf": [{ "$ref": "#/definitions/ProfileValue" }, { "type": "null" }] } },
+      "required": ["value"], "unevaluatedProperties": false,
+      "if": { "properties": { "observationState": { "const": "complete" } } },
+      "then": { "properties": { "value": { "$ref": "#/definitions/ProfileValue" } } }
+    },
+    "AssociationObservation": {
+      "type": "object", "allOf": [{ "$ref": "#/definitions/ObservationMetadata" }],
+      "properties": { "value": { "anyOf": [{ "$ref": "#/definitions/AssociationValue" }, { "type": "null" }] } },
+      "required": ["value"], "unevaluatedProperties": false,
+      "if": { "properties": { "observationState": { "const": "complete" } } },
+      "then": { "properties": { "value": { "$ref": "#/definitions/AssociationValue" } } }
+    },
+    "ConfigurationObservation": {
+      "type": "object", "allOf": [{ "$ref": "#/definitions/ObservationMetadata" }],
+      "properties": { "value": { "anyOf": [{ "$ref": "#/definitions/ConfigurationValue" }, { "type": "null" }] } },
+      "required": ["value"], "unevaluatedProperties": false,
+      "if": { "properties": { "observationState": { "const": "complete" } } },
+      "then": { "properties": { "value": { "$ref": "#/definitions/ConfigurationValue" } } }
+    },
+    "AccessRule": {
+      "type": "object",
+      "description": "Every returned external rule is retained, including an unknown direction. Details are in the hash-bound source, not inferred allowances.",
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "direction": { "type": ["string", "null"], "enum": ["Inbound", "Outbound", null] }
+      },
+      "required": ["name", "direction"],
+      "additionalProperties": false
+    },
+    "RuleCollection": {
+      "type": "object",
+      "properties": {
+        "collectionState": { "$ref": "#/definitions/ObservationState" },
+        "sourceResourceId": {
+          "anyOf": [{ "$ref": "#/definitions/ProfileId" }, { "$ref": "#/definitions/ConfigurationId" }, { "type": "null" }]
+        },
+        "accessRulesVersion": { "$ref": "#/definitions/CounterVersion" },
+        "observedAt": { "$ref": "envelope.schema.json#/definitions/NullableTimestamp" },
+        "items": { "type": ["array", "null"], "items": { "$ref": "#/definitions/AccessRule" } },
+        "nextLink": { "type": ["string", "null"], "format": "uri" },
+        "evidence": { "$ref": "envelope.schema.json#/definitions/EvidenceLinks" }
+      },
+      "required": ["collectionState", "sourceResourceId", "accessRulesVersion", "observedAt", "items", "nextLink", "evidence"],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": { "properties": { "collectionState": { "const": "complete" } } },
+          "then": {
+            "properties": {
+              "items": { "type": "array" }, "nextLink": { "type": "null" },
+              "sourceResourceId": { "type": "string" }, "accessRulesVersion": { "type": "string" },
+              "observedAt": { "$ref": "../1.0.0/core.schema.json#/definitions/Timestamp" },
+              "evidence": { "minItems": 1 }
+            }
+          }
+        },
+        {
+          "if": { "properties": { "collectionState": { "const": "missing" } } },
+          "then": { "properties": { "items": { "type": "null" } } }
+        }
+      ]
+    },
+    "NspObservationSet": {
+      "type": "object",
+      "properties": {
+        "storage": { "$ref": "#/definitions/StorageObservation" },
+        "perimeter": { "$ref": "#/definitions/PerimeterObservation" },
+        "profile": { "$ref": "#/definitions/ProfileObservation" },
+        "association": { "$ref": "#/definitions/AssociationObservation" },
+        "configuration": { "$ref": "#/definitions/ConfigurationObservation" },
+        "profileAccessRules": { "$ref": "#/definitions/RuleCollection" },
+        "effectiveAccessRules": { "$ref": "#/definitions/RuleCollection" }
+      },
+      "required": ["storage", "perimeter", "profile", "association", "configuration", "profileAccessRules", "effectiveAccessRules"],
+      "additionalProperties": false
+    },
+    "BindingResources": {
+      "type": "object",
+      "properties": {
+        "storageId": { "$ref": "#/definitions/StorageId" },
+        "perimeterId": { "$ref": "#/definitions/PerimeterId" },
+        "profileId": { "$ref": "#/definitions/ProfileId" },
+        "associationId": { "$ref": "#/definitions/AssociationId" },
+        "configurationId": { "$ref": "#/definitions/ConfigurationId" },
+        "perimeterGuid": { "type": "string", "format": "uuid" }
+      },
+      "required": ["storageId", "perimeterId", "profileId", "associationId", "configurationId", "perimeterGuid"],
+      "additionalProperties": false
+    },
+    "UnresolvedBindingResources": {
+      "type": "object",
+      "properties": {
+        "storageId": { "$ref": "#/definitions/NullableStorageId" },
+        "perimeterId": { "$ref": "#/definitions/NullablePerimeterId" },
+        "profileId": { "$ref": "#/definitions/NullableProfileId" },
+        "associationId": { "anyOf": [{ "$ref": "#/definitions/AssociationId" }, { "type": "null" }] },
+        "configurationId": { "anyOf": [{ "$ref": "#/definitions/ConfigurationId" }, { "type": "null" }] },
+        "perimeterGuid": { "type": ["string", "null"], "format": "uuid" }
+      },
+      "required": ["storageId", "perimeterId", "profileId", "associationId", "configurationId", "perimeterGuid"],
+      "additionalProperties": false
+    },
+    "DeploymentResources": {
+      "type": "object",
+      "properties": {
+        "storageId": { "$ref": "#/definitions/StorageId" },
+        "perimeterId": { "$ref": "#/definitions/PerimeterId" },
+        "profileId": { "$ref": "#/definitions/ProfileId" },
+        "associationId": { "$ref": "#/definitions/AssociationId" }
+      },
+      "required": ["storageId", "perimeterId", "profileId", "associationId"],
+      "additionalProperties": false
+    },
+    "VerifiedBoundaryObservation": {
+      "description": "Required shape of sources cited by a claimed verified boundary. Not an evaluator: arbitrary observations remain valid under NspObservationSet, and this fragment never produces a verdict.",
+      "allOf": [{ "$ref": "#/definitions/NspObservationSet" }],
+      "properties": {
+        "storage": {
+          "properties": {
+            "observationState": { "const": "complete" },
+            "value": {
+              "type": "object",
+              "properties": {
+                "publicNetworkAccess": { "const": "SecuredByPerimeter" },
+                "supportsHttpsTrafficOnly": { "const": true }, "allowBlobPublicAccess": { "const": false },
+                "allowSharedKeyAccess": { "const": false }, "minimumTlsVersion": { "const": "TLS1_2" },
+                "kind": { "const": "StorageV2" }, "skuName": { "const": "Standard_LRS" },
+                "accessTier": { "const": "Hot" }, "isHnsEnabled": { "const": false },
+                "networkDefaultAction": { "const": "Deny" }, "networkBypass": { "const": "None" }
+              }
+            }
+          }
+        },
+        "perimeter": {
+          "properties": {
+            "observationState": { "const": "complete" },
+            "value": { "type": "object", "properties": { "perimeterGuid": { "type": "string" }, "provisioningState": { "const": "Succeeded" } } }
+          }
+        },
+        "profile": {
+          "properties": {
+            "observationState": { "const": "complete" },
+            "value": { "type": "object", "properties": { "name": { "type": "string" }, "accessRulesVersion": { "type": "string" } } }
+          }
+        },
+        "association": {
+          "properties": {
+            "observationState": { "const": "complete" },
+            "value": { "type": "object", "properties": { "name": { "type": "string" }, "privateLinkResourceId": { "type": "string" }, "profileId": { "type": "string" }, "accessMode": { "const": "Enforced" } } }
+          }
+        },
+        "configuration": {
+          "properties": {
+            "observationState": { "const": "complete" },
+            "value": {
+              "type": "object",
+              "properties": {
+                "perimeterId": { "type": "string" }, "perimeterGuid": { "type": "string" },
+                "associationName": { "type": "string" }, "profileName": { "type": "string" },
+                "accessRulesVersion": { "type": "string" }, "accessMode": { "const": "Enforced" },
+                "provisioningState": { "const": "Succeeded" }, "provisioningIssues": { "type": "array", "maxItems": 0 }
+              }
+            }
+          }
+        },
+        "profileAccessRules": { "properties": { "collectionState": { "const": "complete" }, "items": { "type": "array", "maxItems": 0 } } },
+        "effectiveAccessRules": { "properties": { "collectionState": { "const": "complete" }, "items": { "type": "array", "maxItems": 0 } } }
+      }
+    }
+  }
+}

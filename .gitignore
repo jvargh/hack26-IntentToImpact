@@ -1,0 +1,55 @@
+# Operator archives, local tooling and agent customizations (not published).
+/_bkp/
+/.azure/
+/.github/
+/.intent-to-impact/
+/.copilot-azure/
+/.vscode/
+/.vs/
+/.idea/
+
+# Installed dependencies and disposable build/test output.
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage/
+playwright-report/
+test-results/
+dist/
+*.tsbuildinfo
+*.log
+
+# Local configuration and credentials. Keep explicitly sanitized examples.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+*.cer
+*.crt
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfvars
+*.tfvars.json
+
+# OS/editor debris and local packages. Source templates, locks and generated
+# contract types/validators are intentionally tracked.
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*.tmp
+*.bak
+*.zip

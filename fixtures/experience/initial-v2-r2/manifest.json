@@ -1,0 +1,251 @@
+{
+  "schemaVersion": "1.0.0",
+  "contractId": "U01",
+  "taskId": "MOCK-01-01",
+  "fixtureRevision": 2,
+  "supersedes": {
+    "reason": "New immutable fixture identities after correcting shared Unicode checksum canonicalization.",
+    "root": "fixtures\\experience\\initial-v2",
+    "files": [
+      {
+        "path": "fixtures\\experience\\initial-v2\\action-map.json",
+        "sha256": "sha256:6fbac73996784d95d5e463018b1e0d6c6fb22158ba778d5b1466af415baae2f8"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\manifest.json",
+        "sha256": "sha256:4b740fb51780a124b3e2e401e628ea22765063d54b9c658d5c2d1dfa9e10193d"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\run-manifest.json",
+        "sha256": "sha256:e207eb62a9dad10f34f191caa99c36c17dcc3af1f0e6dd18d3b0a05730cd2316"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-01\\records.json",
+        "sha256": "sha256:9e267d2f5f0e0b2b0503be9e985394e4feb495850846717200e90524f7025185"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-01\\response.json",
+        "sha256": "sha256:92ddb8c5fa388d82f7afb9dbe69f61ac4d79e11c151f61c2934db665fff3d373"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-09\\records.json",
+        "sha256": "sha256:56dedc2f6f95ac9ba910ff51e7cc29a413c9e918e624bd0317e2093584a92332"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-09\\response.json",
+        "sha256": "sha256:d1e103de8b71d79ec5689f01639925cf8f37f29ddb9088a1e91874cef35884e9"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-09-stale\\records.json",
+        "sha256": "sha256:2ca6c86473371dd0a9b04b29aa553c5130090fa947fc8ffa6a3adc4ef5af2d28"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-09-stale\\response.json",
+        "sha256": "sha256:9fe7206d815323b00ee68e3c981b9ec8f73073d59de5c25e46865417f824af76"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-10\\records.json",
+        "sha256": "sha256:75e9251897488a1f3de05973b498d28d7196122dec9fd360a44693b99bf4e885"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-10\\response.json",
+        "sha256": "sha256:7b265506193258b45e53882aa44bf98e4a222bed0b7fa7531a7f563da5393e99"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-11\\records.json",
+        "sha256": "sha256:dc8ce5f669404e3ae665e3b0ec05bf0d2f6d7a197a1c4a1e83427ddb8ee04883"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-11\\response.json",
+        "sha256": "sha256:25ff87cd855867ca66b2c827eee9de1337f3cc8b53b896a37d27e92d28a7f36f"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-11-missing\\records.json",
+        "sha256": "sha256:f8bcfe089eac2f7f7cfdb82902c50704244f91b7e70c6a939f8cd95e5e16e7b9"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-11-missing\\response.json",
+        "sha256": "sha256:11dd08d1b8df96458fe56fd731c488ddc156e9809155d7d6b714c1612300d234"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-12\\records.json",
+        "sha256": "sha256:3494046606c3a272d1b49f04a3a7a50232fbeca624be93816afdc57dc3800269"
+      },
+      {
+        "path": "fixtures\\experience\\initial-v2\\scenes\\fx-12\\response.json",
+        "sha256": "sha256:cb147ac81d87537baf4059d8fdaf8b722fd359647c320570c60cad80917a4fdc"
+      }
+    ]
+  },
+  "scenario": {
+    "scenarioId": "DEMO-CASE-CLAIMS-V2",
+    "scenarioVersion": "2.0.0",
+    "scenarioHash": "sha256:a140b136272f077c82dcd1d38e8e2c13b0aa7aea192be2a80112ccc744213e9a"
+  },
+  "runMode": "fixture",
+  "purpose": "ux-mock",
+  "origin": "fixture",
+  "evidenceOrigin": "ux-mock",
+  "liveProofEligible": false,
+  "currentDesign": "design\\components\\CURRENT.v2.json",
+  "registry": "contracts\\registry\\1.0.0.json",
+  "fullFxCatalogComplete": false,
+  "inputFiles": [
+    {
+      "path": "fixtures\\scenarios\\DEMO-CASE-CLAIMS-V2.json",
+      "sha256": "sha256:5be0908b430718ceb5aaa995268abe8d61142e878199a11f7b99faae7739b121"
+    },
+    {
+      "path": "contracts\\examples\\1.0.0\\risk-examples.json",
+      "sha256": "sha256:e37f2b710174efe4e6bd43b264afbfc0424b02b765d236f47af6e6d6b700300e"
+    },
+    {
+      "path": "contracts\\schemas\\1.0.0\\core.schema.json",
+      "sha256": "sha256:2188cefbe3f156776238c029899a35502d8435081639d6deab92e6fdffa39c01"
+    },
+    {
+      "path": "contracts\\schemas\\1.0.0\\scenario.schema.json",
+      "sha256": "sha256:0cc1072d3c532baef5967321e6055740871a61c67d5dd5b60fc1d544c5964bde"
+    },
+    {
+      "path": "contracts\\schemas\\1.0.0\\risk.schema.json",
+      "sha256": "sha256:7c2305b4a298b812225d329fa1e57fadfb3705618e417a7301e475c84582913f"
+    },
+    {
+      "path": "contracts\\schemas\\1.0.0\\projections.schema.json",
+      "sha256": "sha256:82334b2f3404362708ace8e8767c32c85f47fdfa8f4b5a4330edd828ed57bb1f"
+    },
+    {
+      "path": "design\\components\\CURRENT.v2.json",
+      "sha256": "sha256:d92253d1b987ba87fda22d31fa22a2b5a52a954a02caf95c23806aaca9c4ea9b"
+    }
+  ],
+  "initialSceneId": "FX-01",
+  "humanGate": "GATE-UX01-pending",
+  "runManifest": "run-manifest.json",
+  "runManifestSha256": "sha256:8cc5e35335a31b1b2b50b3fe1cd6d7d872f725b815bad7825531471766d54b54",
+  "actionMap": "action-map.json",
+  "actionMapSha256": "sha256:6fbac73996784d95d5e463018b1e0d6c6fb22158ba778d5b1466af415baae2f8",
+  "scenes": [
+    {
+      "sceneId": "FX-01",
+      "fixtureId": "FX-01",
+      "response": "scenes\\fx-01\\response.json",
+      "responseSha256": "sha256:388cd1995a620068326ff32e1fd86d412314fa06fcbc43e26dec016b925ca693",
+      "records": "scenes\\fx-01\\records.json",
+      "recordsSha256": "sha256:002c1fe4ff785da754de9b45c9d9c7b13ed0d63a165ddd33288c99b4902592a8",
+      "primaryActionId": "view-risk-example",
+      "projectionIds": [
+        "P01",
+        "P05",
+        "P06"
+      ],
+      "recordCount": 5,
+      "origin": "fixture"
+    },
+    {
+      "sceneId": "FX-09",
+      "fixtureId": "FX-09",
+      "response": "scenes\\fx-09\\response.json",
+      "responseSha256": "sha256:06b5b12bd84a72319d38d888a3bf5b98a79ac14f416be47bd6b8d7cf42c739f0",
+      "records": "scenes\\fx-09\\records.json",
+      "recordsSha256": "sha256:09746ba92370a1d4bb14797e97819c5b480f61f14d3de088dc47b43e774766f6",
+      "primaryActionId": "review-correction-example",
+      "projectionIds": [
+        "P01",
+        "P05",
+        "P06"
+      ],
+      "recordCount": 10,
+      "origin": "fixture"
+    },
+    {
+      "sceneId": "FX-10",
+      "fixtureId": "FX-10",
+      "response": "scenes\\fx-10\\response.json",
+      "responseSha256": "sha256:3c3b797ba2632dc52f1f0bc5c06ca92962bb1072aaef2d48089352b989e64ecc",
+      "records": "scenes\\fx-10\\records.json",
+      "recordsSha256": "sha256:8dd81c9974abe968d48c5e991b740a51f0e032eaa697d44b68312336db8c2954",
+      "primaryActionId": "view-verification-pending",
+      "projectionIds": [
+        "P01",
+        "P05",
+        "P06"
+      ],
+      "recordCount": 10,
+      "origin": "fixture"
+    },
+    {
+      "sceneId": "FX-11",
+      "fixtureId": "FX-11",
+      "response": "scenes\\fx-11\\response.json",
+      "responseSha256": "sha256:c666a850c97a12e6fcd979c79c7a1c040f71fc32c6c43eafdcd7d26f0009ba4b",
+      "records": "scenes\\fx-11\\records.json",
+      "recordsSha256": "sha256:8f54e5f67c29848d596cf93334370fa7e58936b77c6122b9aa34b30633e3a761",
+      "primaryActionId": "view-restoration-example",
+      "projectionIds": [
+        "P01",
+        "P05",
+        "P06"
+      ],
+      "recordCount": 10,
+      "origin": "fixture"
+    },
+    {
+      "sceneId": "FX-12",
+      "fixtureId": "FX-12",
+      "response": "scenes\\fx-12\\response.json",
+      "responseSha256": "sha256:04b4059ed5eea491dbad81814b206b9fb1b0d0226923ab7b910487713e52f971",
+      "records": "scenes\\fx-12\\records.json",
+      "recordsSha256": "sha256:a88b7256b0a1d2564832bac13241dd961ae511184a5b59699f309b8bd9c21d55",
+      "primaryActionId": "inspect-fixture-evidence",
+      "projectionIds": [
+        "P01",
+        "P05",
+        "P06"
+      ],
+      "recordCount": 9,
+      "origin": "fixture"
+    },
+    {
+      "sceneId": "FX-11:missing-evidence",
+      "fixtureId": "FX-11",
+      "response": "scenes\\fx-11-missing\\response.json",
+      "responseSha256": "sha256:2bec7f5c841ee95667d228a0f6c64497848d758656db77fc89280373d5ca9fbd",
+      "records": "scenes\\fx-11-missing\\records.json",
+      "recordsSha256": "sha256:8e36f1ee46f687b7732cdbf4920a88f6ab3618e8d248f69daf8cbbc104ecb5ec",
+      "primaryActionId": "view-verification-pending",
+      "projectionIds": [
+        "P01",
+        "P05",
+        "P06"
+      ],
+      "recordCount": 5,
+      "origin": "fixture"
+    },
+    {
+      "sceneId": "FX-09:stale-evidence",
+      "fixtureId": "FX-09",
+      "response": "scenes\\fx-09-stale\\response.json",
+      "responseSha256": "sha256:ff4e4fb9789813e6c6b56ce4eccdb30f6d0289e2da6d45c441d2c324a47695df",
+      "records": "scenes\\fx-09-stale\\records.json",
+      "recordsSha256": "sha256:12db30f438f194979d03a7d3d6fe24f42146dcbec7f02883cc21e0452c39e003",
+      "primaryActionId": "view-current-risk-example",
+      "projectionIds": [
+        "P01",
+        "P05",
+        "P06"
+      ],
+      "recordCount": 10,
+      "origin": "fixture"
+    }
+  ],
+  "limitations": [
+    "Historical V2 scenario under LOCAL-09, not current NSP/V3 proof. Original initial-v2 bytes are retained but are not valid under the corrected Unicode checksum convention.",
+    "Initial P01/P05/P06 only; no complete P02/P03/P04/P07/P08/P09 or full FX-00..19 catalog.",
+    "FX-10/11 show only prepared/pending risk-summary aspects. Distinct material/delivery/applying examples and local byte receipts await FND-01-04 and MOCK-01-02.",
+    "D10/D11/D12 are explicitly opaque fixture references accepted only by the integrity helper's external-reference seam; never loaded graph proof.",
+    "All acknowledgement/confirmation/evaluation IDs are synthetic, including FX-12 verified. No operation or human approval is authorized or proved.",
+    "Unknown counts stay null. CP-05 remains unconfirmed; unsupported promises remain unknown. No client calculations or fallback to live transport."
+  ]
+}

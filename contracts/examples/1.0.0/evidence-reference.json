@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "1.0.0",
+  "artifactType": "evidence-reference",
+  "artifactId": "EVIDENCE-CONTRACT-EXAMPLE",
+  "runId": "RUN-CONTRACT-EXAMPLE",
+  "caseId": "CASE-CONTRACT-EXAMPLE",
+  "scope": {
+    "scopeId": "SCOPE-EXAMPLE",
+    "subscriptionId": null,
+    "resourceGroup": null,
+    "resourceIds": []
+  },
+  "caseRevisionAtWrite": 0,
+  "createdAt": "2026-09-12T17:00:00Z",
+  "updatedAt": "2026-09-12T17:00:00Z",
+  "stateChecksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "derivedFrom": {},
+  "origin": "fixture",
+  "evidenceState": "fresh",
+  "collector": { "collectorId": "COLLECTOR-FIXTURE", "version": "1.0.0" },
+  "observedAt": "2026-09-12T17:00:00Z",
+  "retrievedAt": "2026-09-12T17:00:00Z",
+  "validUntil": null,
+  "eligibility": "ineligible",
+  "sourceChecksum": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "completeness": "complete",
+  "supportedAssertionIds": ["ASSERT-CONTRACT-SHAPE"]
+}

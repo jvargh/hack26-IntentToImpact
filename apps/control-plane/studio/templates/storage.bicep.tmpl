@@ -1,0 +1,29 @@
+resource @@SYMBOL@@ 'Microsoft.Storage/storageAccounts@2023-05-01' = {
+  name: @@NAME@@
+  location: location
+  kind: 'StorageV2'
+  sku: { name: 'Standard_LRS' }
+  properties: {
+    accessTier: 'Hot'
+    minimumTlsVersion: 'TLS1_2'
+    supportsHttpsTrafficOnly: true
+    allowSharedKeyAccess: false
+    allowBlobPublicAccess: false
+    allowCrossTenantReplication: false
+    defaultToOAuthAuthentication: true
+    publicNetworkAccess: 'Enabled'
+    networkAcls: { bypass: 'None', defaultAction: 'Allow' }
+  }
+}
+resource @@SYMBOL@@_blob 'Microsoft.Storage/storageAccounts/blobServices@2023-05-01' = {
+  parent: @@SYMBOL@@
+  name: 'default'
+  properties: {
+    deleteRetentionPolicy: { enabled: true, days: 7 }
+  }
+}
+resource @@SYMBOL@@_data 'Microsoft.Storage/storageAccounts/blobServices/containers@2023-05-01' = {
+  parent: @@SYMBOL@@_blob
+  name: 'data'
+  properties: { publicAccess: 'None' }
+}

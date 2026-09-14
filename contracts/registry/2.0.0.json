@@ -1,0 +1,34 @@
+{
+  "registryVersion": "1.0.0",
+  "schemaVersion": "2.0.0",
+  "historicalArtifactLock": "registry/2.0.0.history.json",
+  "scenarioProfile": {
+    "scenarioId": "DEMO-CASE-CLAIMS-V3",
+    "scenarioVersion": "3.0.0",
+    "scenarioHash": "sha256:363494e94d3d436fa76a574c0eb91824be1a74f0b52c6928a452c744cee6be29",
+    "path": "fixtures/scenarios/DEMO-CASE-CLAIMS-V3.json"
+  },
+  "compatibleSourceContracts": {
+    "D22": "1.0.0",
+    "E01": "1.0.0",
+    "E04": "1.0.0",
+    "E05": "1.0.0"
+  },
+  "bundles": [
+    { "name": "envelope", "schema": "schemas/2.0.0/envelope.schema.json", "python": "python/envelope.py", "typescript": "typescript/envelope.d.ts", "contracts": {} },
+    { "name": "scenario", "schema": "schemas/2.0.0/scenario.schema.json", "python": "python/scenario.py", "typescript": "typescript/scenario.d.ts", "contracts": { "SCENARIO-V3": "ClaimsScenarioV3" } },
+    { "name": "nsp", "schema": "schemas/2.0.0/nsp.schema.json", "python": "python/nsp.py", "typescript": "typescript/nsp.d.ts", "contracts": {} },
+    {
+      "name": "risk", "schema": "schemas/2.0.0/risk.schema.json", "python": "python/risk.py", "typescript": "typescript/risk.d.ts",
+      "contracts": { "D03": "CustomerPromiseContract", "D13": "SandboxOperationReceipt", "D14": "RuntimeBinding", "D15": "RuntimeSnapshot", "D16": "DriftFinding", "D17": "PromiseEvaluation" }
+    },
+    {
+      "name": "projections", "schema": "schemas/2.0.0/projections.schema.json", "python": "python/projections.py", "typescript": "typescript/projections.d.ts",
+      "contracts": { "P01": "ExperienceOverview", "P05": "OperationsRisk", "P06": "IntentContinuityGraph" }
+    },
+    {
+      "name": "design", "schema": "schemas/2.0.0/design.schema.json", "python": "python/design.py", "typescript": "typescript/design.d.ts",
+      "contracts": { "D02": "Requirements", "D04": "ArchitectureProposal", "D05": "ArchitectureModel", "D06": "ArchitectureDecisionRecord", "D07": "Approval", "D08": "ReviewGateEvaluation", "D09": "GenerationContract" }
+    }
+  ]
+}

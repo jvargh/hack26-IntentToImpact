@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "purpose": "LOCAL-09-technical-observation-seam-not-canonical-V3",
+  "decisionId": "LOCAL-09",
+  "canonicalScenarioId": null,
+  "canonicalScenarioHash": null,
+  "publicationOwner": "A-contracts",
+  "currentBaselineStatus": "not-observed",
+  "requiredFutureEvidence": [
+    "Fresh successful actual deployment operation and approved immutable candidate/parameter/LOCAL-09 hashes.",
+    "Exact actual RG/storage/NSP/profile/association IDs and empty owned account inventory.",
+    "Storage ARM properties: SecuredByPerimeter, HTTPS true, anonymous/shared-key false, TLS1_2, Hot/non-HNS and deny/None fallback.",
+    "NSP GET: provisioningState Succeeded and actual perimeterGuid.",
+    "Profile GET: exact ID and nonmissing accessRulesVersion. The pinned profile API has no provisioningState field; do not invent it.",
+    "Association GET: exact target storage/profile IDs, Enforced, provisioningState Succeeded, hasProvisioningIssues no.",
+    "Complete profile accessRules list with zero items and no unconsumed nextLink.",
+    "Complete storage networkSecurityPerimeterConfigurations list/get: one matching effective configuration, Succeeded, empty provisioningIssues, matching NSP ID/perimeterGuid, matching association name/Enforced mode, matching profile name/accessRulesVersion and zero effective accessRules."
+  ],
+  "apiVersions": {
+    "storage": "2025-06-01",
+    "nsp": "2025-01-01",
+    "profile": "2025-01-01",
+    "association": "2025-01-01",
+    "providerSideStorageConfiguration": "2025-06-01"
+  },
+  "failureSemantics": "Missing fields, partial inventories, failed reads, stale versions, provisioning issues or wrong bindings mean incomplete/unknown, never passed. SecuredByPerimeter alone is insufficient.",
+  "noRulesMeaning": "Enforced zero-rule configuration intent, not an executed data-plane blocking test. No data access is performed.",
+  "limits": ["No product approval/materialization IDs", "No current V2 proof", "No invented V3 hashes", "No private endpoint proof", "No full access-control or RTO/RPO assurance"]
+}

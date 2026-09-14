@@ -1,0 +1,48 @@
+{
+  "recordType": "ux-decision",
+  "schemaVersion": "1.0.0",
+  "recordId": "UXD-003",
+  "taskId": "UX-01-01",
+  "scenarioId": "DEMO-CASE-CLAIMS-V2",
+  "illustrative": false,
+  "state": "pending-review",
+  "owner": "D-ux",
+  "reporter": "User-directed LOCAL-08; D-ux records the actual technical revision, not a stakeholder UX approval",
+  "checkpointId": "UX-Checkpoint-01",
+  "screenIds": ["intent", "overview", "implementation", "operations", "value"],
+  "componentIds": ["PromiseCard", "ChangeSetSummary", "RiskPanel", "ContinuityGraph", "ContinuityList", "OutcomeReceipt"],
+  "fixtureIds": ["FX-01", "FX-02", "FX-08", "FX-09", "FX-10", "FX-11", "FX-12", "FX-13", "FX-19"],
+  "fixtureVersion": "1.0.0",
+  "projectionRefs": [
+    {"id": "P02", "expectedVersion": "1.0.0", "bindingStatus": "pending"},
+    {"id": "P04", "expectedVersion": "1.0.0", "bindingStatus": "pending"},
+    {"id": "P05", "expectedVersion": "1.0.0", "bindingStatus": "pending"},
+    {"id": "P06", "expectedVersion": "1.0.0", "bindingStatus": "pending"},
+    {"id": "P08", "expectedVersion": "1.0.0", "bindingStatus": "pending"}
+  ],
+  "observation": "The user directed public networking with no private infrastructure through LOCAL-08, then explicitly requested the bounded current-scenario design correction. Historical V1 private-connectivity wording could not represent current V2 configuration assurance.",
+  "severity": "material",
+  "classification": "domain-policy",
+  "proposedChange": "Implemented new V2 journey/IA/component handoff files and CURRENT.v2.json. CP-01 now displays HTTPS-required, anonymous-blob-access-disabled and minimum-TLS-1.2 on a public endpoint; publicNetworkAccess Enabled is desired. The proposed breach/correction property is supportsHttpsTrafficOnly false/true. Existing palette, five moments, interactions, RPO and cost oracle are retained. V1 sources/evidence remain historical.",
+  "rationale": "Apply the recorded user direction, not an agent-invented policy relaxation. Remove the wording-only mock prerequisite blocker while keeping canonical projection binding and human confirmation separate.",
+  "acceptanceCriteria": [
+    "Current V2 handoff identifies four exact desired properties and the unapproved HTTPS-only seed/restoration.",
+    "All existing moments, interactions, component IDs, approval/materialization states and neutral token values are preserved.",
+    "No private network is required, no fixture is live proof, and no product confirmation or operation approval is inferred.",
+    "A/C use current V2 wording now; UXD-002 remains pending until A freezes P schemas. GATE-UX01 remains pending human review."
+  ],
+  "approvalScope": "technical-design-only",
+  "technicalReviews": {"status": "pending", "requiredRoles": ["D", "C", "A"], "records": []},
+  "affectedPlanIds": ["UX-01", "UX-02", "MOCK-01"],
+  "affectedTaskIds": ["UX-01-01", "UX-02-01", "MOCK-01-01"],
+  "mockAlignmentEvidenceRefs": [],
+  "liveAlignmentEvidenceRefs": [],
+  "evidenceOrigin": "ux-mock",
+  "dueBy": "Technical acceptance of this LOCAL-08 design correction; human UX01 acceptance remains separate",
+  "sourceRefs": [
+    ".intent-to-impact\\execution\\decisions\\LOCAL-08.json",
+    "intent-to-impact-p0-task-decomposition.md#4.3",
+    "intent-to-impact-p0-implementation-plan.md#LOCAL-08",
+    "design\\components\\CURRENT.v2.json"
+  ]
+}
