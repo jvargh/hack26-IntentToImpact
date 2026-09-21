@@ -10,13 +10,14 @@ const ZOOM_STEP = 1.2;
 const clampZoom = (value: number) => Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, value));
 const kindSymbols = { appservice: "▣", functions: "ϟ", storage: "▤", servicebus: "⇄", keyvault: "◇", external: "↗", client: "▱" };
 
-export function ArchitectureCanvas({ option, selectedId, highlightedIds, onSelect, expanded = false, onExpand }: {
+export function ArchitectureCanvas({ option, selectedId, highlightedIds, onSelect, expanded = false, onExpand, simulated = false }: {
   option: ArchitectureOption | null;
   selectedId: string | null;
   highlightedIds: string[] | null;
   onSelect: (id: string) => void;
   expanded?: boolean;
   onExpand?: () => void;
+  simulated?: boolean;
 }) {
   const markerId = useId().replaceAll(":", "");
   const hintId = useId();
@@ -149,7 +150,7 @@ export function ArchitectureCanvas({ option, selectedId, highlightedIds, onSelec
     tabIndex={option ? 0 : undefined} aria-describedby={option ? hintId : undefined}
     aria-keyshortcuts={option ? "Control+= Control+- Control+0 Meta+= Meta+- Meta+0" : undefined}
     onPointerEnter={() => { hovered.current = true; }} onPointerLeave={() => { hovered.current = false; }}>
-    <div className="st-canvas-caption"><span className="st-overline">TOPOLOGY / {option ? "MODEL-GENERATED" : "NO RESULT"}</span><span>{option ? `${option.components.length} components · ${option.connections.length} connections` : "Your architecture belongs here"}</span></div>
+    <div className="st-canvas-caption"><span className="st-overline">TOPOLOGY / {option ? simulated ? "SIMULATED EXAMPLE" : "MODEL-GENERATED" : "NO RESULT"}</span><span>{option ? `${option.components.length} components · ${option.connections.length} connections` : "Your architecture belongs here"}</span></div>
     {!option ? <div className="st-canvas-empty">
       <div className="st-empty-orbit" aria-hidden="true"><i /><i /><i /><span>⌘</span></div>
       <span className="st-overline">FROM INTENT TO INFRASTRUCTURE</span>

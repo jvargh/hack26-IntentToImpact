@@ -19,6 +19,22 @@ export type AnalysisRequest = {
  * @maxItems 5
  */
 export type Documents = SourceDocument[];
+export type StudioResult = {
+  resultId: string;
+  inputHash: string;
+  createdAt: string;
+  origin: "live-model" | "simulated";
+  analysis: ArchitectureAnalysis;
+  /**
+   * @minItems 2
+   * @maxItems 2
+   */
+  modelReceipts: ModelReceipt[];
+  sources: {
+    id: string;
+    name: string;
+  }[];
+};
 
 export interface SourceDocument {
   id: string;
@@ -164,27 +180,12 @@ export interface StudioEvent {
   message: string;
   at: string;
 }
-export interface StudioResult {
-  resultId: string;
-  inputHash: string;
-  createdAt: string;
-  origin: "live-model";
-  analysis: ArchitectureAnalysis;
-  /**
-   * @minItems 2
-   * @maxItems 2
-   */
-  modelReceipts: ModelReceipt[];
-  sources: {
-    id: string;
-    name: string;
-  }[];
-}
 export interface ModelReceipt {
   role: "synthesis" | "assurance";
   model: string;
   responseId: string;
   durationMs: number;
+  origin?: "live-model" | "simulated";
 }
 export interface StudioError {
   code: string;

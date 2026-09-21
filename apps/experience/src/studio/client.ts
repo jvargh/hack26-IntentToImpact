@@ -125,13 +125,16 @@ export class StudioClient {
     signal?.throwIfAborted();
   }
 
-  async health(signal?: AbortSignal): Promise<{ ready: boolean; model: string; message: string }> {
+  async health(signal?: AbortSignal): Promise<{ ready: boolean; model: string; message: string; mode?: "live" | "simulated" }> {
     await this.ensureSession(signal);
     const value = await this.json("/api/studio/health", { signal });
     if (!object(value) || typeof value.ready !== "boolean" || typeof value.model !== "string" || typeof value.message !== "string") {
       throw new StudioClientError("The health response was invalid.", "invalid-response");
     }
-    return { ready: value.ready, model: value.model, message: value.message };
+    if (value.mode !== undefined && value.mode !== "live" && value.mode !== "simulated") {
+      throw new StudioClientError("The service returned an unknown execution mode.", "invalid-response");
+    }
+    return { ready: value.ready, model: value.model, message: value.message, ...(value.mode ? { mode: value.mode } : {}) };
   }
 
   async analyze(input: AnalysisRequest, signal?: AbortSignal): Promise<StudioJob> {

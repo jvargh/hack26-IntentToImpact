@@ -1,0 +1,20 @@
+{
+  "prompt": "Help us redesign our order-to-fulfilment process. Customers need an immediate order acknowledgement and reliable status updates, even when the warehouse is offline. Keep our existing ERP and payment provider. We need an architecture we can deliver incrementally, with a clear view of risks and trade-offs.",
+  "documents": [
+    {
+      "id": "example-process",
+      "name": "Order fulfilment - business process.md",
+      "text": "# Order-to-fulfilment process\n\nCustomers submit an order through the storefront. The payment provider handles card details and sends a payment reference and callback. The existing ERP owns stock availability. The warehouse receives fulfilment requests and returns dispatch updates asynchronously.\n\nThe ERP, payment provider and warehouse are existing integrations that must be retained; they are not new Azure resources to provision.\n\nPayment callbacks can be retried. The warehouse may be unavailable while orders continue to arrive. Support staff need to find stuck orders and explain the current order status to customers. The ERP will remain in place during migration."
+    },
+    {
+      "id": "example-requirements",
+      "name": "Operating requirements.md",
+      "text": "# Operating requirements\n\nEU customer contact data must remain in approved EU regions. Store payment references, not card details. Campaign traffic is bursty; peak orders per minute have not been measured.\n\nProvide an immediate acknowledgement and subsequent order-status updates. Monitor stuck orders and give support staff a recovery process. Monthly budget, recovery time, recovery point, retention periods and team capacity are not yet confirmed."
+    },
+    {
+      "id": "example-clarifications",
+      "name": "Example clarification workshop.md",
+      "text": "# Illustrative clarification workshop\n\nThese authored sample answers extend the initially incomplete operating requirements. They demonstrate a completed clarification step, not AI extraction, real customer confirmation or validated targets.\n\n## What normal and peak volumes should the design support?\n\nPlan for 2,000 orders per day and campaign bursts of 50 order submissions per second. These are illustrative workload assumptions; validate them against traffic measurements and load tests before sizing.\n\n## How much downtime and data loss can the business tolerate?\n\nUse an illustrative recovery time objective (RTO) of 60 minutes and recovery point objective (RPO) of 15 minutes. Continue accepting orders during warehouse outages. Confirm the targets with the business and prove recovery through testing.\n\n## What is the monthly budget and intended delivery date?\n\nUse USD 1,500 per month as an illustrative planning budget and aim for a pilot in 12 weeks. This is a sample budget, not a calculated Azure estimate or a delivery commitment; pricing and team capacity still need validation.\n\n## Who owns integrations, sensitive data and day-to-day support?\n\nFulfilment operations owns the process and stuck-order recovery. The integration team owns ERP and warehouse interfaces. The payment provider owns card data; customer support receives scoped order access. The privacy owner confirms retention and EU residency controls."
+    }
+  ]
+}

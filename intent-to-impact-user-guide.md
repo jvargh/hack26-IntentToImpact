@@ -17,8 +17,18 @@ From the project root:
 .\tools\Run-LiveStudio.ps1
 ```
 
-Open <http://127.0.0.1:5173/>. If it is already running, do not start a second
-server on that port.
+Open <http://127.0.0.1:5173/>. Rerunning the launcher replaces this workspace's
+existing studio or Vite server on port 5173: it builds first, stops the recognized
+listener by PID, waits for port release, and starts the new server.
+Use `-SkipBuild` to reuse existing built assets. Unrelated processes are left
+alone and reported by PID. Finish active analysis/build jobs before restarting;
+in-flight work can be interrupted and model completion may be unknown. Saved
+run files are not deleted.
+
+To stop without restarting, run `.\tools\Stop-LiveStudioPort.ps1` from the
+repository root (or `.\Stop-LiveStudioPort.ps1` inside `tools`). It now executes
+the stop action directly and prints whether it stopped a server or the port
+was already available. It leaves unrelated processes untouched.
 
 - **Ready - configuration only** means the configured model integration is
   available to attempt a request. It is not proof a model call has succeeded.
@@ -420,6 +430,8 @@ Continue to inspect unresolved findings; a successful package is not release app
 | Symptom | Cause / next action |
 |---|---|
 | Unreadable JSON at connection | Frontend-only server may be answering API calls with HTML. Stop that server and use the combined launcher. |
+| Port 5173 belongs to an unrelated or unidentifiable PID | The launcher only replaces this workspace's recognized studio/Vite servers. Inspect the reported PID and stop it explicitly if appropriate; do not kill all Python or Node processes. |
+| Port not released before timeout | A listener remained or reappeared after cleanup. Inspect port 5173; no replacement server was started. |
 | Generate fails with a source-reference error | A result cited unavailable source data. Preserve the failed run; do not substitute example output. |
 | Connection endpoint does not exist in its option | The model supplied an unknown ID, possibly a service kind instead of a component ID. The result is rejected rather than guessing the intended node. Preserve the failed run; a subsequent explicit request is a new model execution. |
 | One analysis already running | Wait for the active job; opening history does not start another call. |

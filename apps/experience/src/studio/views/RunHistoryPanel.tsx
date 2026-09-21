@@ -111,6 +111,7 @@ export function RunHistoryPanel({ client, workingCopyHasContent, working, onOpen
       <code className="st-hash">{run.summary.jobId}</code>
       {run.summary.previousResultId && <p className="st-muted">Revision of <code>{run.summary.previousResultId}</code></p>}
       <h3>Original intent</h3><p>{run.inputs.prompt}</p>
+      {run.job.result?.origin === "simulated" && <p className="st-warning">SIMULATED EXAMPLE: this run used authored responses, not Foundry inference. Compiled packages, if present, use real compiler output.</p>}
       <DesignChangeOutcome job={run.job} />
       {run.inputs.refinement && <><h3>Refinement</h3><p>{run.inputs.refinement}</p></>}
       {run.job.error && <p className="st-warning">Saved failure: {run.job.error.message}</p>}

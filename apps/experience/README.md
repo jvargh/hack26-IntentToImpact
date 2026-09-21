@@ -19,9 +19,19 @@ From the repository root:
 ```
 
 Open **http://127.0.0.1:5173/**. The script builds frontend assets and starts the
-same-origin, IPv4-loopback Python API. It refuses to kill another process on port
-5173. The isolated Python environment and pinned dependencies are documented in
+same-origin, IPv4-loopback Python API. After building successfully, it stops any
+existing studio or Vite server recognized as belonging to this workspace on port
+5173, waits for release, and starts the replacement. It refuses to stop unrelated
+or unidentifiable processes. Finish active work first; a restart may interrupt
+model/build jobs, but does not delete saved runs. `-SkipBuild` reuses built assets
+and performs the same port cleanup.
+The isolated Python environment and pinned dependencies are documented in
 [the backend guide](../control-plane/studio/README.md). Stop with Ctrl+C.
+
+For a standalone stop, run `.\tools\Stop-LiveStudioPort.ps1` from the repository
+root, or `.\Stop-LiveStudioPort.ps1` from `tools`. It infers the workspace from
+the script location and invokes cleanup directly. Dot-sourcing is import-only,
+as required by the launcher's build-before-stop sequence.
 
 Do not use `npm run dev` or `npm run preview` as the live application: they only serve frontend assets
 and cannot supply the authenticated model/job/build APIs.

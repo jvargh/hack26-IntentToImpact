@@ -53,6 +53,9 @@ class StudioService:
             raise StudioFailure("unsafe_storage", "Studio storage must not be a symbolic link.", 500)
         self.root.mkdir(parents=True, exist_ok=True)
         self.model = model or FoundryModelClient()
+        self.origin = getattr(self.model, "origin", "live-model")
+        if self.origin not in {"live-model", "simulated"}:
+            raise ValueError("Unsupported studio model origin.")
         self.bundle_builder = bundle_builder
         self.jobs = {}
         self.result_jobs = {}
@@ -292,8 +295,13 @@ class StudioService:
         return job["result"]
 
     async def submit(self, owner, request):
+        model_validator = getattr(self.model, "validate_request", None)
+        if model_validator:
+            model_validator(request)
         validate_request(request)
         request = copy.deepcopy(request)
+        if self.origin == "simulated":
+            request["documents"] = sorted(request["documents"], key=lambda document: document["id"])
         fingerprint = digest(request)
         async with self.lock:
             lookup = (owner, request["idempotencyKey"])
@@ -313,11 +321,21 @@ class StudioService:
                     previous = self.get_result(owner, request["previousResultId"])
                     prior = self.jobs[self.result_jobs[previous["resultId"]]]
                     original = read_json(self._path("jobs", prior["job"]["jobId"], "input.json"))["effective"]
-                if request["prompt"] != original["prompt"] or request["documents"] != original["documents"]:
+                if self.origin == "simulated" and previous["origin"] != "simulated":
+                    raise StudioFailure("simulation_example_required",
+                                        "Load example inputs and start a new simulated run before requesting scripted refinements.", 422)
+                documents = request["documents"]
+                original_documents = original["documents"]
+                if self.origin == "simulated":
+                    documents = sorted(documents, key=lambda document: document["id"])
+                    original_documents = sorted(original_documents, key=lambda document: document["id"])
+                if request["prompt"] != original["prompt"] or documents != original_documents:
                     raise StudioFailure("revision_source_conflict", "Refinements must retain the original prompt and documents; start a new analysis to replace sources.", 409)
                 effective["prompt"], effective["documents"] = original["prompt"], original["documents"]
                 if "designChange" in request:
                     effective, approval = prepare_change(request, previous, now())
+            if model_validator:
+                model_validator(effective)
             if any(record["job"]["status"] in ("queued", "running") for record in self.jobs.values()):
                 raise StudioFailure("busy", "One live analysis is already running. Wait for completion before submitting another.", 429, True)
             if len(self.jobs) >= MAX_JOBS:
@@ -337,7 +355,10 @@ class StudioService:
                        {"request": request, "effective": effective, "previous": previous}, immutable=True)
             self.jobs[job_id] = record
             self.idempotency[lookup] = job_id
-            self._event(record, "intake", "Input validated; consent recorded. Prompt, documents and results persist locally.")
+            self._event(record, "intake",
+                        "SIMULATED: exact example inputs validated. Sources and scripted results persist; no model call or charge."
+                        if self.origin == "simulated" else
+                        "Input validated; consent recorded. Prompt, documents and results persist locally.")
             task = asyncio.create_task(self._execute(record, effective, previous))
             self.tasks.add(task)
             task.add_done_callback(self.tasks.discard)
@@ -350,12 +371,17 @@ class StudioService:
                 record["job"]["status"] = "running"
                 write_json(self._path("jobs", record["job"]["jobId"], "synthesis-response-format.json"),
                            response_format("ArchitectureAnalysis", request), immutable=True)
-                self._event(record, "synthesis", "Calling the existing Foundry model for source-grounded architecture synthesis.")
+                self._event(record, "synthesis",
+                            "SIMULATED: loading the authored example architecture; no Foundry call."
+                            if self.origin == "simulated" else
+                            "Calling the existing Foundry model for source-grounded architecture synthesis.")
                 analysis, receipt = await self.model.generate(
                     "synthesis", request, previous=previous,
                     progress=lambda message: self._event(record, "synthesis", message),
                 )
                 validate("ModelReceipt", receipt)
+                if self.origin == "simulated" and receipt.get("origin") != "simulated":
+                    raise StudioFailure("invalid_receipt", "Simulation requires explicitly simulated receipts.", 502)
                 if receipt["role"] != "synthesis":
                     raise StudioFailure("invalid_receipt", "Synthesis receipt has the wrong role.", 502)
                 receipts.append(receipt)
@@ -364,7 +390,10 @@ class StudioService:
                 write_json(self._path("jobs", record["job"]["jobId"], "synthesis-proposal.json"), analysis, immutable=True)
                 analysis = ground_external_dependencies(analysis, request)
                 validate_analysis(analysis, request)
-                self._event(record, "assurance", "Synthesis validated. Starting a separate live, no-tools assurance call.")
+                self._event(record, "assurance",
+                            "SIMULATED: validating a separate authored nine-dimension review; not independent AI assurance."
+                            if self.origin == "simulated" else
+                            "Synthesis validated. Starting a separate live, no-tools assurance call.")
                 write_json(self._path("jobs", record["job"]["jobId"], "assurance-response-format.json"),
                            response_format("AssuranceReview", request), immutable=True)
                 assurance, receipt = await self.model.generate(
@@ -372,6 +401,8 @@ class StudioService:
                     progress=lambda message: self._event(record, "assurance", message),
                 )
                 validate("ModelReceipt", receipt)
+                if self.origin == "simulated" and receipt.get("origin") != "simulated":
+                    raise StudioFailure("invalid_receipt", "Simulation requires explicitly simulated receipts.", 502)
                 if receipt["role"] != "assurance" or receipt["responseId"] == receipts[0]["responseId"]:
                     raise StudioFailure("invalid_receipt", "Independent assurance requires its own response ID.", 502)
                 receipts.append(receipt)
@@ -383,7 +414,7 @@ class StudioService:
                 validate_analysis(analysis, request)
                 result = {
                     "resultId": "result_" + secrets.token_hex(16), "inputHash": record["inputHash"],
-                    "createdAt": now(), "origin": "live-model", "analysis": analysis,
+                    "createdAt": now(), "origin": self.origin, "analysis": analysis,
                     "modelReceipts": receipts,
                     "sources": [{"id": "prompt", "name": "Business prompt"}]
                     + [{"id": doc["id"], "name": doc["name"]} for doc in request["documents"]]
@@ -395,7 +426,10 @@ class StudioService:
                 record["resultHash"] = digest(result)
                 record["job"].update(status="succeeded", result=result)
                 self.result_jobs[result["resultId"]] = record["job"]["jobId"]
-                self._event(record, "complete", "Two live model calls completed and validated. Proposal only; nothing deployed.")
+                self._event(record, "complete",
+                            "SIMULATED: two authored outputs passed schema and source checks. No live model calls; nothing deployed."
+                            if self.origin == "simulated" else
+                            "Two live model calls completed and validated. Proposal only; nothing deployed.")
         except asyncio.CancelledError:
             self._fail(record, StudioFailure("cancelled", "Server stopped; request was cancelled locally. Remote completion is unknown.", 503, True))
             raise

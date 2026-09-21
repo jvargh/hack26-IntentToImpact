@@ -1,4 +1,4 @@
-"""Single-origin, loopback-only HTTP transport; no browser Azure credentials."""
+"""Single-origin HTTP transport: loopback by default, explicitly gated ACA hosting."""
 
 import hashlib
 import hmac
@@ -9,11 +9,13 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse, JSONResponse, Response
+from fastapi.responses import FileResponse, JSONResponse, RedirectResponse, Response
 from starlette.exceptions import HTTPException
 
 from .service import StudioService, read_json, write_json
 from .validation import StudioFailure, strict_json
+from .hosting import authenticated_principal, load_hosted_config, validate_forwarding
+from .model_client import FoundryModelClient
 
 ROOT = Path(__file__).resolve().parents[3]
 ORIGIN = "http://127.0.0.1:5173"
@@ -74,8 +76,9 @@ class Sessions:
 
 
 class LocalTransport:
-    def __init__(self, app, sessions):
+    def __init__(self, app, sessions, hosted_config=None, hosted_lock=None):
         self.app, self.sessions = app, sessions
+        self.hosted_config, self.hosted_lock = hosted_config, hosted_lock
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
@@ -90,10 +93,22 @@ class LocalTransport:
             await send(message)
 
         try:
+            config = self.hosted_config
+            method, path = scope["method"], scope["path"]
+            if config and path == "/healthz" and method in ("GET", "HEAD"):
+                ready = bool(self.hosted_lock and self.hosted_lock.ready())
+                response = (Response(status_code=200 if ready else 503) if method == "HEAD"
+                            else JSONResponse({"ready": ready}, status_code=200 if ready else 503))
+                await response(scope, receive, secured_send)
+                return
             headers = {}
             for key, value in scope["headers"]:
                 name = key.decode("latin-1").lower()
-                if name in headers and name in {"host", "origin", "content-length", "cookie", "x-csrf-token", "x-studio-client"}:
+                security_header = name in {"host", "origin", "content-length", "cookie", "x-csrf-token", "x-studio-client"}
+                if config:
+                    security_header = security_header or name in {"authorization", "content-type", "forwarded"} or name.startswith(
+                        ("x-ms-", "x-forwarded-", "x-original-", "x-rewrite-"))
+                if name in headers and security_header:
                     raise StudioFailure("invalid_headers", "Duplicate security headers are not permitted.", 400)
                 headers[name] = value.decode("latin-1")
             peer = (scope.get("client") or ("", 0))[0]
@@ -101,19 +116,31 @@ class LocalTransport:
                 local = ipaddress.ip_address(peer).is_loopback
             except ValueError:
                 local = False
-            if not local or headers.get("host") != HOST:
+            if config:
+                if headers.get("host") != config.host:
+                    raise StudioFailure("invalid_origin", "Use the configured studio HTTPS origin.", 403)
+                validate_forwarding(headers, config)
+            elif not local or headers.get("host") != HOST:
                 raise StudioFailure("invalid_origin", "Studio accepts only direct requests to 127.0.0.1:5173.", 403)
-            if any(name == "forwarded" or name.startswith(("x-forwarded-", "x-original-", "x-rewrite-")) for name in headers):
+            if not config and any(name == "forwarded" or name.startswith(("x-forwarded-", "x-original-", "x-rewrite-")) for name in headers):
                 raise StudioFailure("forwarded_request", "Forwarded requests are not supported.", 403)
             origin = headers.get("origin")
-            if origin is not None and origin != ORIGIN:
+            expected_origin = config.public_origin if config else ORIGIN
+            if origin is not None and origin != expected_origin:
                 raise StudioFailure("invalid_origin", "Foreign origins are not permitted.", 403)
-            method, path = scope["method"], scope["path"]
+            api = path == "/api" or path.startswith("/api/")
+            if config and config.auth_mode == "entra":
+                principal = authenticated_principal(headers, config)
+                if principal is None:
+                    if not api and method == "GET" and ("text/html" in headers.get("accept", "") or not Path(path).suffix):
+                        await RedirectResponse("/.auth/login/aad", status_code=302)(scope, receive, secured_send)
+                        return
+                    raise StudioFailure("authentication_required", "Sign in to the studio first.", 401)
+                scope.setdefault("state", {})["principal_id"] = principal
             if method == "OPTIONS":
                 raise StudioFailure("preflight_rejected", "Cross-origin preflight is not supported.", 405)
             if method not in ("GET", "HEAD", "POST"):
                 raise StudioFailure("method_not_allowed", "Method not allowed.", 405)
-            api = path == "/api" or path.startswith("/api/")
             if api:
                 if headers.get("x-studio-client") != "1":
                     raise StudioFailure("client_header_required", "X-Studio-Client: 1 is required.", 403)
@@ -125,7 +152,7 @@ class LocalTransport:
                     owner, session = found
                     scope.setdefault("state", {})["owner"] = owner
                     if method == "POST":
-                        if origin != ORIGIN or not hmac.compare_digest(headers.get("x-csrf-token", ""), session["csrf"]):
+                        if origin != expected_origin or not hmac.compare_digest(headers.get("x-csrf-token", ""), session["csrf"]):
                             raise StudioFailure("csrf_rejected", "The exact studio Origin and session CSRF token are required.", 403)
             if method == "POST":
                 if not api:
@@ -164,7 +191,45 @@ class LocalTransport:
             await JSONResponse(exc.public(), status_code=exc.status)(scope, receive, secured_send)
 
 
-def create_app(data_root=None, static_root=None, model=None, bundle_builder=None, history_scope="session"):
+def create_app(data_root=None, static_root=None, model=None, bundle_builder=None, history_scope="session",
+               hosted_config=None, hosted_lock=None):
+    """Injected hosted_config permits isolated factory tests without a Linux lock.
+
+    Environment-driven production creation requires the lock acquired by serve
+    before service recovery. An unlocked test factory never reports ready.
+    """
+    import os
+
+    model_mode = os.environ.get("STUDIO_MODEL_MODE", "live")
+    if model_mode not in {"live", "simulated"}:
+        raise ValueError("STUDIO_MODEL_MODE must be live or simulated.")
+    if model_mode == "simulated" and os.environ.get("STUDIO_HOSTING") != "aca":
+        raise ValueError("Judge simulation requires explicit STUDIO_HOSTING=aca.")
+    if model_mode != "simulated" and getattr(model, "origin", None) == "simulated":
+        raise ValueError("Judge simulation requires explicit STUDIO_MODEL_MODE=simulated.")
+    injected_config = hosted_config is not None
+    hosted_config = hosted_config or load_hosted_config()
+    if hosted_config:
+        if not injected_config and not (hosted_lock and hosted_lock.acquired):
+            raise RuntimeError("Acquire the ACA worker lock in studio.serve before creating the app.")
+        if hosted_lock is not None and (not hosted_lock.acquired or hosted_lock.config != hosted_config):
+            raise RuntimeError("The ACA worker lock must be acquired for this configuration.")
+        if data_root is not None and Path(data_root) != hosted_config.data_root:
+            raise ValueError("Hosted storage must use STUDIO_DATA_ROOT.")
+        data_root = hosted_config.data_root
+        history_scope = "session" if hosted_config.auth_mode == "anonymous-demo" else "workspace"
+        if model_mode == "simulated":
+            if model is not None and getattr(model, "origin", None) != "simulated":
+                raise ValueError("A live model cannot be injected into judge simulation.")
+            if model is None:
+                from aca.simulator import JudgeSimulator
+                model = JudgeSimulator()
+        else:
+            model = model or FoundryModelClient(hosted_config=hosted_config)
+        if bundle_builder is None:
+            from functools import partial
+            from .bundle import build_bundle
+            bundle_builder = partial(build_bundle, compiler_path=hosted_config.bicep_path)
     service = StudioService(data_root or ROOT / ".intent-to-impact" / "studio" / "runs", model, bundle_builder, history_scope)
     sessions = Sessions(service.root)
     dist = Path(static_root or ROOT / "apps" / "experience" / "dist").absolute()
@@ -177,7 +242,7 @@ def create_app(data_root=None, static_root=None, model=None, bundle_builder=None
     app = FastAPI(title="Live architecture studio", docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.state.service = service
     app.state.sessions = sessions
-    app.add_middleware(LocalTransport, sessions=sessions)
+    app.add_middleware(LocalTransport, sessions=sessions, hosted_config=hosted_config, hosted_lock=hosted_lock)
 
     @app.exception_handler(StudioFailure)
     async def failure_handler(_, exc):
@@ -203,7 +268,7 @@ def create_app(data_root=None, static_root=None, model=None, bundle_builder=None
     async def session(request: Request):
         token, csrf, max_age = sessions.issue(request.cookies.get(COOKIE))
         response = JSONResponse({"csrfToken": csrf})
-        response.set_cookie(COOKIE, token, httponly=True, samesite="strict", secure=False,
+        response.set_cookie(COOKIE, token, httponly=True, samesite="strict", secure=bool(hosted_config),
                             max_age=max_age, path="/api/studio")
         return response
 

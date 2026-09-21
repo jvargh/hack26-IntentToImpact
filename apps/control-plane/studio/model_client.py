@@ -125,6 +125,20 @@ def verify_identity():
 
 
 class FoundryModelClient:
+    def __init__(self, hosted_config=None, credential_factory=None):
+        self.hosted_config = hosted_config
+        self.credential_factory = credential_factory
+
+    async def _credential(self):
+        if self.hosted_config:
+            from azure.identity.aio import ManagedIdentityCredential
+            factory = self.credential_factory or ManagedIdentityCredential
+            return factory(client_id=self.hosted_config.managed_identity_client_id)
+        from azure.identity.aio import AzureCliCredential
+        await asyncio.to_thread(verify_identity)
+        factory = self.credential_factory or AzureCliCredential
+        return factory(subscription=SUBSCRIPTION, process_timeout=20)
+
     def readiness(self):
         try:
             for module in ("agent_framework.foundry", "azure.ai.projects.aio", "azure.identity.aio"):
@@ -155,11 +169,9 @@ class FoundryModelClient:
         from agent_framework import Agent
         from agent_framework.foundry import FoundryChatClient
         from azure.ai.projects.aio import AIProjectClient
-        from azure.identity.aio import AzureCliCredential
 
         if role not in ("synthesis", "assurance"):
             raise StudioFailure("invalid_role", "Unsupported model operation.")
-        await asyncio.to_thread(verify_identity)
         for name in ("azure", "openai", "httpx", "httpcore", "agent_framework"):
             logging.getLogger(name).setLevel(logging.CRITICAL)
         schema_name = "ArchitectureAnalysis" if role == "synthesis" else "AssuranceReview"
@@ -208,7 +220,7 @@ class FoundryModelClient:
                 )
                 return self.studio_openai_client
 
-        async with AzureCliCredential(subscription=SUBSCRIPTION, process_timeout=20) as credential:
+        async with await self._credential() as credential:
             async with BoundedProjectClient(endpoint=ENDPOINT, credential=credential, retry_total=0) as project:
                 try:
                     agent = Agent(

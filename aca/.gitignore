@@ -1,0 +1,7 @@
+.local/
+*.parameters.json
+!*.parameters.example.json
+*.tar
+*.jsonl
+wheelhouse/*
+!wheelhouse/.gitkeep

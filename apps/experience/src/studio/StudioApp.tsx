@@ -34,7 +34,7 @@ export function StudioApp({ client: suppliedClient }: { client?: Pick<StudioClie
   const [inputs, setInputs] = useState<Inputs>(blankInputs);
   const [consent, setConsent] = useState(false);
   const [reading, setReading] = useState(false);
-  const [health, setHealth] = useState<{ ready: boolean; model: string; message: string } | null>(null);
+  const [health, setHealth] = useState<{ ready: boolean; model: string; message: string; mode?: "live" | "simulated" } | null>(null);
   const [healthError, setHealthError] = useState("");
   const [healthAttempt, setHealthAttempt] = useState(0);
   const [busy, setBusy] = useState<"analysis" | "build" | "download" | null>(null);
@@ -76,6 +76,7 @@ export function StudioApp({ client: suppliedClient }: { client?: Pick<StudioClie
   const status = busy === "analysis" ? "Generating" : busy === "build" ? "Compiling" : failedAttempt || job?.status === "failed" ? "Failed" : !health && !healthError ? "Connecting" : health?.ready ? "Ready" : "Unavailable";
   const technicalEvents = job?.events.filter((event) => /^Received [\d,]+ response characters\b/.test(event.message)) ?? [];
   const activityEvents = job?.events.filter((event) => !technicalEvents.includes(event)) ?? [];
+  const simulated = health?.mode === "simulated";
 
   useEffect(() => {
     alive.current = true;
@@ -127,7 +128,9 @@ export function StudioApp({ client: suppliedClient }: { client?: Pick<StudioClie
         setOptionId(target && next.result.analysis.options.some((item) => item.id === target) ? target : next.result.analysis.recommendedOptionId);
         setComponentId(null); setRequirementId(null); setLens(next.changeApproval?.finding.dimension ?? null);
         if (next.changeApproval) { setTab("assurance"); setInspectorVisible(true); }
-        setNotice("Architecture returned by the live model. Review the sources, assumptions and assurance findings.");
+        setNotice(next.result.origin === "simulated"
+          ? "Simulated example returned. No Foundry calls were made. Inspect the scripted design, sources and review."
+          : "Architecture returned by the live model. Review the sources, assumptions and assurance findings.");
         return next.result;
       }
       await waitForPoll(controller.signal);
@@ -138,7 +141,7 @@ export function StudioApp({ client: suppliedClient }: { client?: Pick<StudioClie
   async function analyze(event: FormEvent) {
     event.preventDefault();
     if (busy || reading) return;
-    if (!consent) { setError("Confirm consent before sending your prompt and documents to Microsoft Foundry."); return; }
+    if (!simulated && !consent) { setError("Confirm consent before sending your prompt and documents to Microsoft Foundry."); return; }
     if (inputs.prompt.trim().length < 10) { setError("Describe your process in at least 10 characters."); return; }
     if (refinementParentId && !inputs.refinement.trim()) { setError("Describe the change you want, or edit the original prompt to start a new analysis."); return; }
     const submitted = { ...inputs, documents: inputs.documents.map((document) => ({ ...document })) };
@@ -189,7 +192,9 @@ export function StudioApp({ client: suppliedClient }: { client?: Pick<StudioClie
       if (revised && !controller.signal.aborted) {
         setInputs((current) => inputIdentity(current) === draft.inputIdentity ? submitted : current);
         setBuild(null); setChangeDraft(null);
-        setNotice("Revised proposal and independent assurance are ready. Review what changed before generating its infrastructure package. Approval did not waive any blocker.");
+        setNotice(revised.origin === "simulated"
+          ? "Simulated revision and scripted review are ready. Your instruction is recorded, not interpreted by AI. No model call or risk waiver occurred."
+          : "Revised proposal and independent assurance are ready. Review what changed before generating its infrastructure package. Approval did not waive any blocker.");
       }
     } catch (failure) {
       if (!controller.signal.aborted) {
@@ -300,24 +305,25 @@ export function StudioApp({ client: suppliedClient }: { client?: Pick<StudioClie
     <a className="st-skip-link" href="#st-workspace">Skip to architecture canvas</a>
     <header className="st-header"><a href="/" className="st-brand" aria-label="Intent to Impact Studio home"><span className="st-brand-mark" aria-hidden="true">⌘</span><span>intent<span className="st-brand-divider">/</span>impact<small>ARCHITECTURE STUDIO</small></span></a>
       <div className="st-header-center"><span className="st-header-line" /><span>DESIGN SYSTEMS. NOT SLIDES.</span></div>
-      <div className="st-runtime"><span className={`st-status-dot ${busy ? "is-busy" : status === "Ready" ? "is-ready" : ""}`} /><div><span>Foundry · {health?.model || "model metadata unavailable"}</span><small>{status}{health?.ready && !result && !busy ? " · configuration only" : ""}</small></div></div>
+      <div className="st-runtime"><span className={`st-status-dot ${busy ? "is-busy" : status === "Ready" ? "is-ready" : ""}`} /><div><span>{simulated ? "Judge demo · no model calls" : `Foundry · ${health?.model || "model metadata unavailable"}`}</span><small>{status}{health?.ready && !result && !busy ? simulated ? " · simulation only" : " · configuration only" : ""}</small></div></div>
     </header>
     <div className="st-workspace-bar"><div><span className="st-overline">WORKSPACE</span><strong>{result?.analysis.title || inputs.title || "Untitled architecture"}</strong></div><div className="st-workspace-tools"><span className="st-memory-note">Inputs in tab · submitted runs stored locally</span><button type="button" onClick={() => setHistoryOpen(true)}>Run history</button><button type="button" aria-expanded={promptVisible} onClick={() => setPromptVisible((value) => !value)}>Prompt</button><button type="button" aria-expanded={inspectorVisible} onClick={() => setInspectorVisible((value) => !value)}>Inspector</button></div></div>
+    {simulated && <div className="st-simulation-banner" role="note"><strong>JUDGE DEMO / SIMULATED AI</strong><span>AI calls are simulated for judging purposes to demonstrate the overall functionality without incurring model costs. No requests are sent to Foundry. Load example inputs to begin. Package compilation is real; Azure hosting costs still apply.</span></div>}
     <main className="st-layout">
       <aside className="st-prompt-console" aria-label="Prompt console">
         <div className="st-panel-title"><span className="st-overline">01 / DEFINE YOUR INTENT</span><span className="st-live-word">INPUT</span></div>
         <form onSubmit={(event) => { void analyze(event); }}>
           <label className="st-label" htmlFor="st-title">Project name <span>optional</span></label><input id="st-title" maxLength={160} value={inputs.title} onChange={(event) => patchInput({ title: event.target.value })} placeholder="Name your next system" />
           <div className="st-label-row"><label className="st-label" htmlFor="st-prompt">What should this system do?</label><span>{inputs.prompt.length.toLocaleString()}/12k</span></div>
-          <textarea id="st-prompt" maxLength={12000} value={inputs.prompt} onChange={(event) => patchInput({ prompt: event.target.value })} placeholder="Describe the process, the people, and what has to change. Include constraints, existing systems, and the outcome you need." rows={7} />
-          <button type="button" className="st-text-button" disabled={!!busy || reading} onClick={() => { setInputs({ title: "Order fulfilment", prompt: EXAMPLE_PROMPT, refinement: "", documents: EXAMPLE_DOCUMENTS.map(({ id, name, text }) => ({ id, name, text })) }); setRestoredParentId(null); setConsent(false); setNotice("Example inputs loaded only. Consent and generate to request a real model result."); }}>Load example inputs <span aria-hidden="true">↗</span></button>
+          <textarea id="st-prompt" maxLength={12000} value={inputs.prompt} readOnly={simulated} onChange={(event) => patchInput({ prompt: event.target.value })} placeholder={simulated ? "Click Load example inputs to start the judge demonstration." : "Describe the process, the people, and what has to change. Include constraints, existing systems, and the outcome you need."} rows={7} />
+          <button type="button" className="st-text-button" disabled={!!busy || reading} onClick={() => { setInputs({ title: "Order fulfilment", prompt: EXAMPLE_PROMPT, refinement: "", documents: EXAMPLE_DOCUMENTS.map(({ id, name, text }) => ({ id, name, text })) }); setRestoredParentId(null); setConsent(false); setNotice(simulated ? "Example inputs loaded. Select Generate architecture to run the no-model simulation." : "Example inputs loaded only. Consent and generate to request a real model result."); }}>Load example inputs <span aria-hidden="true">↗</span></button>
           <div className="st-label-row"><span className="st-label">Source documents</span><span>{inputs.documents.length}/5</span></div>
-          <input ref={fileInput} className="st-file-input" id="st-documents" type="file" accept=".txt,.md,.markdown" multiple aria-label="Attach source documents" disabled={reading || !!busy} onChange={(event) => { void attach(event.target.files); }} />
-          <button type="button" className="st-attach" onClick={() => fileInput.current?.click()} disabled={reading || !!busy}><span aria-hidden="true">+</span><span>{reading ? "Reading locally…" : "Attach process documents"}<small>TXT / Markdown · max 1 MB each</small></span></button>
-          {inputs.documents.length > 0 && <ul className="st-attached">{inputs.documents.map((document) => <li key={document.id}><button type="button" onClick={() => setSource(document)} aria-label={`Preview attached ${document.name}`}><span aria-hidden="true">⌑</span><span>{document.name}</span></button><button type="button" aria-label={`Remove ${document.name}`} disabled={!!busy || reading} onClick={() => patchInput({ documents: inputs.documents.filter((item) => item.id !== document.id) })}>×</button></li>)}</ul>}
-          <p className="st-input-note">Local until Generate. Submitted input and results are stored unencrypted on this machine. Do not include secrets or sensitive documents. Model calls incur charges.</p>
-          {refinementParentId && <div className="st-refinement"><label className="st-label" htmlFor="st-refinement">Refine this architecture</label><textarea id="st-refinement" rows={3} maxLength={4000} value={inputs.refinement} onChange={(event) => patchInput({ refinement: event.target.value })} placeholder="What should change, and why?" /><button type="button" className="st-refine-chip" disabled={!!busy} onClick={() => patchInput({ refinement: "Make this more resilient" })}>↻ Make this more resilient</button><small>A new real model job, not a local diagram edit.</small></div>}
-          <label className="st-check"><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />I consent to send this prompt and attached text to the configured Microsoft Foundry model through this server.</label>
+          <input ref={fileInput} className="st-file-input" id="st-documents" type="file" accept=".txt,.md,.markdown" multiple aria-label="Attach source documents" disabled={simulated || reading || !!busy} onChange={(event) => { void attach(event.target.files); }} />
+          <button type="button" className="st-attach" onClick={() => fileInput.current?.click()} disabled={simulated || reading || !!busy}><span aria-hidden="true">+</span><span>{reading ? "Reading locally…" : "Attach process documents"}<small>{simulated ? "Judge demo uses the supplied example only" : "TXT / Markdown · max 1 MB each"}</small></span></button>
+          {inputs.documents.length > 0 && <ul className="st-attached">{inputs.documents.map((document) => <li key={document.id}><button type="button" onClick={() => setSource(document)} aria-label={`Preview attached ${document.name}`}><span aria-hidden="true">⌑</span><span>{document.name}</span></button><button type="button" aria-label={`Remove ${document.name}`} disabled={simulated || !!busy || reading} onClick={() => patchInput({ documents: inputs.documents.filter((item) => item.id !== document.id) })}>×</button></li>)}</ul>}
+          <p className="st-input-note">{simulated ? "Example-only simulation. Nothing is sent to Foundry. Submitted example runs and revisions are stored by the server for this browser session; do not include sensitive information." : "Local until Generate. Submitted input and results are stored unencrypted on this machine. Do not include secrets or sensitive documents. Model calls incur charges."}</p>
+          {refinementParentId && <div className="st-refinement"><label className="st-label" htmlFor="st-refinement">Refine this architecture</label><textarea id="st-refinement" rows={3} maxLength={4000} value={inputs.refinement} onChange={(event) => patchInput({ refinement: event.target.value })} placeholder="What should change, and why?" /><button type="button" className="st-refine-chip" disabled={!!busy} onClick={() => patchInput({ refinement: "Make this more resilient" })}>↻ Make this more resilient</button><small>{simulated ? "Runs a scripted revision. Your instruction is recorded, not evaluated by AI." : "A new real model job, not a local diagram edit."}</small></div>}
+          {!simulated && <label className="st-check"><input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} />I consent to send this prompt and attached text to the configured Microsoft Foundry model through this server.</label>}
           <button className={`${!result || stale ? "st-primary" : "st-secondary"} st-wide`} type="submit" disabled={!!busy || reading}>{busy === "analysis" ? "Generating architecture…" : refinementParentId ? "Refine architecture" : "Generate architecture"}<span aria-hidden="true">{busy === "analysis" ? "◌" : "↗"}</span></button>
         </form>
         {(!health?.ready || healthError) && <div className="st-health-message"><span className="st-overline">{healthError ? "CONNECTION ERROR" : health ? "MODEL NOT READY" : "CONNECTING TO SERVER"}</span><p>{healthError || health?.message || "Checking model configuration. This does not run inference."}</p><button type="button" onClick={() => { setHealth(null); setHealthAttempt((value) => value + 1); }}>Check connection</button></div>}
@@ -328,17 +334,17 @@ export function StudioApp({ client: suppliedClient }: { client?: Pick<StudioClie
         </section>
       </aside>
       <section className="st-workspace" id="st-workspace" aria-label="Architecture workspace" tabIndex={-1}>
-        <div className="st-stage-header"><div><span className="st-overline">02 / EXPLORE THE SYSTEM</span><h1>{result ? "Architecture, with evidence." : "Your next system starts here."}</h1></div><span className={`st-badge ${stale ? "st-badge-warning" : ""}`}>{result ? stale ? "PREVIOUS RESULT · NOT CURRENT" : restoredRunId ? "SAVED MODEL RESULT" : "LIVE MODEL RESULT" : "AWAITING INPUT"}</span></div>
+        <div className="st-stage-header"><div><span className="st-overline">02 / EXPLORE THE SYSTEM</span><h1>{result ? "Architecture, with evidence." : "Your next system starts here."}</h1></div><span className={`st-badge ${stale ? "st-badge-warning" : ""}`}>{result ? stale ? "PREVIOUS RESULT · NOT CURRENT" : result.origin === "simulated" ? restoredRunId ? "SAVED SIMULATED EXAMPLE" : "SIMULATED EXAMPLE" : restoredRunId ? "SAVED MODEL RESULT" : "LIVE MODEL RESULT" : "AWAITING INPUT"}</span></div>
         {error && <div className="st-error" role="alert"><div><strong>Request needs attention</strong><p>{error}</p><small>Your inputs{result ? " and last result are" : " are"} preserved. No sample result has been substituted.</small></div><button type="button" onClick={() => setError("")} aria-label="Dismiss error">×</button></div>}
         {notice && <div className="st-notice" role="status">{notice}<button type="button" aria-label="Dismiss notice" onClick={() => setNotice("")}>×</button></div>}
-        {result && <><div className="st-alternatives" role="group" aria-label="Architecture alternatives">{result.analysis.options.map((item, index) => <button type="button" key={item.id} aria-pressed={option?.id === item.id} onClick={() => { setOptionId(item.id); setComponentId(null); }}><span className="st-option-number">0{index + 1}</span><span>{item.name}{item.id === result.analysis.recommendedOptionId && <small>MODEL RECOMMENDATION</small>}</span><span aria-hidden="true">{option?.id === item.id ? "●" : "○"}</span></button>)}</div>
-          <details className="st-result-summary"><summary>{result.analysis.summary}</summary><div><strong>{previousRequirements ? "What changed" : "Model change summary"}</strong><p>{result.analysis.changeSummary}</p></div></details>
+        {result && <><div className="st-alternatives" role="group" aria-label="Architecture alternatives">{result.analysis.options.map((item, index) => <button type="button" key={item.id} aria-pressed={option?.id === item.id} onClick={() => { setOptionId(item.id); setComponentId(null); }}><span className="st-option-number">0{index + 1}</span><span>{item.name}{item.id === result.analysis.recommendedOptionId && <small>{result.origin === "simulated" ? "EXAMPLE SELECTION" : "MODEL RECOMMENDATION"}</small>}</span><span aria-hidden="true">{option?.id === item.id ? "●" : "○"}</span></button>)}</div>
+          <details className="st-result-summary"><summary>{result.analysis.summary}</summary><div><strong>{previousRequirements ? "What changed" : result.origin === "simulated" ? "Example summary" : "Model change summary"}</strong><p>{result.analysis.changeSummary}</p></div></details>
         </>}
         {job?.changeApproval && <DesignChangeOutcome job={job} />}
         {requirementId && <div className="st-highlight-bar">Linked requirement: <code>{requirementId}</code><button type="button" onClick={() => setRequirementId(null)}>Clear highlight ×</button></div>}
         {lens && <div className="st-highlight-bar">Review lens: {lens} · source-level findings only<button type="button" onClick={() => setLens(null)}>Clear lens ×</button></div>}
         <ArchitectureCanvas key={`${result?.resultId ?? "empty"}-${option?.id ?? "none"}`} option={option} selectedId={componentId} highlightedIds={requirementId ? option?.components.filter((item) => item.requirementIds.includes(requirementId)).map((item) => item.id) ?? [] : null}
-          expanded={!promptVisible && !inspectorVisible} onExpand={() => {
+          simulated={result?.origin === "simulated"} expanded={!promptVisible && !inspectorVisible} onExpand={() => {
             if (promptVisible || inspectorVisible) {
               panelsBeforeExpand.current = { prompt: promptVisible, inspector: inspectorVisible };
               setPromptVisible(false); setInspectorVisible(false);
@@ -356,6 +362,7 @@ export function StudioApp({ client: suppliedClient }: { client?: Pick<StudioClie
       workingCopyHasContent={Boolean(inputs.title || inputs.prompt || inputs.documents.length || result)}
       onOpen={(saved) => { void openSavedRun(saved); }} onClose={() => setHistoryOpen(false)} />}
     {changeDraft && <DesignChangeDrawer finding={changeDraft.finding} option={changeDraft.option} intent={changeDraft.intent}
+      simulated={simulated}
       busy={busy === "analysis"} current={changeCurrent} error={changeError}
       onApprove={(instruction) => { void approveDesignChange(instruction); }} onClose={() => setChangeDraft(null)} />}
   </div>;

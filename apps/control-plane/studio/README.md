@@ -8,6 +8,36 @@ The built experience and API share **http://127.0.0.1:5173**. This is a
 single-machine demonstration, not production authentication. The OS/process owner
 can read its local files. Never publish this server or place it behind a proxy.
 
+That restriction applies to default **local mode**. The separate
+[ACA solution](../../../aca/README.md) enables hosted mode only through explicit
+validated settings. It requires ACA Easy Auth, an allowlisted tenant/operator,
+secure cookies and CSRF, managed identity, mounted persistent state and a
+single-worker lock. Do not expose local mode by merely changing its bind address.
+
+## Hosted configuration
+
+| Setting | Required ACA value |
+|---|---|
+| `STUDIO_HOSTING` | `aca` (unset retains local behavior) |
+| `STUDIO_AUTH_MODE` | `entra` by default; explicit `anonymous-demo` disables sign-in and forces session-private history |
+| `STUDIO_PUBLIC_ORIGIN` | Exact public HTTPS app origin |
+| `STUDIO_ALLOWED_OBJECT_IDS` | Comma-separated permitted Entra object IDs |
+| `STUDIO_TENANT_ID` | Permitted tenant ID |
+| `STUDIO_MANAGED_IDENTITY_CLIENT_ID` | User-assigned runtime identity client ID |
+| `STUDIO_DATA_ROOT` | Existing writable mounted directory |
+| `STUDIO_BICEP_PATH` | Absolute pinned Linux compiler path |
+
+Hosted startup binds `0.0.0.0:8080` with proxy-header rewriting disabled. ACA
+authenticates callers; the backend checks the supplied principal/tenant again
+and never infers the public origin from arbitrary forwarded headers. Minimal
+`/healthz` bypasses user auth for probes but never returns run data. The writer
+lock is acquired before recovery and held for the entire process lifetime.
+Model execution uses the configured managed identity, not `az login`.
+
+Default local APIs, sessions, CLI identity preflight and compiler lookup are
+preserved. In both modes, unavailable state/model/compiler remains an explicit
+error; there is no fixture fallback.
+
 ## Run
 
 From the repository root in PowerShell:

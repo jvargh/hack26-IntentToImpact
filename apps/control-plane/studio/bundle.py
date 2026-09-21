@@ -57,6 +57,13 @@ LIMITATIONS = [
     "Service Bus work queues and Key Vault. Other services, triggers, runtimes and private topologies are blocked.",
     "No live cost forecast or production-readiness claim. B1 plans and Standard services are billable if deployed.",
 ]
+SIMULATION_LIMITATION = (
+    "SIMULATED DESIGN: This package is based on an authored, example-only judge simulation. "
+    "No live model inference or independent AI assurance occurred; sim_ receipts are simulation provenance, "
+    "not Foundry response evidence. Only Bicep compiler results are real compilation evidence. "
+    "Scripted refinements do not demonstrate semantic execution of arbitrary instructions. "
+    "Existing callback compatibility and application implementation remain unresolved."
+)
 
 
 class Blocked(ValueError):
@@ -438,9 +445,17 @@ def _render(result: dict, option: dict) -> tuple[str, dict]:
                                "roleAssignments": roles, "externalPrerequisites": prerequisites}
 
 
-def _compiler() -> tuple[Path, str, dict]:
+def _compiler(compiler_path=None) -> tuple[Path, str, dict]:
+    if compiler_path is None and os.environ.get("STUDIO_HOSTING") == "aca":
+        from .hosting import load_hosted_config
+        compiler_path = load_hosted_config().bicep_path
+    if compiler_path is not None:
+        compiler_path = Path(compiler_path)
+        if (not compiler_path.is_absolute() or compiler_path.resolve() != compiler_path
+                or not compiler_path.is_file() or not os.access(compiler_path, os.X_OK)):
+            raise Blocked("Configured Bicep compiler must be an absolute existing executable without symlinks.")
     errors = []
-    for path in COMPILER_PATHS:
+    for path in (compiler_path,) if compiler_path is not None else COMPILER_PATHS:
         if not path.is_file():
             continue
         try:
@@ -478,7 +493,7 @@ def _build_dir(output_root: Path, build_id: str) -> Path:
     return directory
 
 
-def build_bundle(result: dict, option_id: str, output_root: Path) -> dict:
+def build_bundle(result: dict, option_id: str, output_root: Path, *, compiler_path=None) -> dict:
     """Return the exact shared BuildResult; a download exists only after a real successful compile."""
     build_id = uuid.uuid4().hex
     receipt = {
@@ -489,6 +504,8 @@ def build_bundle(result: dict, option_id: str, output_root: Path) -> dict:
         "diagnostics": "", "files": [], "downloadUrl": None,
         "limitations": list(LIMITATIONS), "deploymentStatus": "not-deployed",
     }
+    if isinstance(result, dict) and result.get("origin") == "simulated":
+        receipt["limitations"].insert(0, SIMULATION_LIMITATION)
     directory = None
     contents = {}
     validation = {"status": "blocked", "deploymentStatus": "not-deployed",
@@ -511,6 +528,8 @@ def build_bundle(result: dict, option_id: str, output_root: Path) -> dict:
                 "moduleAliases": {"br": {"public": {"registry": "mcr.microsoft.com", "modulePath": "bicep"}}},
             }),
         }
+        if result["origin"] == "simulated":
+            contents["README.md"] = "# SIMULATED example design — real compiler checks only\n\n" + SIMULATION_LIMITATION + "\n\n" + contents["README.md"]
         manifest = {
             "schemaVersion": "1.0.0", "buildId": build_id, "resultId": result["resultId"],
             "inputHash": result["inputHash"], "optionId": option_id,
@@ -533,7 +552,7 @@ def build_bundle(result: dict, option_id: str, output_root: Path) -> dict:
                                      cacheRootDirectory=str(directory / ".bicep-cache"))
         (directory / "bicepconfig.json").write_text(_json(compile_configuration), encoding="utf-8", newline="\n")
         validation["compilationConfiguration"] = compile_configuration
-        compiler, version, version_check = _compiler()
+        compiler, version, version_check = _compiler(compiler_path)
         receipt["compilerVersion"] = version
         validation["commands"].append(version_check)
         command = [str(compiler), "build", str(directory / "main.bicep"),

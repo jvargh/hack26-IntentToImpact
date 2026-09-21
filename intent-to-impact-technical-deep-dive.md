@@ -953,7 +953,19 @@ Use the existing [combined launcher](./tools/Run-LiveStudio.ps1):
 .\tools\Run-LiveStudio.ps1
 ```
 
-The launcher builds the frontend and starts the local API. It refuses to kill another process already using the configured port. An already running instance only needs a browser refresh after a completed frontend rebuild; backend changes require a controlled restart with active work considered.
+The launcher builds the frontend, then replaces a recognized same-workspace
+studio or Vite listener on port 5173 before starting the local API. It verifies
+the process command line and creation identity, stops only explicit PIDs, and
+waits up to ten seconds for port release. Unrelated/unidentifiable listeners,
+inspection/termination errors and release timeouts stop startup explicitly.
+`-SkipBuild` reuses existing assets with the same cleanup. Saved records are not
+deleted; active work should finish first because termination can interrupt jobs
+and leave remote completion unknown. A failed build leaves the old server running.
+
+The same helper is executable directly as `.\tools\Stop-LiveStudioPort.ps1`
+for stop-only operation. It derives the default workspace from its file location.
+Dot-sourcing imports its functions without performing cleanup; direct invocation
+runs the stop function. This distinction keeps launcher imports side-effect free.
 
 At `http://127.0.0.1:5173/`:
 

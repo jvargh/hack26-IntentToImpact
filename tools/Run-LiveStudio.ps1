@@ -6,12 +6,10 @@ $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $python = Join-Path $root '.intent-to-impact\studio\.venv\Scripts\python.exe'
 $app = Join-Path $root 'apps\experience'
+. (Join-Path $PSScriptRoot 'Stop-LiveStudioPort.ps1')
 
 if (-not (Test-Path -LiteralPath $python)) {
     throw 'The studio environment is missing. Follow apps\control-plane\studio\README.md to create it and install the pinned requirements.'
-}
-if (Get-NetTCPConnection -LocalAddress '127.0.0.1' -LocalPort 5173 -State Listen -ErrorAction SilentlyContinue) {
-    throw 'Port 5173 is already occupied. Stop the preview or studio process you started before launching another; this script will not terminate other processes.'
 }
 Push-Location $app
 try {
@@ -27,6 +25,8 @@ try {
 } finally {
     Pop-Location
 }
+
+Stop-LiveStudioPort -WorkspaceRoot $root
 
 $oldPythonPath = $env:PYTHONPATH
 Push-Location $root

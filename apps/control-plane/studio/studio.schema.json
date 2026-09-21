@@ -148,19 +148,24 @@
     },
     "ModelReceipt": {
       "type":"object","additionalProperties":false,
-      "properties":{"role":{"type":"string","enum":["synthesis","assurance"]},"model":{"type":"string"},"responseId":{"type":"string","minLength":1},"durationMs":{"type":"integer","minimum":0}},
+      "properties":{"role":{"type":"string","enum":["synthesis","assurance"]},"model":{"type":"string"},"responseId":{"type":"string","minLength":1},"durationMs":{"type":"integer","minimum":0},"origin":{"type":"string","enum":["live-model","simulated"]}},
       "required":["role","model","responseId","durationMs"]
     },
     "StudioResult": {
       "type":"object","additionalProperties":false,
       "properties":{
         "resultId":{"type":"string"},"inputHash":{"type":"string"},"createdAt":{"type":"string"},
-        "origin":{"type":"string","const":"live-model"},
+        "origin":{"type":"string","enum":["live-model","simulated"]},
         "analysis":{"$ref":"#/definitions/ArchitectureAnalysis"},
         "modelReceipts":{"type":"array","minItems":2,"maxItems":2,"items":{"$ref":"#/definitions/ModelReceipt"}},
         "sources":{"type":"array","items":{"type":"object","additionalProperties":false,"properties":{"id":{"type":"string"},"name":{"type":"string"}},"required":["id","name"]}}
       },
-      "required":["resultId","inputHash","createdAt","origin","analysis","modelReceipts","sources"]
+      "required":["resultId","inputHash","createdAt","origin","analysis","modelReceipts","sources"],
+      "allOf":[{
+        "if":{"properties":{"origin":{"const":"simulated"}}},
+        "then":{"properties":{"modelReceipts":{"items":{"properties":{"origin":{"const":"simulated"},"responseId":{"pattern":"^sim_"}},"required":["origin"]}}}},
+        "else":{"properties":{"modelReceipts":{"items":{"properties":{"origin":{"const":"live-model"}}}}}}
+      }]
     },
     "StudioEvent": {
       "type":"object","additionalProperties":false,

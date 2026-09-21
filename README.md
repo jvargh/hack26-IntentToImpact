@@ -2,7 +2,8 @@
 
 **Business intent in. Traceable architecture, explicit risks and compiled infrastructure out.**
 
-Intent to Impact is a local, human-directed architecture studio. It turns a business
+Intent to Impact is a human-directed architecture studio with local and explicitly
+configured Azure Container Apps hosting modes. It turns a business
 prompt and process documents into AI-generated alternatives, an interactive
 topology, a separate nine-dimension review, and a compiler-checked infrastructure
 package. People can challenge a finding, approve a revision request and inspect
@@ -24,6 +25,21 @@ deployment and business-application verification are **not** claimed complete.
 | [Experience setup](./apps/experience/README.md) | UI behavior, build/test commands and operating limitations |
 | [Backend setup](./apps/control-plane/studio/README.md) | Local API, model configuration, sessions, persistence and recovery |
 | [Infrastructure catalog](./apps/control-plane/studio/templates/README.md) | Supported resources, edge-to-permission mappings and deployment prerequisites |
+| [Azure Container Apps solution](./aca/README.md) | Container build, protected hosted configuration, persistent storage, deployment and verification |
+
+The [ACA solution](./aca) hosts the studio itself as `intent2impact-hack26`.
+It is separate from the in-product **Deploy to Azure** handoff for a generated
+customer workload. Hosted mode adds Entra protection, managed-identity model
+access, a single persistent writer and Linux Bicep; local mode stays unchanged.
+See its README for current deployment status and the private-NFS transport trade-off.
+
+**Judge walkthrough:** ACA has an explicit public, no-model simulation mode:
+**Load example inputs -> Generate architecture** returns authored sample designs
+and reviews, clearly labeled throughout the workflow. Revision demonstrations,
+session-private history and real Bicep package compilation remain available.
+There are no Foundry calls or inference charges in simulated mode; Azure hosting
+still costs money. Local mode continues to use real Foundry calls. See
+[ACA judge instructions](./aca/README.md#judge-demo-no-foundry-usage).
 
 The earlier three-minute presenter script and original review documents were
 moved to the local `_bkp` archive. That archive is intentionally not published.
@@ -128,8 +144,30 @@ frontend startup check. Install dependencies once, not on every launch.
 ```
 
 Open **http://127.0.0.1:5173/**. The launcher builds the frontend and starts the
-same-origin Python API. It refuses to terminate another process using that port.
+same-origin Python API. After a successful build, it automatically stops this
+workspace's existing studio or Vite dev/preview server on port 5173, waits for
+the port to be released, then starts the replacement. Unrelated or unidentifiable
+processes are not stopped; the error identifies the PID for manual inspection.
+Finish active model/build work before restarting: termination can interrupt it,
+and remote model completion may be unknown. Saved runs are preserved.
 Stop the process you started with Ctrl+C when finished.
+
+Use `.\tools\Run-LiveStudio.ps1 -SkipBuild` to restart using already-built assets.
+The same port-cleanup checks apply. Launcher regression tests are in
+[Stop-LiveStudioPort.Tests.ps1](./tests/tools/Stop-LiveStudioPort.Tests.ps1)
+and run with Pester 5.
+
+To stop the studio without starting a replacement:
+
+```powershell
+.\tools\Stop-LiveStudioPort.ps1
+```
+
+From the `tools` directory, use `.\Stop-LiveStudioPort.ps1`. The script infers
+the workspace from its own location, not your current directory. It stops only
+recognized workspace servers listening on port 5173 and reports when the port
+is already free. Importing it with dot-sourcing loads functions without stopping
+anything, so the launcher can build before performing cleanup.
 
 **Do not use `npm run dev` or `npm run preview` alone for the live product.**
 A frontend-only server can return HTML for API requests, causing

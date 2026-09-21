@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen, waitFor, within } from "@testing-librar
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { StudioApp } from "./StudioApp";
-import { StudioClient } from "./client";
+import { StudioClient, validateJob } from "./client";
 import type { AnalysisRequest, BuildRequest, BuildResult, ReviewFinding, StudioJob, StudioResult, RunHistory, SavedRun } from "./contracts";
 
 const dimensions: ReviewFinding["dimension"][] = ["business", "security", "reliability", "performance", "cost", "integration", "compliance", "operations", "delivery"];
@@ -102,6 +102,63 @@ function uploadedFile() {
   return file;
 }
 afterEach(() => { vi.useRealTimers(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
+
+describe("ACA judge simulation", () => {
+  function simulatorClient() {
+    const client = new TestClient();
+    const health = { ready: true, model: "judge-simulator", message: "Example simulation only.", mode: "simulated" as const };
+    client.health.mockResolvedValue(health);
+    const value = result("result-simulation");
+    value.origin = "simulated";
+    value.modelReceipts = value.modelReceipts.map((receipt) => ({
+      ...receipt, model: "judge-simulator", responseId: `sim_${receipt.role}`, origin: "simulated",
+    }));
+    client.analyze.mockResolvedValue(succeeded(value));
+    return client;
+  }
+
+  it("runs Load Example then Generate without paid-model consent and labels the result honestly", async () => {
+    const client = simulatorClient();
+    render(<StudioApp client={client} />);
+    await screen.findByText("JUDGE DEMO / SIMULATED AI");
+    expect(screen.getByRole("note")).toHaveTextContent("AI calls are simulated for judging purposes to demonstrate the overall functionality without incurring model costs.");
+    expect(screen.getByRole("note")).toHaveTextContent("No requests are sent to Foundry.");
+    expect(screen.queryByRole("checkbox", { name: /I consent to send/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: "What should this system do?" })).toHaveAttribute("readonly");
+    expect(screen.getByRole("button", { name: /Attach process documents/ })).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: /Load example inputs/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Generate architecture" }));
+    expect(await screen.findByText("SIMULATED EXAMPLE", { exact: true })).toBeVisible();
+    expect(screen.queryByText("LIVE MODEL RESULT")).not.toBeInTheDocument();
+    expect(screen.getByText(/Simulated example returned/)).toBeVisible();
+    expect(client.analyze).toHaveBeenCalledTimes(1);
+    expect(client.analyze).toHaveBeenCalledWith(expect.objectContaining({ documents: expect.arrayContaining([
+      expect.objectContaining({ id: "example-process" }),
+    ]) }), expect.any(AbortSignal));
+  });
+
+  it("labels the assurance and change panels as scripted, not independent inference", async () => {
+    render(<StudioApp client={simulatorClient()} />);
+    await screen.findByText("JUDGE DEMO / SIMULATED AI");
+    fireEvent.click(screen.getByRole("button", { name: /Load example inputs/ }));
+    fireEvent.click(screen.getByRole("button", { name: "Generate architecture" }));
+    await screen.findByText("SIMULATED EXAMPLE", { exact: true });
+    fireEvent.click(screen.getByRole("tab", { name: /Assurance/ }));
+    expect(screen.getByText("SCRIPTED REVIEW / 09 LENSES")).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Review Business fit: info" }));
+    fireEvent.click(screen.getByRole("button", { name: "Request recommended change" }));
+    const dialog = within(screen.getByRole("dialog", { name: "Approve a design change" }));
+    expect(dialog.getByRole("checkbox", { name: /scripted demonstration revision/ })).not.toBeChecked();
+    expect(dialog.getByText(/Judge simulation: no model charges/)).toBeVisible();
+    expect(dialog.queryByText(/Two model calls may incur charges/)).not.toBeInTheDocument();
+  });
+
+  it("rejects simulated output mislabeled with live receipt provenance", () => {
+    const value = result();
+    value.origin = "simulated";
+    expect(() => validateJob(succeeded(value))).toThrow("invalid job response");
+  });
+});
 
 describe("contextual design changes", () => {
   async function setup() {

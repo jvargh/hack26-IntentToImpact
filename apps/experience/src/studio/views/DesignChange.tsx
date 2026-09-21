@@ -5,10 +5,11 @@ import { StudioDrawer } from "./SourceDrawer";
 
 export type ChangeIntent = NonNullable<AnalysisRequest["designChange"]>["intent"];
 
-export function DesignChangeDrawer({ finding, option, intent, busy, current, error, onApprove, onClose }: {
+export function DesignChangeDrawer({ finding, option, intent, busy, current, error, onApprove, onClose, simulated = false }: {
   finding: ReviewFinding; option: ArchitectureOption; intent: ChangeIntent;
   busy: boolean; current: boolean; error: string;
   onApprove: (instruction: string) => void; onClose: () => void;
+  simulated?: boolean;
 }) {
   const instructionId = useId();
   const [instruction, setInstruction] = useState(intent === "recommendation" ? finding.recommendation : "");
@@ -34,8 +35,8 @@ export function DesignChangeDrawer({ finding, option, intent, busy, current, err
       <small>{instruction.length}/2000 characters. The server includes the exact finding and selected alternative with your instruction.</small>
       <p className="st-warning">Approval authorizes a new design proposal, not a risk waiver. The original blocker stays on the original revision. The new assurance review may still report a blocker.</p>
       <label className="st-check"><input type="checkbox" checked={consent} disabled={busy}
-        onChange={(event) => setConsent(event.target.checked)} />I approve this revision request and consent to send the original sources and this instruction to Microsoft Foundry for synthesis and a separate assurance review.</label>
-      <p className="st-input-note">Two model calls may incur charges. Approval and results are stored unencrypted locally under demo-human (not a verified production identity). No application code is implemented or Azure resources deployed by this action.</p>
+        onChange={(event) => setConsent(event.target.checked)} />{simulated ? "I approve this scripted demonstration revision. My instruction is recorded, not interpreted by AI; no Foundry call is made." : "I approve this revision request and consent to send the original sources and this instruction to Microsoft Foundry for synthesis and a separate assurance review."}</label>
+      <p className="st-input-note">{simulated ? "Judge simulation: no model charges. This produces an authored example change and scripted review, not a general response to your instruction. Records persist in this browser session's server history." : "Two model calls may incur charges. Approval and results are stored unencrypted locally under demo-human (not a verified production identity). No application code is implemented or Azure resources deployed by this action."}</p>
       {!current && !busy && <p className="st-warning" role="alert">The working design or input changed. Close this panel and reopen the finding on the current result before approving.</p>}
       {error && <p className="st-error" role="alert">{error}</p>}
       {busy && <p role="status">Regenerating the architecture and re-running independent assurance. Closing this panel does not cancel the server job.</p>}
@@ -50,10 +51,11 @@ export function DesignChangeDrawer({ finding, option, intent, busy, current, err
 export function DesignChangeOutcome({ job }: { job: StudioJob }) {
   const approval = job.changeApproval;
   if (!approval) return null;
+  const simulated = job.result?.origin === "simulated";
   const latest = job.result?.analysis.review.find((finding) => finding.dimension === approval.finding.dimension);
   const outcome = job.status === "failed" ? "Revision failed; original unchanged"
     : latest?.severity === "blocker" ? "Blocker remains in revised design"
-      : latest ? `Latest AI review: ${latest.severity}` : "Revision and re-review pending";
+      : latest ? `Latest ${simulated ? "scripted" : "AI"} review: ${latest.severity}` : "Revision and re-review pending";
   return <details className="st-change-outcome">
     <summary><span className="st-overline">APPROVED REVISION REQUEST / {dimensionNames[approval.finding.dimension].toUpperCase()}</span>
       <strong>{outcome}</strong><span>View change & decision record</span></summary>
@@ -69,9 +71,9 @@ export function DesignChangeOutcome({ job }: { job: StudioJob }) {
     </dl>
     <h4>Approved instruction</h4><p className="st-verbatim">{approval.instruction}</p>
     <h4>Original finding</h4><p>{approval.finding.finding}</p>
-    {latest && <><h4>Latest independent model finding</h4><p>{latest.finding}</p>
-      <h4>Model change summary</h4><p>{job.result?.analysis.changeSummary}</p>
+    {latest && <><h4>{simulated ? "Latest scripted finding" : "Latest independent model finding"}</h4><p>{latest.finding}</p>
+      <h4>{simulated ? "Simulated change summary" : "Model change summary"}</h4><p>{job.result?.analysis.changeSummary}</p>
       {!job.result?.analysis.options.some((option) => option.id === approval.optionId) && <p className="st-warning">The model did not retain the target alternative ID. Inspect the revised alternatives before generating a package.</p>}</>}
-    <p className="st-input-note">Approval was permission to revise, not sign-off on the resulting design. A changed severity is an AI assessment, not verified resolution. Review the new proposal before separately generating its infrastructure package.</p>
+    <p className="st-input-note">{simulated ? "This is a scripted simulation, not AI reasoning or verified resolution. The instruction is recorded for the workflow demonstration; approval is not risk acceptance." : "Approval was permission to revise, not sign-off on the resulting design. A changed severity is an AI assessment, not verified resolution. Review the new proposal before separately generating its infrastructure package."}</p>
   </details>;
 }

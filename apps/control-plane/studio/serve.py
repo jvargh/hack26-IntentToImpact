@@ -1,10 +1,12 @@
-"""Run the production frontend and API together on the approved loopback origin."""
+"""Serve loopback locally, or a single locked ACA worker behind tenant Easy Auth."""
 
 import uvicorn
 import json
 from pathlib import Path
 
 from .app import create_app
+from .hosting import load_hosted_config
+from .hosted_lock import HostedWorkerLock
 
 
 def load_history_scope():
@@ -19,6 +21,14 @@ def load_history_scope():
 
 
 def main():
+    config = load_hosted_config()
+    if config:
+        with HostedWorkerLock(config) as worker_lock:
+            uvicorn.run(create_app(hosted_config=config, hosted_lock=worker_lock),
+                        host="0.0.0.0", port=8080, proxy_headers=False,
+                        access_log=False, log_level="warning", limit_concurrency=32,
+                        timeout_keep_alive=5)
+        return
     uvicorn.run(create_app(history_scope=load_history_scope()), host="127.0.0.1", port=5173, proxy_headers=False,
                 access_log=False, log_level="warning", limit_concurrency=32,
                 timeout_keep_alive=5)
