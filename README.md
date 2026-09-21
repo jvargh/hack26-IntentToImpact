@@ -68,7 +68,7 @@ retired workbench assets are not shipped in the production bundle.
 ## How it works
 
 ```mermaid
-flowchart LR
+flowchart TD
     Input["Prompt + source documents"] --> Service["Local StudioService"]
     Service --> Synthesis["Foundry synthesis"]
     Synthesis --> Checks["Schema / sources / graph checks"]
