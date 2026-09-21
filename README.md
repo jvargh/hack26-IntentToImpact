@@ -9,10 +9,6 @@ topology, a separate nine-dimension review, and a compiler-checked infrastructur
 package. People can challenge a finding, approve a revision request and inspect
 the resulting change without losing the original evidence.
 
-**Current baseline: 14 September 2026.** The live design-to-package workflow is
-implemented and tested. Azure Portal handoff is available; actual target resource
-deployment and business-application verification are **not** claimed complete.
-
 ## Start here
 
 | Document | What it answers |
@@ -268,16 +264,3 @@ The [engine illustration](./imgs/intent-to-impact-deep-dive.png),
 They include aspirational elements such as runtime continuity or services outside
 the current catalog; they are **not screenshots or proof of implemented features**.
 The specifications and user guide define the current behavior.
-
-## Publication hygiene
-
-The root `.gitignore` and `.gitattributes` are intentionally local-only and are
-not published. This checkout uses them to exclude operator archives, local
-settings, dependencies, caches, credentials and generated output, and to preserve
-exact bytes for checksum-bound artifacts. Contributors must configure equivalent
-local exclusions and line-ending behavior before generating or committing files.
-
-Source templates, lockfiles, canonical schemas, generated contract types/static
-validators, test fixtures and the maintained documentation remain versioned.
-This repository publication is a developer action; the product itself does not
-create GitHub branches or pull requests.
