@@ -271,13 +271,13 @@ The specifications and user guide define the current behavior.
 
 ## Publication hygiene
 
-The root `.gitignore` excludes `_bkp`, `.azure`, `.github`, `.intent-to-impact`,
-local agent/deployment settings, dependency environments, caches, compiled output,
-logs, credentials and ZIP exports. These exclusions do not delete local files.
+The root `.gitignore` and `.gitattributes` are intentionally local-only and are
+not published. This checkout uses them to exclude operator archives, local
+settings, dependencies, caches, credentials and generated output, and to preserve
+exact bytes for checksum-bound artifacts. Contributors must configure equivalent
+local exclusions and line-ending behavior before generating or committing files.
 
 Source templates, lockfiles, canonical schemas, generated contract types/static
 validators, test fixtures and the maintained documentation remain versioned.
-The [Git attributes](./.gitattributes) preserve exact file bytes rather than applying
-automatic newline conversion to checksum-bound schemas, fixtures and validators.
 This repository publication is a developer action; the product itself does not
 create GitHub branches or pull requests.
