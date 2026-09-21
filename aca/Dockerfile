@@ -1,17 +1,17 @@
 FROM node:22-bookworm-slim AS frontend
 WORKDIR /app
-COPY contracts/package.json contracts/package-lock.json ./contracts/
-RUN npm ci --prefix contracts --ignore-scripts
-COPY apps/experience/package.json apps/experience/package-lock.json ./apps/experience/
-RUN npm ci --prefix apps/experience
-COPY apps/experience ./apps/experience
-COPY apps/control-plane/studio/studio.schema.json ./apps/control-plane/studio/studio.schema.json
-COPY contracts/generated ./contracts/generated
-COPY contracts/schemas ./contracts/schemas
-COPY fixtures/experience ./fixtures/experience
-COPY design/tokens ./design/tokens
+COPY intent-to-impact-studio/contracts/package.json intent-to-impact-studio/contracts/package-lock.json ./intent-to-impact-studio/contracts/
+RUN npm ci --prefix intent-to-impact-studio/contracts --ignore-scripts
+COPY intent-to-impact-studio/apps/experience/package.json intent-to-impact-studio/apps/experience/package-lock.json ./intent-to-impact-studio/apps/experience/
+RUN npm ci --prefix intent-to-impact-studio/apps/experience
+COPY intent-to-impact-studio/apps/experience ./intent-to-impact-studio/apps/experience
+COPY intent-to-impact-studio/apps/control-plane/studio/studio.schema.json ./intent-to-impact-studio/apps/control-plane/studio/studio.schema.json
+COPY intent-to-impact-studio/contracts/generated ./intent-to-impact-studio/contracts/generated
+COPY intent-to-impact-studio/contracts/schemas ./intent-to-impact-studio/contracts/schemas
+COPY intent-to-impact-studio/fixtures/experience ./intent-to-impact-studio/fixtures/experience
+COPY intent-to-impact-studio/design/tokens ./intent-to-impact-studio/design/tokens
 COPY aca/Generate-Example.mjs aca/example-input.json ./aca/
-RUN node aca/Generate-Example.mjs --check && cd apps/experience && npm run check:studio && npm run typecheck && npm run build
+RUN node aca/Generate-Example.mjs --check && cd intent-to-impact-studio/apps/experience && npm run check:studio && npm run typecheck && npm run build
 
 FROM python:3.13-slim-bookworm AS runtime
 ARG BICEP_VERSION=0.47.16
@@ -27,15 +27,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates
     && HOME=/root /usr/local/bin/bicep --version \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-COPY apps/control-plane/studio/requirements.txt /tmp/requirements.txt
+COPY intent-to-impact-studio/apps/control-plane/studio/requirements.txt /tmp/requirements.txt
 COPY aca/wheelhouse /tmp/wheelhouse
 RUN if ls /tmp/wheelhouse/*.whl >/dev/null 2>&1; then \
       pip install --no-cache-dir --no-index --find-links=/tmp/wheelhouse -r /tmp/requirements.txt; \
     else pip install --no-cache-dir -r /tmp/requirements.txt; fi \
     && rm -rf /tmp/wheelhouse
-COPY --chown=studio:studio apps/control-plane/studio ./apps/control-plane/studio
-COPY --chown=studio:studio aca/simulator.py aca/example-input.json ./aca/
-COPY --from=frontend --chown=studio:studio /app/apps/experience/dist ./apps/experience/dist
+COPY --chown=studio:studio intent-to-impact-studio/apps/control-plane/studio ./apps/control-plane/studio
+COPY --chown=studio:studio aca/example-input.json ./aca/
+COPY --from=frontend --chown=studio:studio /app/intent-to-impact-studio/apps/experience/dist ./apps/experience/dist
 RUN mkdir -p /app/.intent-to-impact/studio/runs && chown -R studio:studio /app/.intent-to-impact
 USER 10001:10001
 EXPOSE 8080

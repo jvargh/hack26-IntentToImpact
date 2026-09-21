@@ -17,14 +17,14 @@ deployment and business-application verification are **not** claimed complete.
 
 | Document | What it answers |
 |---|---|
-| [Numbered user guide](./intent-to-impact-user-guide.md) | How to use screenshot points 1-17, assurance actions, regeneration, history and the Azure handoff |
-| [Technical deep dive](./intent-to-impact-technical-deep-dive.md) | How the governed design-to-evidence engine works; implemented boundaries and evidence |
-| [Detailed design specification](./intent-to-impact-design-spec.md) | Current implementation overlay and the broader target architecture |
-| [P0 implementation plan](./intent-to-impact-p0-implementation-plan.md) | Delivered vertical slice, local adaptations and remaining implementation work |
-| [Engineering task decomposition](./intent-to-impact-p0-task-decomposition.md) | Current delivery status alongside the preserved 75-task planning backlog |
-| [Experience setup](./apps/experience/README.md) | UI behavior, build/test commands and operating limitations |
-| [Backend setup](./apps/control-plane/studio/README.md) | Local API, model configuration, sessions, persistence and recovery |
-| [Infrastructure catalog](./apps/control-plane/studio/templates/README.md) | Supported resources, edge-to-permission mappings and deployment prerequisites |
+| [Numbered user guide](./docs/intent-to-impact-user-guide.md) | How to use screenshot points 1-17, assurance actions, regeneration, history and the Azure handoff |
+| [Technical deep dive](./docs/intent-to-impact-technical-deep-dive.md) | How the governed design-to-evidence engine works; implemented boundaries and evidence |
+| [Detailed design specification](./docs/intent-to-impact-design-spec.md) | Current implementation overlay and the broader target architecture |
+| [P0 implementation plan](./docs/intent-to-impact-p0-implementation-plan.md) | Delivered vertical slice, local adaptations and remaining implementation work |
+| [Engineering task decomposition](./docs/intent-to-impact-p0-task-decomposition.md) | Current delivery status alongside the preserved 75-task planning backlog |
+| [Experience setup](./intent-to-impact-studio/apps/experience/README.md) | UI behavior, build/test commands and operating limitations |
+| [Backend setup](./intent-to-impact-studio/apps/control-plane/studio/README.md) | Local API, model configuration, sessions, persistence and recovery |
+| [Infrastructure catalog](./intent-to-impact-studio/apps/control-plane/studio/templates/README.md) | Supported resources, edge-to-permission mappings and deployment prerequisites |
 | [Azure Container Apps solution](./aca/README.md) | Container build, protected hosted configuration, persistent storage, deployment and verification |
 
 The [ACA solution](./aca) hosts the studio itself as `intent2impact-hack26`.
@@ -115,7 +115,7 @@ sign-off. Compilation is not deployment. Portal navigation is not provisioning.*
 - Python 3.13 is the tested runtime.
 - Azure CLI signed in to the approved existing Foundry tenant/subscription.
 - Access to the project/model configured in
-  [model_client.py](./apps/control-plane/studio/model_client.py). This checkout
+  [model_client.py](./intent-to-impact-studio/apps/control-plane/studio/model_client.py). This checkout
   retains the existing demo configuration; it is not automatically configured
   for another tenant. No keys or login tokens are included.
 - For package generation: Bicep 0.47.16 or newer in one of the builder's approved
@@ -128,10 +128,10 @@ sign-off. Compilation is not deployment. Portal navigation is not provisioning.*
 From the repository root:
 
 ```powershell
-npm ci --prefix .\contracts
-npm ci --prefix .\apps\experience
+npm ci --prefix .\intent-to-impact-studio\contracts
+npm ci --prefix .\intent-to-impact-studio\apps\experience
 python -m venv .\.intent-to-impact\studio\.venv
-& .\.intent-to-impact\studio\.venv\Scripts\python.exe -m pip install -r .\apps\control-plane\studio\requirements.txt
+& .\.intent-to-impact\studio\.venv\Scripts\python.exe -m pip install -r .\intent-to-impact-studio\apps\control-plane\studio\requirements.txt
 ```
 
 The contracts dependencies are needed by the schema generator used during the
@@ -140,7 +140,7 @@ frontend startup check. Install dependencies once, not on every launch.
 ### Start the combined application
 
 ```powershell
-.\tools\Run-LiveStudio.ps1
+.\intent-to-impact-studio\tools\Run-LiveStudio.ps1
 ```
 
 Open **http://127.0.0.1:5173/**. The launcher builds the frontend and starts the
@@ -152,18 +152,18 @@ Finish active model/build work before restarting: termination can interrupt it,
 and remote model completion may be unknown. Saved runs are preserved.
 Stop the process you started with Ctrl+C when finished.
 
-Use `.\tools\Run-LiveStudio.ps1 -SkipBuild` to restart using already-built assets.
+Use `.\intent-to-impact-studio\tools\Run-LiveStudio.ps1 -SkipBuild` to restart using already-built assets.
 The same port-cleanup checks apply. Launcher regression tests are in
-[Stop-LiveStudioPort.Tests.ps1](./tests/tools/Stop-LiveStudioPort.Tests.ps1)
+[Stop-LiveStudioPort.Tests.ps1](./intent-to-impact-studio/tests/tools/Stop-LiveStudioPort.Tests.ps1)
 and run with Pester 5.
 
 To stop the studio without starting a replacement:
 
 ```powershell
-.\tools\Stop-LiveStudioPort.ps1
+.\intent-to-impact-studio\tools\Stop-LiveStudioPort.ps1
 ```
 
-From the `tools` directory, use `.\Stop-LiveStudioPort.ps1`. The script infers
+From the `intent-to-impact-studio\tools` directory, use `.\Stop-LiveStudioPort.ps1`. The script infers
 the workspace from its own location, not your current directory. It stops only
 recognized workspace servers listening on port 5173 and reports when the port
 is already free. Importing it with dot-sourcing loads functions without stopping
@@ -212,7 +212,7 @@ outstanding; do not present the handoff as their proof.
 
 ## Validation
 
-From `apps\experience`:
+From `intent-to-impact-studio\apps\experience`:
 
 ```powershell
 npm run check:studio
@@ -225,13 +225,13 @@ Backend fixture/contract tests can run without model calls after dependencies
 are installed:
 
 ```powershell
-& .\.intent-to-impact\studio\.venv\Scripts\python.exe -B -m unittest discover -s .\tests\studio -p test_model.py
-& .\.intent-to-impact\studio\.venv\Scripts\python.exe -B -m unittest discover -s .\tests\studio -p test_design_changes.py
+& .\.intent-to-impact\studio\.venv\Scripts\python.exe -B -m unittest discover -s .\intent-to-impact-studio\tests\studio -p test_model.py
+& .\.intent-to-impact\studio\.venv\Scripts\python.exe -B -m unittest discover -s .\intent-to-impact-studio\tests\studio -p test_design_changes.py
 ```
 
 Bundle tests include actual compiler cases and need Bicep. Browser tests use
 Playwright with isolated Edge profiles; chargeable model tests require explicit
-`--execute-live`. The [user guide](./intent-to-impact-user-guide.md) separates
+`--execute-live`. The [user guide](./docs/intent-to-impact-user-guide.md) separates
 real inference, compiler proof, replay tests and portal-only validation.
 
 Local verification before publication included:
@@ -256,14 +256,9 @@ environments and are not fresh-checkout acceptance gates.
 
 | Path | Purpose |
 |---|---|
-| [apps/experience](./apps/experience) | Live React studio, generated validators and retained historical UI tests |
-| [apps/control-plane/studio](./apps/control-plane/studio) | Active API, model calls, validation, revisions and infrastructure builder |
-| [contracts](./contracts) | Schema-generation tooling and original governed-system contracts |
-| [tests/studio](./tests/studio) | Backend, build and approval tests |
-| [tests/experience](./tests/experience) | Browser regressions and local evidence runners |
-| [tools](./tools) | Combined launcher and contract tooling |
-| [design](./design) / [fixtures](./fixtures) | Earlier design artifacts, tokens and explicitly synthetic examples |
-| [engines](./engines) / [reporting](./reporting) | Earlier promise/drift and continuity foundations, not the integrated live workflow |
+| [intent-to-impact-studio](./intent-to-impact-studio) | Application source, contracts, engines, fixtures, reporting, tests and developer tools |
+| [docs](./docs) | User, architecture, implementation and design documentation |
+| [aca](./aca) | Azure Container Apps hosting, deployment and verification |
 | [infra](./infra) | Historical NSP sandbox templates; not an approved automatic deployment path |
 | [imgs](./imgs) | Supplied project illustrations |
 

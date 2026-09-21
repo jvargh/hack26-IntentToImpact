@@ -159,7 +159,7 @@ do not use `--trusted-host` or disable TLS checks. Optionally download compatibl
 Linux wheels through the host's verified package feed, then rebuild offline:
 
 ```powershell
-& .\.intent-to-impact\studio\.venv\Scripts\python.exe -m pip download --only-binary=:all: --platform manylinux2014_x86_64 --platform manylinux_2_28_x86_64 --platform linux_x86_64 --python-version 313 --implementation cp --abi cp313 --abi abi3 -r .\apps\control-plane\studio\requirements.txt --dest .\aca\wheelhouse
+& .\.intent-to-impact\studio\.venv\Scripts\python.exe -m pip download --only-binary=:all: --platform manylinux2014_x86_64 --platform manylinux_2_28_x86_64 --platform linux_x86_64 --python-version 313 --implementation cp --abi cp313 --abi abi3 -r .\intent-to-impact-studio\apps\control-plane\studio\requirements.txt --dest .\aca\wheelhouse
 ```
 
 The build uses a populated `wheelhouse` without network package resolution.
