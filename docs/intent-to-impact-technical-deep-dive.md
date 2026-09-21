@@ -169,7 +169,7 @@ Seeing Service Bus or Storage on a generated diagram does not mean the studio it
 Likewise, deploying the Studio to ACA does not deploy that generated workload.
 
 ```mermaid
-flowchart LR
+flowchart TD
     H["Human: intent, evidence, revision direction"]
     UI["React studio"]
     API["FastAPI: local loopback or ACA ingress"]
@@ -295,7 +295,7 @@ sequenceDiagram
     Service->>Model: Synthesis with strict request-specific schema
     Model-->>Service: Architecture JSON and response ID
     Service->>Store: Preserve proposal and synthesis receipt
-    Service->>Validator: Ground external bindings; validate analysis
+    Service->>Validator: Ground external bindings and validate analysis
     Service->>Model: Separate assurance call over proposal and sources
     Model-->>Service: Nine findings and a distinct response ID
     Service->>Validator: Validate assurance and merged analysis

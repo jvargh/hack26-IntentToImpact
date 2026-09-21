@@ -430,7 +430,7 @@ These are prototype targets, not production service-level objectives.
 ## 6. System context
 
 ```mermaid
-flowchart LR
+flowchart TD
     Customer["Customer / Delivery Team"]
     Architect["Accountable Architect"]
     Portal["Intent-to-Impact Experience"]
@@ -469,7 +469,7 @@ local topology is React/FastAPI, file-backed jobs/results and two local Agent Fr
 roles calling the existing Foundry model; see section 1.1.
 
 ```mermaid
-flowchart TD
+flowchart TB
     UI["Web / Teams / Copilot Experience"]
     API["Experience API"]
     ORCH["Microsoft Foundry Hosted Orchestrator<br/>Agent Framework"]
@@ -500,6 +500,10 @@ flowchart TD
     AUDIT["Append-only Audit Store"]
     OBS["Telemetry and Evaluation"]
     ANALYTICS["Value and Reporting Store"]
+
+    REQ ~~~ MODEL ~~~ DEC ~~~ REVIEW ~~~ GEN ~~~ DRIFT ~~~ REPORT
+    CONTEXT ~~~ ARCH ~~~ SEC ~~~ REL ~~~ COST ~~~ IAC ~~~ REM
+    EVIDENCE ~~~ STATE ~~~ OBJECTS ~~~ GIT ~~~ AZURE ~~~ AUDIT ~~~ OBS ~~~ ANALYTICS
 
     UI --> API --> ORCH
     HOOK -.-> API
