@@ -5,18 +5,21 @@
 Architecture-as-Code is the implementation principle; Intent Continuity is the
 customer-facing value proposition.
 
-**Publication baseline: 2026-09-14.** The implemented local Studio now supports real
-business-input synthesis, separate assurance, approved contextual revisions, and
-compiler-validated deployment packages with a manual Azure Portal handoff. It is
-not a deployed business application or a completed runtime-continuity platform.
-Read [the implemented baseline](#11-implemented-local-baseline) before the retained
+**Current-state update: 2026-09-20.** The Studio supports local real-model
+operation and a separately configured Azure Container Apps (ACA) hosting mode.
+The verified public ACA judge deployment uses an explicitly labelled,
+example-only simulation; it was verified on 2026-09-17 and is currently stopped.
+Both modes retain real Bicep compilation and a manual Azure Portal handoff. The
+hosted Studio is not a deployed customer workload or a completed
+runtime-continuity platform.
+Read [the implemented baseline](#11-implemented-current-baseline) before the retained
 target architecture. Sections 3-28 preserve original requirements, IDs and future
 acceptance criteria; they are **targets or historical planning**, not a completion
 ledger. Only the bounded slice described below is validated.
 
 ## Table of contents
 
-**UI builders:** Start with the [implemented local baseline](#11-implemented-local-baseline)
+**UI builders:** Start with the [implemented current baseline](#11-implemented-current-baseline)
 and [current user guide](./intent-to-impact-user-guide.md). For future work, use the
 [prioritized customer journeys](#27-prioritized-customer-journeys-and-ui-contracts),
 then the [Customer Promise Contract](#816-customer-promise-contract-and-intent-continuity),
@@ -26,7 +29,7 @@ then the [Customer Promise Contract](#816-customer-promise-contract-and-intent-c
 [demo acceptance matrix](#2713-demo-storyboard-and-acceptance-matrix).
 
 - [1. Document status](#1-document-status)
-  - [1.1 Implemented local baseline](#11-implemented-local-baseline)
+  - [1.1 Implemented current baseline](#11-implemented-current-baseline)
   - [1.2 Validation and remaining boundary](#12-validation-and-remaining-boundary)
 - [2. Executive summary](#2-executive-summary)
   - [2.1 Intent Continuity and differentiation](#21-intent-continuity-and-differentiation)
@@ -148,8 +151,8 @@ then the [Customer Promise Contract](#816-customer-promise-contract-and-intent-c
 
 | Field | Value |
 | --- | --- |
-| Status | Published design reference: implemented local slice plus retained target architecture |
-| Baseline date | 2026-09-14; historical requirements have not all been re-audited |
+| Status | Published design reference: implemented local and ACA-hosted Studio slice plus retained target architecture |
+| Current-state date | 2026-09-20; historical requirements have not all been re-audited |
 | Product | Intent-to-Impact |
 | Positioning | From customer promise to verified Azure reality |
 | Differentiator | Intent Continuity |
@@ -159,14 +162,24 @@ then the [Customer Promise Contract](#816-customer-promise-contract-and-intent-c
 | Target experience | Capture customer promises, implement them through approved Azure architecture, and verify them against scoped runtime evidence |
 | Delivery model | Human-led, agent-operated |
 
-### 1.1 Implemented local baseline
+### 1.1 Implemented current baseline
 
-The current product is a React `StudioApp` with a loopback FastAPI backend and
-file-backed jobs/results. It uses the existing Foundry `gpt-5.2` deployment through
+The current product is a React `StudioApp` with a FastAPI backend and file-backed
+jobs/results. Default local mode binds to loopback and uses the existing Foundry
+`gpt-5.2` deployment through
 **two local Microsoft Agent Framework roles and separate calls: architecture
 synthesis, then independent assurance**. It does not deploy three Prompt Agent
 specialists or a Foundry Hosted Orchestrator. Here, independent assurance means a
 separate model call and responsibility, not a different deployed model or human.
+
+The same application can run in ACA only through explicit hosted configuration.
+The retained ACA deployment hosts the **Studio**, with mounted persistent state,
+a pinned Linux Bicep compiler, a single writer and either Entra authentication or
+explicit anonymous-demo access. The currently deployed judge configuration is
+public and simulated: it accepts only the unchanged built-in example, returns
+authored synthesis/review/revision data, makes no Foundry calls, and isolates
+history by browser session. It is currently stopped. Local mode remains live-model
+mode; simulation is rejected outside ACA and is never an error fallback.
 
 | Implemented surface | Current behavior and boundary |
 | --- | --- |
@@ -176,14 +189,14 @@ separate model call and responsibility, not a different deployed model or human.
 | Workspace history | Shared workspace history is opt-in; the default remains session-private. Opted-in history retains approvals, failures and deployment packages alongside results. Reopening evidence is not a fresh model execution or verified production identity. |
 | Deterministic package generation | A bounded Bicep catalog renders the selected topology, runs the actual compiler and produces an eight-file ZIP. Selected-only guards prevent an unselected duplicate from blocking a valid option. Queue-edge direction determines permissions. This is infrastructure preparation, not business-code generation or Azure creation. |
 | **Deploy to Azure** | Verified-file and required-parameter checks precede a **manual Portal handoff only**. The user must inspect the package, supply real values and complete Azure-side review. Opening the Portal does not upload the template, create resources or prove deployment. |
+| ACA-hosted judge Studio | The public simulation was verified end to end with scripted revisions, Linux Bicep compilation, session-private history and restart recovery. Simulated architecture/review data is labelled in the UI and package. ACA hosting costs remain; Foundry inference does not occur in this mode. |
 
 The local product has no GitHub branch/PR/publishing workflow. That product boundary
 does **not** prohibit developers from publishing this repository to GitHub `main`;
 repository publication is separate from an in-product delivery or deployment receipt.
 See the [technical deep dive](./intent-to-impact-technical-deep-dive.md) for the
-implemented runtime and the [implementation plan](./intent-to-impact-p0-implementation-plan.md)
-and [task overlay](./intent-to-impact-p0-task-decomposition.md#current-implementation-status-overlay)
-for the boundary with the original backlog.
+implemented runtime and the [current user guide](./intent-to-impact-user-guide.md)
+for the active workflow boundary.
 
 ### 1.2 Validation and remaining boundary
 
@@ -202,8 +215,10 @@ all original tasks and milestones.
 | 16 approval tests | Bounded revision approval behavior |
 | Real Playwright: original `Order fulfilment-#1`, `opt-a` | Two distinct compiles, SHA-verified eight-file downloads, history recovery and actual Portal navigation; no template upload or resource creation |
 | Real recommendation and challenge journeys | Both business recommendation and challenge ran fresh synthesis plus separate assurance, then produced compiled downloads |
+| ACA public judge verification, 2026-09-17 | Example-only simulated generation and both scripted revisions, real Linux Bicep compilation, eight-file ZIP hashes, visitor isolation, and saved-run/package recovery after a cold restart; no Foundry calls |
 
-Actual Azure resource creation was **not executed or verified**. Target environment,
+ACA resource creation and operation verify hosting of the Studio only. Actual
+creation of a **generated customer workload** was not executed or verified. Its target environment,
 real Entra identity, external-system values, and final resource/cost approval remain
 outstanding. Runtime drift detection/restoration, promise-coverage and outcome/attention
 metrics, and full original policy/work-engine integration remain roadmap work or
@@ -2857,8 +2872,10 @@ No broad catch converts these failures into a successful response.
 
 ## 17. Reference deployment topology
 
-**Production target only.** This cloud topology has not been deployed by the local
-Studio workflow. Section 1.1 describes the implemented topology.
+**Retained full-product target only.** This topology has not been implemented by
+either current Studio mode. The bounded ACA solution described in section 1.1
+hosts the Studio itself; it does not implement this target control plane and does
+not deploy packages generated for customer workloads.
 
 The logical design is platform-independent. A practical Azure implementation can use:
 

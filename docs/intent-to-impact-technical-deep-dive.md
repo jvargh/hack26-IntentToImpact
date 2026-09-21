@@ -2,15 +2,18 @@
 
 ## The governed design-to-evidence engine
 
-**Baseline:** implemented local studio as reviewed on 14 September 2026, including
-both contextual assurance actions, run history, selected-alternative package
-validation/regeneration, Dagre topology layout, retired draft mode and the
-guided Azure Portal handoff. Actual resource deployment remains unverified.
+**Current state (20 September 2026):** the same Studio runs locally with live
+Foundry calls or in explicitly configured Azure Container Apps (ACA) hosting.
+The public judge deployment was verified on 17 September in labelled,
+example-only simulation mode and is currently stopped. Both modes use real Bicep
+compilation. No generated customer workload deployment is claimed.
 
 **Publication boundary:** operator archives, saved runs, raw receipts, local
 tooling and agent configuration are excluded from Git. Local evidence paths
 below identify prior verification records, not downloadable repository artifacts.
-Use the [README](../README.md) for fresh-checkout prerequisites and the
+Use the [frontend setup](../intent-to-impact-studio/apps/experience/README.md),
+[backend setup](../intent-to-impact-studio/apps/control-plane/studio/README.md),
+[ACA guide](../aca/README.md), and
 [user guide](./intent-to-impact-user-guide.md) for current operation.
 
 **Audience:** hackathon technical judges, architects, engineering leads, and developers taking the prototype forward.
@@ -36,7 +39,7 @@ The distinguishing feature is not the diagram or the model alone. It is the cont
 9. [Infrastructure generation and compilation](#9-infrastructure-generation-and-compilation)
 10. [The topology layout engine](#10-the-topology-layout-engine)
 11. [Persistence, lineage, and history](#11-persistence-lineage-and-history)
-12. [Trust boundaries and local protections](#12-trust-boundaries-and-local-protections)
+12. [Trust boundaries and runtime protections](#12-trust-boundaries-and-runtime-protections)
 13. [Failure, concurrency, and recovery](#13-failure-concurrency-and-recovery)
 14. [Worked example: order fulfilment](#14-worked-example-order-fulfilment)
 15. [Evidence and validation](#15-evidence-and-validation)
@@ -117,6 +120,8 @@ Neither deterministic code nor successful compilation makes the model's architec
 | Topology geometry | [graphLayout.ts](../intent-to-impact-studio/apps/experience/src/studio/views/graphLayout.ts) | Computes visual positions and routes; has no design-authoring authority |
 | Human interaction and current-view checks | [StudioApp.tsx](../intent-to-impact-studio/apps/experience/src/studio/StudioApp.tsx) | Collects consent, tracks unsent changes, displays results and decisions |
 | Local HTTP boundary | [app.py](../intent-to-impact-studio/apps/control-plane/studio/app.py) | Enforces loopback, origin, session and request restrictions |
+| Hosted boundary | [hosting.py](../intent-to-impact-studio/apps/control-plane/studio/hosting.py) | Requires explicit ACA origin, identity, storage and compiler configuration |
+| Judge simulation | [simulator.py](../intent-to-impact-studio/apps/control-plane/studio/simulator.py) | Returns only labelled authored responses for the exact built-in example; never calls Foundry |
 
 **The orchestrator in the live path is application code.** The application uses Microsoft Agent Framework for its two specialist model calls, but a conversational model does not choose the next workflow action, acquire extra tools, or execute infrastructure.
 
@@ -151,22 +156,27 @@ This deep dive is the implemented-baseline companion to the broader design, not 
 
 ### 4.1 Keep the studio and the generated system separate
 
-There are two architectures to understand:
+There are two architectural subjects to keep separate:
 
-- **The studio runtime:** React in a browser, a local Python API, local persisted files, the configured Foundry model, and a local Bicep compiler.
+- **The studio runtime:** React and the Python API, running either on local
+  loopback with local files, CLI identity and a local Bicep compiler, or as a
+  single-writer ACA app with mounted storage, hosted security controls and a
+  pinned Linux compiler. ACA may use live Foundry through managed identity or
+  the explicit judge simulation.
 - **The generated workload:** a customer-specific combination of supported Azure resources and existing external systems, described by an architecture result and infrastructure package.
 
 Seeing Service Bus or Storage on a generated diagram does not mean the studio itself uses those services as its workflow store or message bus.
+Likewise, deploying the Studio to ACA does not deploy that generated workload.
 
 ```mermaid
 flowchart LR
     H["Human: intent, evidence, revision direction"]
     UI["React studio"]
-    API["Loopback FastAPI transport"]
+    API["FastAPI: local loopback or ACA ingress"]
     S["StudioService: code-owned coordinator"]
     V["Schema and relationship validation"]
-    M["Foundry: synthesis and assurance"]
-    D["Local run and approval records"]
+    M["Live Foundry or labelled ACA simulation"]
+    D["Local or mounted run and approval records"]
     B["Closed-catalog Bicep builder"]
     C["Local Bicep compiler"]
     Z["Downloadable infrastructure ZIP"]
@@ -194,18 +204,19 @@ There is intentionally no arrow from the studio to an Azure deployment operation
 | Browser application | React 19.2.4, TypeScript 5.9.3, Vite 7.3.1 |
 | Browser validation | Generated AJV standalone validators; date/time formats registered during generation |
 | Graph layout | `@dagrejs/dagre` 3.1.1 |
-| HTTP service | FastAPI, Starlette, Uvicorn in a local Python environment |
+| HTTP service | FastAPI, Starlette and Uvicorn; `127.0.0.1:5173` locally or one ACA worker on `0.0.0.0:8080` behind HTTPS ingress |
 | Agent/model integration | Microsoft Agent Framework, Foundry chat client, Azure AI Projects, Azure Identity |
-| Model | Existing configured `gpt-5.2` deployment; both roles use it |
+| Model | Live mode uses the existing configured `gpt-5.2` deployment for both roles; ACA judge simulation uses the authored `judge-simulator` and makes no Foundry calls |
 | Runtime request validation | Canonical JSON Schema with Python `jsonschema` |
-| Durable store | Local JSON files and ZIP artifacts; no live-studio database |
-| Infrastructure compiler | Verified local Bicep executable; recorded runs used 0.47.16 |
+| Durable store | JSON files and ZIP artifacts in the local run directory or mounted ACA Premium Files NFS; no live-studio database |
+| Infrastructure compiler | Verified local Bicep executable or pinned Linux container binary; recorded local runs used 0.47.16 |
 
 Exact dependency pins remain authoritative in [frontend dependencies](../intent-to-impact-studio/apps/experience/package.json) and [backend requirements](../intent-to-impact-studio/apps/control-plane/studio/requirements.txt).
 
 ### 4.3 Request and progress transport
 
-The combined application is served from `http://127.0.0.1:5173/`.
+Local mode is served from `http://127.0.0.1:5173/`. Hosted mode uses its configured
+ACA HTTPS origin. It cannot be enabled safely by changing the local bind address.
 
 The browser establishes a local session, submits an analysis, receives HTTP `202` with a `StudioJob`, and polls that job. The model response streams into the backend, but the browser sees bounded stage events through polling rather than a direct model-token stream or an SSE channel.
 
@@ -674,12 +685,16 @@ The factory default is session-private visibility. The developer installation
 explicitly enabled shared workspace history: any valid local studio session can
 read those stored runs. That ignored local setting does not accompany a checkout.
 This is an operator-controlled, single-user-demo choice, not production tenant isolation.
+ACA Entra mode authenticates and allowlists operators, but all allowed operators
+share workspace history. The current anonymous public demo instead forces
+session-private history. Mounted records survive container restart, but the file
+store remains deliberately single-writer.
 
 A saved result is labeled as saved, not as new live inference. Restoring it requires fresh consent for subsequent model calls.
 
-## 12. Trust boundaries and local protections
+## 12. Trust boundaries and runtime protections
 
-The current security model is a deliberately local demonstration:
+Default local mode is a deliberately local demonstration:
 
 1. **Browser to local API:** direct loopback connection, exact Host/Origin checks, custom client header, local session cookie, CSRF token on POST, JSON-only bounded bodies.
 2. **Local API to model:** fixed endpoint/deployment, server-held Azure CLI credential access, stateless no-tools calls and strict output guard.
@@ -697,7 +712,12 @@ These mechanisms should not be overstated:
 - Local approval hashes do not identify a real authorized enterprise approver.
 - Customer text is persisted unencrypted and also sent to the configured model after consent.
 
-The studio should not be published to a network or placed behind a proxy under this security model.
+Local mode should not be published to a network or placed behind a proxy under
+this security model. Hosted mode is a separate, explicit boundary: ACA ingress,
+an exact HTTPS origin, secure cookies and CSRF, mounted storage, one writer, and
+either Easy Auth with tenant/operator checks or explicit `anonymous-demo`.
+The current public demo has no sign-in, so it is for non-confidential example
+use only; session isolation does not turn it into multi-tenant production.
 
 ## 13. Failure, concurrency, and recovery
 
@@ -829,6 +849,7 @@ numbered scenarios, outcomes and known limits.
 | Zoom: `CANVAS-ZOOM/30bf3c50c3ac4f5788577d33eb82ad79/receipt.json` | Keyboard, wheel anchor, limits, editable-field isolation and list mode | Explicitly replayed UI data, not new model proof |
 | Publication frontend verification | 89 tests passed across studio, routing, client, layout and handoff; generated-contract check, TypeScript and build passed | Includes the earlier 59-test subset; not an all-repository certification |
 | Backend/build tests | 25 bundle, 19 model/validation and 16 approval tests passed | Bundle includes real compiles; model/approval unit tests use injected models |
+| ACA judge checks, 2026-09-17 | Public no-sign-in built-in example, both scripted revision actions, real Linux Bicep compilation, ZIP hashes, visitor isolation and cold-restart recovery | Authored results, not Foundry inference; hosted live-model mode was not proven and the app is currently stopped |
 
 The first browser attempt at the contextual revision successfully caused real synthesis and assurance, but its test harness initially counted only HTTP `200`, not the analysis endpoint's `202`. The harness failed its capture assertion after the revision had completed. It was corrected, and verification resumed the stored revision instead of charging for another model run.
 
@@ -862,6 +883,7 @@ not authorize or perform inference or Azure operations.
 | Strict structured output plus runtime checks | Fewer malformed/phantom references | Valid JSON can still contain poor architectural judgment |
 | Closed infrastructure catalog | Traceable, repeatable generation without arbitrary model code | Limited services, runtimes, networking and integration patterns |
 | Local file store | Fast demo setup and inspectable evidence | Unencrypted data, bounded capacity, no enterprise tenancy or distributed durability |
+| Single-writer mounted ACA file store | Preserves the existing evidence model across container restarts | One active revision/replica, brief update downtime, private NFS transport is not encrypted by ACA |
 | Explicit revision permission | Actionable human control and exact lineage | Not final design approval or a risk-exception workflow |
 | Client-side graph layout | Immediate visual organization without model cost | Geometry is temporary; labels/crossings still need interaction on dense graphs |
 | No deployment endpoint | No accidental cloud mutation through the studio | Delivery stops at compiled infrastructure and documented prerequisites |
@@ -875,7 +897,7 @@ not authorize or perform inference or Azure operations.
 5. **No comprehensive semantic-grounding proof.** Most source links identify whole sources; requirements are not backed by machine-verified passage entailment.
 6. **No option-specific review-impact model.** Findings review the proposal as a whole and lack component-impact references.
 7. **Limited long revision-chain semantics.** Parent results preserve lineage, but the current `refinement` source represents the current instruction. This is not a fully normalized decision-history or conflict-resolution model.
-8. **No production durability, tenancy, retention or full tracing platform.**
+8. **No production durability, multi-tenant data model, retention workflow or full tracing platform.** The ACA demo adds persistent mounted storage and hosting controls, not those product capabilities.
 9. **No measured business-outcome improvement or broad model-quality evaluation benchmark.**
 
 The older intent-continuity/runtime-drift foundations and sandbox experiments should remain separately labeled until integrated into the actual user journey.
@@ -929,6 +951,9 @@ That is the bridge from the current architecture studio to the broader original 
 | Broader target design | [Detailed design specification](./intent-to-impact-design-spec.md) |
 | Live experience and setup | [Frontend README](../intent-to-impact-studio/apps/experience/README.md) |
 | API, model and persistence behavior | [Backend README](../intent-to-impact-studio/apps/control-plane/studio/README.md) |
+| ACA hosting, simulation and operations | [ACA README](../aca/README.md) |
+| Hosted configuration and principal checks | [hosting.py](../intent-to-impact-studio/apps/control-plane/studio/hosting.py) |
+| Authored judge simulator | [simulator.py](../intent-to-impact-studio/apps/control-plane/studio/simulator.py) |
 | Sole transport contract | [studio.schema.json](../intent-to-impact-studio/apps/control-plane/studio/studio.schema.json) |
 | Job and build coordination | [service.py](../intent-to-impact-studio/apps/control-plane/studio/service.py) |
 | Model roles and provider guard | [model_client.py](../intent-to-impact-studio/apps/control-plane/studio/model_client.py) |
@@ -945,7 +970,7 @@ That is the bridge from the current architecture studio to the broader original 
 | Typed client and transport checks | [client.ts](../intent-to-impact-studio/apps/experience/src/studio/client.ts) |
 | Generated contract tooling | [generate-studio.mjs](../intent-to-impact-studio/apps/experience/scripts/generate-studio.mjs) |
 
-### 18.2 Start and inspect the current demo
+### 18.2 Start and inspect local mode
 
 Use the existing [combined launcher](../intent-to-impact-studio/tools/Run-LiveStudio.ps1):
 
@@ -983,8 +1008,14 @@ The earlier three-minute script is retained only in the local `_bkp` archive.
 A saved run is a legitimate fallback when labeled as saved evidence, not as
 fresh inference.
 
+For the hosted judge journey, follow the [ACA guide](../aca/README.md). Its
+currently retained app is stopped and must be started by an authorized operator.
+In the default public simulation, load the unchanged built-in example; no model
+consent or Foundry call occurs. Authored synthesis, review and revision outcomes
+remain visibly labelled, while package compilation is real.
+
 ### 18.3 The concise technical explanation
 
-> Intent to Impact is a human-directed architecture pipeline with a deterministic control core. Two bounded AI calls propose and review a typed design. Code verifies relationships, records exact revision permissions, preserves history, and translates supported designs into real compiler-checked infrastructure. A separate layout engine makes the same design inspectable. The current delivery boundary is a traceable compiled package, not a deployed or verified business application.
+> Intent to Impact is a human-directed architecture pipeline with a deterministic control core. In local live mode, two bounded AI calls propose and review a typed design; the ACA judge mode instead supplies clearly labelled authored examples. Code verifies relationships, records exact revision permissions, preserves history, and translates supported designs into real compiler-checked infrastructure. A separate layout engine makes the same design inspectable. The current customer-workload delivery boundary is a traceable compiled package, not a deployed or verified business application.
 
 That is the engine to demonstrate: **not intelligence without controls, and not controls without useful output, but a visible path from intent to an inspectable, reviewable, reproducible handoff.**

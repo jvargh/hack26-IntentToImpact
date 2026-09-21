@@ -1,15 +1,23 @@
 # Intent to Impact: numbered user guide
 
-**Applies to:** the current live architecture studio, updated 14 September 2026.  
+**Applies to:** local live-model mode and the ACA-hosted judge Studio, current as
+of 20 September 2026. The public ACA deployment was verified on 17 September
+and is currently stopped.
+
 **Screenshot key:** points **1-12** are in image 1, **13** in image 2, **14-16**
 in image 3, and **17** in image 4. Image 5 shows the package-generation error
 explained below.  
 **Publication:** screenshot numbering is explained in this guide; source
 screenshots, raw run evidence and the archived three-minute script are local-only.  
-**Setup:** [Repository README](../README.md).  
+**Setup:** [local experience](../intent-to-impact-studio/apps/experience/README.md),
+[local backend](../intent-to-impact-studio/apps/control-plane/studio/README.md),
+or [ACA hosting and judge instructions](../aca/README.md).
+
 **Technical detail:** [Engine deep dive](./intent-to-impact-technical-deep-dive.md).
 
 ## 1. Start the correct application
+
+### Local live-model mode
 
 From the project root:
 
@@ -43,6 +51,25 @@ was already available. It leaves unrelated processes untouched.
   configured otherwise.
   Do not enter secrets or data you are not authorized to send to the model.
 
+### ACA-hosted judge mode
+
+The retained ACA deployment hosts this Studio, not a package generated for a
+customer workload. It is currently stopped; an authorized operator must start it
+before using the URL in the [ACA guide](../aca/README.md).
+
+The current public configuration is explicitly marked **JUDGE SIMULATION**.
+Load the unchanged built-in example and select **Generate architecture**; custom
+prompts/documents are rejected, and no model-processing consent or Foundry call
+occurs. Synthesis, review and revisions are authored scripted examples. Project
+title edits are allowed, revision instructions are recorded but not interpreted,
+and every simulated result remains labelled. Bicep compilation and package hash
+checks are real. History is private to the browser session and persists on the
+mounted store across container restarts. Do not enter confidential information.
+
+This simulation is not a fallback for local or hosted live-model failures. ACA
+hosting still incurs Azure compute, registry and storage costs even though the
+simulation incurs no inference charges.
+
 ## 2. What each numbered point does
 
 ### Point 1 - Project name
@@ -59,9 +86,13 @@ unsent input change until another explicit analysis request.
 Describe the customer outcome, process, constraints, existing systems and unknowns.
 Use **Load example inputs** for the fictional order-fulfilment scenario.
 
-**Expected:** the example fills input fields and attaches sample source text.
-It makes no AI call and does not draw a canned architecture. Check the
+**Expected locally:** the example fills input fields and attaches sample source
+text. It makes no AI call and does not draw a canned architecture. Check the
 model-processing consent box, then select **Generate architecture** to run AI.
+
+**Expected in ACA judge simulation:** loading still makes no call. Generate
+accepts only the unchanged example and returns visibly labelled authored content
+without consent or inference.
 
 **Important:** loading the example replaces the working input. Reopen a saved
 run through history rather than loading the example over an outcome you are
@@ -75,41 +106,44 @@ the exact text and close the source drawer when finished.
 **Limits:** five documents, at most 150,000 combined text characters, and up to
 1 MB per file at local intake. PDF/Word extraction is not available in this path.
 
-**Expected:** the source is read locally first. It is sent to the configured
-Foundry deployment only after explicit model-processing consent and submission.
-Editing original sources starts a new analysis rather than silently reusing
-the previous design's source snapshot.
+**Expected:** the source is read in the Studio first. In live mode it is sent to
+the configured Foundry deployment only after explicit model-processing consent
+and submission. Judge simulation accepts only its unchanged built-in sources and
+sends nothing to Foundry. Editing original sources starts a new analysis rather
+than silently reusing the previous design's source snapshot.
 
 ### Point 4 - Synthesis response validation
 
 This marker is an **activity event**, not a button.
 
-The first model call proposes an architecture. The service checks response shape,
-source references and supported component identities before continuing.
+In live mode, the first model call proposes an architecture. In judge simulation,
+the equivalent stage loads an authored proposal. In both cases the service checks
+response shape, source references and supported component identities before continuing.
 
 **Expected:** concise stage messages. There should not be an endless list of
 received-character counters. An invalid proposal is not replaced by sample data.
 
 ### Point 5 - Separate assurance begins
 
-This is another activity event. After synthesis validation, the service makes a
-separate no-tools model call to review the proposal against its sources.
+This is another activity event. After synthesis validation, live mode makes a
+separate no-tools model call to review the proposal against its sources. Judge
+simulation supplies its separate authored nine-dimension review without inference.
 
 **Expected:** assurance runs after synthesis, not merely a second name for the
 same response. The two calls have distinct recorded response IDs.
 
 ### Point 6 - Assurance response validation
 
-The service checks the second model response, source references and the presence
-of all nine review dimensions.
+The service checks the live response or authored simulated review, source
+references and the presence of all nine review dimensions.
 
 **Expected:** assurance can still report warnings or blockers. A valid review
 is not necessarily a favorable verdict.
 
 ### Point 7 - Complete
 
-**Complete** means both model calls returned acceptable results and the new
-proposal was recorded.
+**Complete** means both live-model stages, or both corresponding simulated stages,
+returned acceptable results and the new proposal was recorded.
 
 It does not mean that application code has been implemented, an Azure deployment
 has succeeded, or every blocker is resolved. In a restored run, these are
@@ -123,6 +157,8 @@ The main workspace displays the current proposal and its origin:
 |---|---|
 | LIVE MODEL RESULT | Result returned by the observed real model job |
 | SAVED MODEL RESULT | A completed result reopened from local history |
+| SIMULATED EXAMPLE | Authored ACA judge result; no Foundry inference |
+| SAVED SIMULATED EXAMPLE | Authored result reopened from hosted session history |
 | PREVIOUS RESULT - NOT CURRENT | Working input changed, another request is running, or an earlier attempt failed |
 
 Do not build from a stale working view. Restore the intended saved run, or
@@ -200,9 +236,11 @@ Use this when the recommendation is a reasonable starting point.
 2. Click **Request recommended change**.
 3. Inspect the exact finding, recommendation and target alternative.
 4. Edit the prefilled **Design change instruction** if needed.
-5. Select the fresh revision/model consent checkbox.
+5. Select the fresh revision/model consent checkbox. In judge simulation, approve
+   the scripted example revision instead; no model consent is requested.
 6. Click **Approve & regenerate**.
-7. Wait for new synthesis and independent assurance.
+7. Wait for new live synthesis and independent assurance, or the clearly labelled
+   scripted equivalents in judge simulation.
 8. Review **View change & decision record**, the latest finding and revised graph.
 
 **Expected:** a new immutable result, not an in-place edit. The decision records
@@ -243,7 +281,9 @@ new provider capabilities.
 - Closing the panel after submission only hides progress; the server job continues.
 - A failed revision retains its failure/approval evidence and leaves the old result unchanged.
 - A lower model severity is not verified risk resolution.
-- New instructions create chargeable synthesis and assurance calls. There is no automatic retry.
+- In live mode, new instructions create chargeable synthesis and assurance calls.
+  In judge simulation, the instruction is recorded but not interpreted and selects
+  the next authored revision. There is no automatic fallback or retry.
 
 ### Point 17 - Generate or regenerate deployment package
 
@@ -256,8 +296,8 @@ new provider capabilities.
 6. For **COMPILED**, verify the compiler version and exit code 0.
 7. Select **Download compiled ZIP**.
 
-**Regenerate** recompiles the selected stored result and option without another
-AI call. It creates a new build ID. Prior builds and their evidence remain in
+**Regenerate** recompiles the selected stored result and option without a model
+call. It creates a new build ID. Prior builds and their evidence remain in
 history rather than being overwritten.
 
 The successful ZIP contains eight files: Bicep, compiled ARM JSON, parameters,
@@ -369,7 +409,7 @@ Official reference:
 
 | Scenario | Expected result | Evidence method |
 |---|---|---|
-| 1-3: enter/load inputs and inspect a document | No inference until explicit consent and Generate | Browser controls and source drawer |
+| 1-3: enter/load inputs and inspect a document | Local live mode infers only after consent and Generate; judge simulation never infers | Browser controls and source drawer |
 | 4-7: inspect stages | Synthesis, validation, separate assurance, validation, complete/error | Real stored events; live revision runs for new execution |
 | 8: reopen saved run | Saved origin label; no inference | History browser check |
 | 9-10: switch alternatives | Correct graph, rationale and selected option | Browser checks against actual saved result |
@@ -384,7 +424,7 @@ Official reference:
 | Azure handoff | Verified JSON, required parameters, acknowledgement and portal navigation | Browser and local hash/shape tests |
 | Actual Azure provisioning | Requires supplied targets, validation and explicit approval | Not executed or verified in this change |
 
-### Recorded verification - 14 September 2026
+### Recorded local live-model verification - 14 September 2026
 
 The evidence paths below are relative to the operator-local
 `.intent-to-impact\spikes` directory, which is deliberately excluded from Git.
@@ -401,6 +441,16 @@ the original saved job IDs do not exist in a fresh checkout.
 | Package from challenge revision | **Compiled and downloaded; hashes matched.** `DESIGN-CHANGE/138e3c1a128940aebc09a702ef6c04a3/receipt.json`. No additional inference. |
 | Unit/contract regressions | Publication check: **89 studio/routing/client/layout/handoff tests**, generated-contract consistency, TypeScript and production build passed. Earlier backend verification: **25 bundle tests**, **19 model/validation tests**, **16 approval tests**. These are scoped suites, not an all-repository certification. |
 | Actual Azure resource creation | **Not executed or verified.** Portal navigation/file preparation passed; target values and final provisioning approval remain required. |
+
+### Recorded ACA judge verification - 17 September 2026
+
+The public, no-sign-in ACA configuration passed the unchanged example, both
+scripted revision actions, real Linux Bicep compilation, eight-file ZIP hash
+checks, browser-session history isolation, and saved-run/package recovery after
+a cold container restart. No Foundry calls were made. These checks verify the
+hosted Studio and its authored judge journey, not a generated customer-workload
+deployment. Hosted live-model mode was not proven functional, and the retained
+container app is currently stopped.
 
 Both successful revision runs kept the Business fit result at **warning** rather
 than fabricating customer confirmation. Both returned queue-consumer connections
@@ -430,6 +480,8 @@ Continue to inspect unresolved findings; a successful package is not release app
 | Symptom | Cause / next action |
 |---|---|
 | Unreadable JSON at connection | Frontend-only server may be answering API calls with HTML. Stop that server and use the combined launcher. |
+| ACA URL is unavailable | The retained judge app is currently stopped. An authorized operator must start it; do not treat an unavailable URL as a local Studio failure. |
+| ACA rejects custom input | Judge simulation accepts only the unchanged built-in example. Reload it; simulation never falls back to Foundry. |
 | Port 5173 belongs to an unrelated or unidentifiable PID | The launcher only replaces this workspace's recognized studio/Vite servers. Inspect the reported PID and stop it explicitly if appropriate; do not kill all Python or Node processes. |
 | Port not released before timeout | A listener remained or reappeared after cleanup. Inspect port 5173; no replacement server was started. |
 | Generate fails with a source-reference error | A result cited unavailable source data. Preserve the failed run; do not substitute example output. |
