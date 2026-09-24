@@ -2,7 +2,14 @@
 
 [![Watch the Intent to Impact demo](https://img.youtube.com/vi/pyOx9IfUOqM/maxresdefault.jpg)](https://youtu.be/pyOx9IfUOqM)
 
-Turn customer intent and supporting evidence into traceable Azure architecture, independently challenge the design, generate validated infrastructure, and continuously verify outcomes. Humans set direction; agents operate the workflow; deterministic controls keep it governed.
+**Business intent in. Traceable architecture, explicit risks and compiled infrastructure out.**
+
+Intent to Impact is a human-directed architecture studio with local and explicitly
+configured Azure Container Apps hosting modes. It turns a business
+prompt and process documents into AI-generated alternatives, an interactive
+topology, a separate nine-dimension review, and a compiler-checked infrastructure
+package. People can challenge a finding, approve a revision request and inspect
+the resulting change without losing the original evidence.
 
 ## Start here
 
