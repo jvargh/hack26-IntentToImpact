@@ -1,5 +1,7 @@
 # Intent to Impact
 
+[![Watch the Intent to Impact demo](https://img.youtube.com/vi/pyOx9IfUOqM/maxresdefault.jpg)](https://youtu.be/pyOx9IfUOqM)
+
 **Business intent in. Traceable architecture, explicit risks and compiled infrastructure out.**
 
 Intent to Impact is a human-directed architecture studio with local and explicitly
